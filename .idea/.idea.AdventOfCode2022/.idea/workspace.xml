@@ -6,17 +6,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ced9b84-c239-41ee-a670-e71d3fb98921" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.AdventOfCode2022/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AdventOfCode2022/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AdventOfCode2022/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AdventOfCode2022/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AdventOfCode2022/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AdventOfCode2022/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode2022.sln" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode2022.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode2022.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/DayOne/DayOne.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode2022/DayOne/DayOne.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode2022/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode2022Test/AdventOfCode2022Test.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode2022Test/AdventOfCode2022Test.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AdventOfCode2022/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AdventOfCode2022/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode.sln" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/AdventOfCode2022.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/DayOne/Day1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/DayOne/DayOne.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/DayTwo/Day2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/DayTwo/DayTwo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022Test/AdventOfCode2022Test.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022Test/DayOne/Day1Test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022Test/DayOne/DayOneTest.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022Test/DayTwo/Day2Test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022Test/DayTwo/DayTwoTest.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventOfCode2022Test/Usings.cs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +33,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Toolset" />
+  </component>
   <component name="ProjectId" id="2IMeoStWRJarYWP0CosKEDlSZJa" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -39,6 +46,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -88,7 +96,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1669996057031</updated>
-      <workItem from="1669996062390" duration="678000" />
+      <workItem from="1669996062390" duration="1345000" />
     </task>
     <servers />
   </component>

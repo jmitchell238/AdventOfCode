@@ -1,6 +1,8 @@
-# AdventOfCode2022
-Advent of Code 2022 Csharp solutions
+# AdventOfCode
 
-This is a repo of my solutions for the Advent of Code 2022 puzzles. 
+Advent of Code C# solutions
 
-These are performed in C#.
+This is a repo of my solutions for the Advent of Code
+
+You can find the solutions to the corresponding years in their folders 2022. 
+
