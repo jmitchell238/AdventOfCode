@@ -13,7 +13,9 @@ public static class DayOne
 
     public static void Day1()
     {
+        Console.Write("Part 1: ");
         PartOne();
+        Console.Write("Part 2: ");
         PartTwo();
     }
 
