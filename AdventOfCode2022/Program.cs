@@ -7,5 +7,8 @@ static class Program
     static void Main(string[] args)
     {
         Console.WriteLine("Hello Advent of Code 2022!");
+
+        DayOne.DayOne.Day1();
+    
     }
 }
