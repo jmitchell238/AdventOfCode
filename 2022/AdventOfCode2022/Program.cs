@@ -2,9 +2,9 @@
 
 namespace AdventOfCode2022;
 
-static class Program
+public static class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         Console.WriteLine("\n" + "Hello Advent of Code 2022!");
 
@@ -16,5 +16,9 @@ static class Program
         Console.WriteLine("Day 2 Results:");
         Console.WriteLine("---------------------------------");
         DayTwo.DayTwo.Day2();
+        Console.WriteLine("\n---------------------------------");
+        Console.WriteLine("Day 3 Results:");
+        Console.WriteLine("---------------------------------");
+        DayThree.DayThree.Day3();
     }
 }
