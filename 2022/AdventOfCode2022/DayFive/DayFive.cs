@@ -46,7 +46,7 @@ public static class DayFive
             }
         }
 
-        return GetTopCrateLettersFromStacks(stacks).ToString();
+        return GetTopCrateLettersFromStacks(stacks);
     }
 
     public static string GetFinalTopCratesCrateMover9001(string[]? input = null)
@@ -70,7 +70,7 @@ public static class DayFive
 
         }
 
-        return GetTopCrateLettersFromStacks(stacks).ToString();
+        return GetTopCrateLettersFromStacks(stacks);
     }
     
     private static int MoveCount(List<string> inp, int i, out int moveFrom, out int moveTo)
@@ -117,7 +117,7 @@ public static class DayFive
         return inp;
     }
 
-    private static StringBuilder GetTopCrateLettersFromStacks(List<Stack<char>> stacks)
+    private static string GetTopCrateLettersFromStacks(List<Stack<char>> stacks)
     {
         var result = new StringBuilder();
         foreach (var crate in stacks)
@@ -125,7 +125,7 @@ public static class DayFive
             result.Append(crate.Peek());
         }
 
-        return result;
+        return result.ToString();
     }
 }
 
