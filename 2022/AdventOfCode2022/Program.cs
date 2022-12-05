@@ -20,5 +20,13 @@ public static class Program
         Console.WriteLine("Day 3 Results:");
         Console.WriteLine("---------------------------------");
         DayThree.DayThree.Day3();
+        Console.WriteLine("\n---------------------------------");
+        Console.WriteLine("Day 4 Results:");
+        Console.WriteLine("---------------------------------");
+        DayFour.DayFour.Day4();
+        Console.WriteLine("\n---------------------------------");
+        Console.WriteLine("Day 5 Results:");
+        Console.WriteLine("---------------------------------");
+        DayFive.DayFive.Day5();
     }
 }
