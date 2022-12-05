@@ -1,18 +1,16 @@
-﻿using AdventOfCode2022.DayFive;
-
-namespace AdventOfCode2022Test.DayFiveTest;
+﻿namespace AdventOfCode2022Test.DayFive;
 
 [TestClass]
 public class DayFiveTest
 {
-    readonly string[] input = File.ReadAllLines("../../../../AdventOfCode2022Test/DayFive/Day5Test.txt");
+    private readonly string[] _input = File.ReadAllLines("../../../../AdventOfCode2022Test/DayFive/Day5Test.txt");
     
     [TestMethod]
     public void GetFinalTopCreatesCrateMover9000_Called_ReturnsCorrectAnswer()
     {
-        var expected = "CMZ";
+        const string expected = "CMZ";
         
-        var actual = DayFive.getFinalTopCratesCrateMover9000(this.input);
+        var actual = AdventOfCode2022.DayFive.DayFive.GetFinalTopCratesCrateMover9000(_input);
 
         Assert.AreEqual(expected, actual);
     }
@@ -20,9 +18,9 @@ public class DayFiveTest
     [TestMethod]
     public void GetFinalTopCreatesCrateMover9001_Called_ReturnsCorrectAnswer()
     {
-        var expected = "MCD";
+        const string expected = "MCD";
 
-        var actual = DayFive.getFinalTopCratesCrateMover9001(this.input);
+        var actual = AdventOfCode2022.DayFive.DayFive.GetFinalTopCratesCrateMover9001(_input);
 
         Assert.AreEqual(expected, actual);
     }

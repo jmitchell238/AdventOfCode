@@ -7,7 +7,7 @@ public class DayOneTest
     public void PartOne_Called_ReturnsCorrectAnswer()
     {
         var input = File.ReadAllLines("../../../../AdventOfCode2022Test/DayOne/Day1Test.txt");
-        var expect = 24000;
+        const int expect = 24000;
 
         var result = AdventOfCode2022.DayOne.DayOne.PartOne(input);
 
@@ -18,7 +18,7 @@ public class DayOneTest
     public void PartTwo_Called_ReturnsCorrectAnswer()
     {
         var input = File.ReadAllLines("../../../../AdventOfCode2022Test/DayOne/Day1Test.txt");
-        var expect = 45000;
+        const int expect = 45000;
 
         var result = AdventOfCode2022.DayOne.DayOne.PartTwo(input);
 

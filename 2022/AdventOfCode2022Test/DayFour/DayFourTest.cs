@@ -1,18 +1,16 @@
-﻿using AdventOfCode2022.DayFour;
-
-namespace AdventOfCode2022Test.DayFourTest;
+﻿namespace AdventOfCode2022Test.DayFour;
 
 [TestClass]
 public class DayFourTest
 {
-    readonly string[] input = File.ReadAllLines("../../../../AdventOfCode2022Test/DayFour/Day4Test.txt");
+    private readonly string[] _input = File.ReadAllLines("../../../../AdventOfCode2022Test/DayFour/Day4Test.txt");
 
     [TestMethod]
     public void GetFullyContainedAssignments_Called_ReturnsCorrectAnswer()
     {
-        var expected = 2;
+        const int expected = 2;
 
-        var actual = DayFour.getFullyContainedAssignments(this.input);
+        var actual = AdventOfCode2022.DayFour.DayFour.GetFullyContainedAssignments(_input);
 
         Assert.AreEqual(expected, actual);
     }
@@ -20,9 +18,9 @@ public class DayFourTest
     [TestMethod]
     public void GetOverlappingAssignments_Called_ReturnsCorrectAnswer()
     {
-        var expected = 4;
+        const int expected = 4;
 
-        var actual = DayFour.getOverlappingAssignments(this.input);
+        var actual = AdventOfCode2022.DayFour.DayFour.GetOverlappingAssignments(_input);
 
         Assert.AreEqual(expected, actual);
     }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace AdventOfCode2022.DayThree;
 
-public class DayThree
+public static class DayThree
 {
     private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DayThree/Day3.txt");
-    private static readonly string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const string Alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static void Day3()
     {
@@ -19,63 +20,48 @@ public class DayThree
     {
         input ??= Input;
 
-        return getPriorityItemsSum(input);
+        return GetPriorityItemsSum(input);
     }
 
     public static int PartTwo(string[]? input = null)
     {
         input ??= Input;
 
-        return getCommonItemPerGroupSum(input);
+        return GetCommonItemPerGroupSum(input);
     }
 
-    public static int getCommonItemPerGroupSum(string[]? input = null)
+    public static int GetCommonItemPerGroupSum(string[]? input = null)
     {
         var sum = 0;
 
-        var elf1 = new Dictionary<char, int>();
-        var elf2 = new Dictionary<char, int>();
-
-        for (int i = 0; i < input.Length; i += 3)
+        for (var i = 0; i < input!.Length; i += 3)
         {
             if (string.IsNullOrEmpty(input[i])) return sum;
-
-            elf1 = new Dictionary<char, int>();
-            elf2 = new Dictionary<char, int>();
 
             var firstElfInGroup = input[i];
             var secondElfInGroup = input[i + 1];
             var thirdElfInGroup = input[i + 2];
+            var elf1 = GetElfItems(firstElfInGroup);
+            var elf2 = GetElfItems(secondElfInGroup);
+            var commonItem = GetCommonItem(elf1, elf2, thirdElfInGroup);
 
-            elf1 = getElfItems(firstElfInGroup);
-            elf2 = getElfItems(secondElfInGroup);
-
-            var commonItem = getCommonItem(elf1, elf2, thirdElfInGroup);
-
-            sum += getItemValue(commonItem);
+            sum += GetItemValue(commonItem);
         }
 
         return sum;
     }
 
-    public static char getCommonItem(Dictionary<char, int> elf1, Dictionary<char, int> elf2, string elf3)
+    public static char GetCommonItem(Dictionary<char, int> elf1, Dictionary<char, int> elf2, string elf3)
     {
-        foreach (char ch in elf3)
-        {
-            if (elf1.ContainsKey(ch) && elf2.ContainsKey(ch))
-            {
-                return ch;
-            }
-        }
-
+        foreach (var ch in elf3.Where(ch => elf1.ContainsKey(ch) && elf2.ContainsKey(ch))) return ch;
         return '-';
     }
 
-    public static Dictionary<char, int> getElfItems(string elfItems)
+    public static Dictionary<char, int> GetElfItems(string elfItems)
     {
         var items = new Dictionary<char, int>();
 
-        foreach (char item in elfItems)
+        foreach (var item in elfItems)
         {
             if (items.ContainsKey(item))
             {
@@ -92,57 +78,46 @@ public class DayThree
         return items;
     }
 
-    public static int getPriorityItemsSum(string[]? input = null)
+    public static int GetPriorityItemsSum(IEnumerable<string>? input = null)
     {
-        var sum = 0;
-
-        foreach (string line in input)
-        {
-            var priorityItem = getDuplicateItem(line);
-            sum += getItemValue(priorityItem);
-        }
-
-        return sum;
+        return input!.Select(GetDuplicateItem).Select(GetItemValue).Sum();
     }
 
-    public static char getDuplicateItem(string line)
+    public static char GetDuplicateItem(string line)
     {
-        char result = '-';
+        var result = '-';
 
-        var firstHalf = line.Substring(0, (int)(line.Length / 2));
-        var lastHalf = line.Substring((int)(line.Length / 2), (int)(line.Length / 2));
+        var firstHalf = line[..(line.Length / 2)];
+        var lastHalf = line.Substring(line.Length / 2, line.Length / 2);
 
         var mp = new Dictionary<char, int>();
 
-        for (int i = 0; i < firstHalf.Length; i++)
+        foreach (var item in firstHalf)
         {
-            if (mp.ContainsKey(firstHalf[i]))
+            if (mp.ContainsKey(item))
             {
-                var val = mp[firstHalf[i]];
-                mp.Remove(firstHalf[i]);
-                mp.Add(firstHalf[i], val + 1);
+                var val = mp[item];
+                mp.Remove(item);
+                mp.Add(item, val + 1);
             }
             else
             {
-                mp.Add(firstHalf[i], 1);
+                mp.Add(item, 1);
             }
         }
 
-        foreach (char ch in lastHalf)
+        foreach (var ch in lastHalf.Where(ch => mp.ContainsKey(ch)))
         {
-            if (mp.ContainsKey(ch))
-            {
-                result = ch;
-                break;
-            }
+            result = ch;
+            break;
         }
 
         return result;
     }
 
-    public static int getItemValue(char ch)
+    public static int GetItemValue(char ch)
     {
-        return alphabet.IndexOf(ch) + 1;
+        return Alphabet.IndexOf(ch) + 1;
     }
 }
 

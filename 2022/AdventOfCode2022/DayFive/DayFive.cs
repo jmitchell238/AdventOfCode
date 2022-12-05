@@ -2,11 +2,12 @@
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode2022.DayFive;
 
 
-public class DayFive
+public static class DayFive
 {
     private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DayFive/Day5.txt");
 
@@ -16,143 +17,115 @@ public class DayFive
         Console.WriteLine($"Part 2: {PartTwo()}");
     }
 
-    public static string PartOne(string[]? input = null)
+    private static string PartOne(string[]? input = null)
     {
         input ??= Input;
 
-        return getFinalTopCratesCrateMover9000(input);
+        return GetFinalTopCratesCrateMover9000(input);
     }
 
-    public static string PartTwo(string[]? input = null)
+    private static string PartTwo(string[]? input = null)
     {
         input ??= Input;
 
-        return getFinalTopCratesCrateMover9001(input);
+        return GetFinalTopCratesCrateMover9001(input);
     }
 
-    public static string getFinalTopCratesCrateMover9000(string[]? input = null)
+    public static string GetFinalTopCratesCrateMover9000(string[]? input = null)
     {
         input ??= Input;
 
-        List<string> inp = new List<string>();
+        var inp = CreateStack(input, out var stacks, out var i);
 
-        foreach (string line in input)
-        {
-            inp.Add(line);
-        }
-
-        var init = new List<List<char>>();
-        var stacks = new List<Stack<char>>();
-
-        int i;
-        for (i = 1; i < inp[0].Length; i += 4)
-        {
-            init.Add(new List<char>());
-            stacks.Add(new Stack<char>());
-        }
-        for (i = 0; inp[i].IndexOf("[") != -1; i++)
-        {
-            for (int j = 1; j < inp[i].Length; j += 4)
-            {
-                if (inp[i][j] != ' ')
-                    init[j / 4].Add(inp[i][j]);
-            }
-        }
-        i += 2;
-
-        for (int j = 0; j < init.Count; j++)
-        {
-            for (int k = init[j].Count - 1; k >= 0; k--)
-            {
-                stacks[j].Push(init[j][k]);
-            }
-        }
-
-        var lift = new Stack<char>();
         for (; i < inp.Count; i++)
         {
-            var cmd = inp[i].SplitToStringArray(" ", true);
-            int moveCount = int.Parse(cmd[1]);
-            int moveFrom = int.Parse(cmd[3]) - 1;
-            int moveTo = int.Parse(cmd[5]) - 1;
-            for (int j = 0; j < moveCount; j++)
+            var moveCount = MoveCount(inp, i, out var moveFrom, out var moveTo);
+            for (var j = 0; j < moveCount; j++)
             {
                 stacks[moveTo].Push(stacks[moveFrom].Pop());
             }
         }
 
-        StringBuilder result = new StringBuilder();
-        for (int j = 0; j < stacks.Count; j++)
-        {
-            result.Append(stacks[j].Peek());
-        }
-
-        return result.ToString();
+        return GetTopCrateLettersFromStacks(stacks).ToString();
     }
 
-    public static string getFinalTopCratesCrateMover9001(string[]? input = null)
+    public static string GetFinalTopCratesCrateMover9001(string[]? input = null)
     {
         input ??= Input;
 
-        List<string> inp = new List<string>();
+        var inp = CreateStack(input, out var stacks, out var i);
 
-        foreach (string line in input)
+        var lift = new Stack<char>();
+        for (; i < inp.Count; i++)
         {
-            inp.Add(line);
+            var moveCount = MoveCount(inp, i, out var moveFrom, out var moveTo);
+            for (var j = 0; j < moveCount; j++)
+            {
+                lift.Push(stacks[moveFrom].Pop());
+            }
+            for (var j = 0; j < moveCount; j++)
+            {
+                stacks[moveTo].Push(lift.Pop());
+            }
+
         }
 
-        var init = new List<List<char>>();
-        var stacks2 = new List<Stack<char>>();
+        return GetTopCrateLettersFromStacks(stacks).ToString();
+    }
+    
+    private static int MoveCount(List<string> inp, int i, out int moveFrom, out int moveTo)
+    {
+        var cmd = inp[i].SplitToStringArray(" ", true);
+        var moveCount = int.Parse(cmd[1]);
+        moveFrom = int.Parse(cmd[3]) - 1;
+        moveTo = int.Parse(cmd[5]) - 1;
+        return moveCount;
+    }
 
-        int i;
+    private static List<string> CreateStack(string[] input, out List<Stack<char>> stacks, out int i)
+    {
+        var inp = input.ToList();
+
+        var init = new List<List<char>>();
+        stacks = new List<Stack<char>>();
+
         for (i = 1; i < inp[0].Length; i += 4)
         {
             init.Add(new List<char>());
-            stacks2.Add(new Stack<char>());
+            stacks.Add(new Stack<char>());
         }
+
         for (i = 0; inp[i].IndexOf("[") != -1; i++)
         {
-            for (int j = 1; j < inp[i].Length; j += 4)
+            for (var j = 1; j < inp[i].Length; j += 4)
             {
                 if (inp[i][j] != ' ')
                     init[j / 4].Add(inp[i][j]);
             }
         }
+
         i += 2;
 
-        for (int j = 0; j < init.Count; j++)
+        for (var j = 0; j < init.Count; j++)
         {
-            for (int k = init[j].Count - 1; k >= 0; k--)
+            for (var k = init[j].Count - 1; k >= 0; k--)
             {
-                stacks2[j].Push(init[j][k]);
+                stacks[j].Push(init[j][k]);
             }
         }
+        
+        return inp;
+    }
 
-        var lift = new Stack<char>();
-        for (; i < inp.Count; i++)
+    private static StringBuilder GetTopCrateLettersFromStacks(List<Stack<char>> stacks)
+    {
+        var result = new StringBuilder();
+        foreach (var crate in stacks)
         {
-            var cmd = inp[i].SplitToStringArray(" ", true);
-            int moveCount = int.Parse(cmd[1]);
-            int moveFrom = int.Parse(cmd[3]) - 1;
-            int moveTo = int.Parse(cmd[5]) - 1;
-            for (int j = 0; j < moveCount; j++)
-            {
-                lift.Push(stacks2[moveFrom].Pop());
-            }
-            for (int j = 0; j < moveCount; j++)
-            {
-                stacks2[moveTo].Push(lift.Pop());
-            }
-
+            result.Append(crate.Peek());
         }
 
-        StringBuilder result = new StringBuilder();
-        for (int j = 0; j < stacks2.Count; j++)
-        {
-            result.Append(stacks2[j].Peek());
-        }
-
-        return result.ToString();
+        return result;
     }
 }
 

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AdventOfCode2022.DayFour;
 
-public class DayFour
+public static class DayFour
 {
     private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DayFour/Day4.txt");
 
@@ -14,21 +14,21 @@ public class DayFour
         Console.WriteLine($"Part 2: {PartTwo()}");
     }
 
-    public static int PartOne(string[]? input = null)
+    private static int PartOne(string[]? input = null)
     {
         input ??= Input;
 
-        return getFullyContainedAssignments(input);
+        return GetFullyContainedAssignments(input);
     }
 
-    public static int PartTwo(string[]? input = null)
+    private static int PartTwo(string[]? input = null)
     {
         input ??= Input;
 
-        return getOverlappingAssignments(input);
+        return GetOverlappingAssignments(input);
     }
 
-    public static int getFullyContainedAssignments(string[]? input = null)
+    public static int GetFullyContainedAssignments(string[]? input = null)
     {
         input ??= Input;
 
@@ -37,15 +37,14 @@ public class DayFour
         foreach (var line in input)
         {
             var assignments = line.Split(',');
-            int[] firstElf = getElfAssignments(assignments, 0);
-            int[] secondElf = getElfAssignments(assignments, 1);
+            var firstElf = GetElfAssignments(assignments, 0);
+            var secondElf = GetElfAssignments(assignments, 1);
 
-
-            if (firstElfAssignmentsFullyContained(firstElf, secondElf))
+            if (FirstElfAssignmentsFullyContained(firstElf, secondElf))
             {
                 totalFullyContainedAssignments++;
             }
-            else if (secondElfAssignmentsFullyContained(secondElf, firstElf))
+            else if (SecondElfAssignmentsFullyContained(secondElf, firstElf))
             {
                 totalFullyContainedAssignments++;
             }
@@ -54,7 +53,7 @@ public class DayFour
         return totalFullyContainedAssignments;
     }
 
-    public static int getOverlappingAssignments(string[]? input = null)
+    public static int GetOverlappingAssignments(string[]? input = null)
     {
         input ??= Input;
 
@@ -63,38 +62,37 @@ public class DayFour
         foreach (var line in input)
         {
             var assignments = line.Split(',');
-            var firstElf = getElfAssignments(assignments, 0);
-            var secondElf = getElfAssignments(assignments, 1);
+            var firstElf = GetElfAssignments(assignments, 0);
+            var secondElf = GetElfAssignments(assignments, 1);
 
-            if (assignmentInRange(firstElf[0], secondElf[0], secondElf[1])) overlappingAssignments++;
-            else if (assignmentInRange(firstElf[1], secondElf[0], secondElf[1])) overlappingAssignments++;
-            else if (assignmentInRange(secondElf[0], firstElf[0], firstElf[1])) overlappingAssignments++;
-            else if (assignmentInRange(secondElf[1], firstElf[0], firstElf[1])) overlappingAssignments++;
+            if (AssignmentInRange(firstElf[0], secondElf[0], secondElf[1])) overlappingAssignments++;
+            else if (AssignmentInRange(firstElf[1], secondElf[0], secondElf[1])) overlappingAssignments++;
+            else if (AssignmentInRange(secondElf[0], firstElf[0], firstElf[1])) overlappingAssignments++;
+            else if (AssignmentInRange(secondElf[1], firstElf[0], firstElf[1])) overlappingAssignments++;
         }
 
 
         return overlappingAssignments;
     }
 
-    public static bool assignmentInRange(int numberToCheck, int bottom, int top)
+    private static bool AssignmentInRange(int numberToCheck, int bottom, int top)
     {
         return (numberToCheck >= bottom && numberToCheck <= top);
     }
 
-    public static int[] getElfAssignments(string[] assignments, int elfIndex)
+    private static int[] GetElfAssignments(string[] assignments, int elfIndex)
     {
         return assignments[elfIndex].Split('-').Select(n => Convert.ToInt32(n)).ToArray();
 
     }
 
-    public static bool firstElfAssignmentsFullyContained(int[] firstElf, int[] secondElf)
+    private static bool FirstElfAssignmentsFullyContained(int[] firstElf, int[] secondElf)
     {
         return (firstElf[0] >= secondElf[0]) && (firstElf[1] <= secondElf[1]);
     }
 
-    public static bool secondElfAssignmentsFullyContained(int[] secondElf, int[] firstElf)
+    private static bool SecondElfAssignmentsFullyContained(int[] secondElf, int[] firstElf)
     {
         return (secondElf[0] >= firstElf[0]) && (secondElf[1] <= firstElf[1]);
     }
-
 }
