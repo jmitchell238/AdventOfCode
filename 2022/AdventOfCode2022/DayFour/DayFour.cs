@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2022.DayFour;
 
@@ -86,7 +83,7 @@ public class DayFour
 
     public static int[] getElfAssignments(string[] assignments, int elfIndex)
     {
-        return assignments[elfIndex].Split('-').Select(n => Convert.ToInt32(n)).ToArray(); ;
+        return assignments[elfIndex].Split('-').Select(n => Convert.ToInt32(n)).ToArray();
 
     }
 
