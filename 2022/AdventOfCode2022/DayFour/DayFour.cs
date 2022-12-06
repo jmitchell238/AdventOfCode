@@ -75,23 +75,23 @@ public static class DayFour
         return overlappingAssignments;
     }
 
-    private static bool AssignmentInRange(int numberToCheck, int bottom, int top)
+    public static bool AssignmentInRange(int numberToCheck, int bottom, int top)
     {
         return (numberToCheck >= bottom && numberToCheck <= top);
     }
 
-    private static int[] GetElfAssignments(string[] assignments, int elfIndex)
+    public static int[] GetElfAssignments(string[] assignments, int elfIndex)
     {
         return assignments[elfIndex].Split('-').Select(n => Convert.ToInt32(n)).ToArray();
 
     }
 
-    private static bool FirstElfAssignmentsFullyContained(int[] firstElf, int[] secondElf)
+    public static bool FirstElfAssignmentsFullyContained(int[] firstElf, int[] secondElf)
     {
         return (firstElf[0] >= secondElf[0]) && (firstElf[1] <= secondElf[1]);
     }
 
-    private static bool SecondElfAssignmentsFullyContained(int[] secondElf, int[] firstElf)
+    public static bool SecondElfAssignmentsFullyContained(int[] secondElf, int[] firstElf)
     {
         return (secondElf[0] >= firstElf[0]) && (secondElf[1] <= firstElf[1]);
     }
