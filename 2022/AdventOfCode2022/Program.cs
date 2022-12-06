@@ -28,5 +28,9 @@ public static class Program
         Console.WriteLine("Day 5 Results:");
         Console.WriteLine("---------------------------------");
         DayFive.DayFive.Day5();
+        Console.WriteLine("\n---------------------------------");
+        Console.WriteLine("Day 6 Results:");
+        Console.WriteLine("---------------------------------");
+        DaySix.DaySix.Day6();
     }
 }
