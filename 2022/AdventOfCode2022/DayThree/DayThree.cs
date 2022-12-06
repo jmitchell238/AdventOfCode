@@ -8,7 +8,7 @@ namespace AdventOfCode2022.DayThree;
 public static class DayThree
 {
     private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DayThree/Day3.txt");
-    private const string Alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static readonly Dictionary<char, int> AlphabetDict = CreateAlphabetDict();
 
     public static void Day3()
     {
@@ -28,6 +28,43 @@ public static class DayThree
         input ??= Input;
 
         return GetCommonItemPerGroupSum(input);
+    }
+
+    public static int GetPriorityItemsSum(IEnumerable<string>? input = null)
+    {
+        return input!.Select(GetDuplicateItem).Select(GetItemValue).Sum();
+    }
+
+    public static char GetDuplicateItem(string line)
+    {
+        var result = '-';
+
+        var firstHalf = line[..(line.Length / 2)];
+        var lastHalf = line.Substring(line.Length / 2, line.Length / 2);
+
+        var mp = new Dictionary<char, int>();
+
+        foreach (var item in firstHalf)
+        {
+            if (mp.ContainsKey(item))
+            {
+                var val = mp[item];
+                mp.Remove(item);
+                mp.Add(item, val + 1);
+            }
+            else
+            {
+                mp.Add(item, 1);
+            }
+        }
+
+        foreach (var ch in lastHalf.Where(ch => mp.ContainsKey(ch)))
+        {
+            result = ch;
+            break;
+        }
+
+        return result;
     }
 
     public static int GetCommonItemPerGroupSum(string[]? input = null)
@@ -78,46 +115,21 @@ public static class DayThree
         return items;
     }
 
-    public static int GetPriorityItemsSum(IEnumerable<string>? input = null)
-    {
-        return input!.Select(GetDuplicateItem).Select(GetItemValue).Sum();
-    }
-
-    public static char GetDuplicateItem(string line)
-    {
-        var result = '-';
-
-        var firstHalf = line[..(line.Length / 2)];
-        var lastHalf = line.Substring(line.Length / 2, line.Length / 2);
-
-        var mp = new Dictionary<char, int>();
-
-        foreach (var item in firstHalf)
-        {
-            if (mp.ContainsKey(item))
-            {
-                var val = mp[item];
-                mp.Remove(item);
-                mp.Add(item, val + 1);
-            }
-            else
-            {
-                mp.Add(item, 1);
-            }
-        }
-
-        foreach (var ch in lastHalf.Where(ch => mp.ContainsKey(ch)))
-        {
-            result = ch;
-            break;
-        }
-
-        return result;
-    }
-
     public static int GetItemValue(char ch)
     {
-        return Alphabet.IndexOf(ch) + 1;
+        return AlphabetDict.GetValueOrDefault(ch);
+        // return Alphabet.IndexOf(ch) + 1;
+    }
+
+    private static Dictionary<char, int> CreateAlphabetDict()
+    {
+        var dict = new Dictionary<char, int>();
+        var value = 1;
+        // lowercase : values = 1 - 26
+        for (var i = 97; i <= 122; i++, value++) dict.Add((char)i, value);
+        // uppercase : values = 27 - 52
+        for (var i = 65; i <= 90; i++, value++) dict.Add((char)i, value);
+
+        return dict;
     }
 }
-
