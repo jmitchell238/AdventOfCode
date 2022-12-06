@@ -18,7 +18,19 @@ public static class DayOne
     public static int PartOne(string[]? input = null)
     {
         input ??= Input;
+        
+        return GetCaloriesFromTopElf(input);
+    }
 
+    public static int PartTwo(string[]? input = null)
+    {
+        input ??= Input;
+
+        return GetCaloriesFromTopThreeElves(input);
+    }
+
+    public static int GetCaloriesFromTopElf(IEnumerable<string> input)
+    {
         var elves = CalculateCaloriesCarried(input);
 
         Console.WriteLine(elves.Max());
@@ -26,10 +38,8 @@ public static class DayOne
         return elves.Max();
     }
 
-    public static int PartTwo(string[]? input = null)
+    public static int GetCaloriesFromTopThreeElves(IEnumerable<string> input)
     {
-        input ??= Input;
-
         var elves = CalculateCaloriesCarried(input);
 
         var result = elves.OrderByDescending(i => i).Take(3).Sum();
@@ -39,7 +49,7 @@ public static class DayOne
         return result;
     }
 
-    private static List<int> CalculateCaloriesCarried(IEnumerable<string> input)
+    public static List<int> CalculateCaloriesCarried(IEnumerable<string> input)
     {
         List<int> elves = new();
 
