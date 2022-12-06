@@ -6,6 +6,26 @@ public class DayThreeTest
     private readonly string[] _input = File.ReadAllLines("../../../../AdventOfCode2022Test/DayThree/Day3Test.txt");
     
     [TestMethod]
+    public void PartOne_Called_ReturnsCorrectAnswer()
+    {
+        const int expected = 157;
+
+        var actual = AdventOfCode2022.DayThree.DayThree.PartOne(_input);
+
+        Assert.AreEqual(expected, actual);
+    }
+
+    [TestMethod]
+    public void PartTwo_Called_ReturnsCorrectAnswer()
+    {
+        const int expected = 70;
+
+        var actual = AdventOfCode2022.DayThree.DayThree.PartTwo(_input);
+
+        Assert.AreEqual(expected, actual);
+    }
+
+    [TestMethod]
     public void GetCommonItemPerGroupSum_Called_ReturnsCorrectAnswer()
     {
         const int expected = 70;
@@ -29,7 +49,7 @@ public class DayThreeTest
             { 'L', 1 }, { 'r', 1 }, { 's', 1 }, { 'F', 1 }, { 'M', 1 }, { 'f', 1 }, { 'Z', 1 }, { 'S', 1 }
         };
         var thirdElfInGroup = _input[3];
-        var expected = 'M';
+        const char expected = 'M';
 
         var actual = AdventOfCode2022.DayThree.DayThree.GetCommonItem(elf1, elf2, thirdElfInGroup);
 
@@ -49,8 +69,6 @@ public class DayThreeTest
         var actual = AdventOfCode2022.DayThree.DayThree.GetElfItems(elfItems);
 
         CollectionAssert.AreEquivalent(expected, actual);
-        //Assert.AreSame(expected, actual);
-
     }
 
     [TestMethod]
@@ -64,9 +82,9 @@ public class DayThreeTest
     }
 
     [TestMethod]
-    public void GetDupplicateItem_Called_ReturnsCorrectAnswer()
+    public void GetDuplicateItem_Called_ReturnsCorrectAnswer()
     {
-        var elfItems = this._input[0];
+        var elfItems = _input[0];
         const char expected = 'p';
 
         var actual = AdventOfCode2022.DayThree.DayThree.GetDuplicateItem(elfItems);
@@ -81,26 +99,6 @@ public class DayThreeTest
         const int expected = 27;
 
         var actual = AdventOfCode2022.DayThree.DayThree.GetItemValue(ch);
-
-        Assert.AreEqual(expected, actual);
-    }
-
-    [TestMethod]
-    public void PartOne_Called_ReturnsCorrectAnswer()
-    {
-        const int expected = 157;
-
-        var actual = AdventOfCode2022.DayThree.DayThree.PartOne(_input);
-
-        Assert.AreEqual(expected, actual);
-    }
-
-    [TestMethod]
-    public void PartTwo_Called_ReturnsCorrectAnswer()
-    {
-        const int expected = 70;
-
-        var actual = AdventOfCode2022.DayThree.DayThree.PartTwo(_input);
 
         Assert.AreEqual(expected, actual);
     }
