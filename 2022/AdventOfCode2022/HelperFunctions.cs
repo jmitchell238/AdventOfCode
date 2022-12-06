@@ -6,7 +6,7 @@ namespace AdventOfCode2022;
 /// <summary>
 /// This class contains code that usually are helpful on multiple days.
 /// </summary>
-internal static class HelperFunctions
+public static class HelperFunctions
 {
     // Split a string into separate strings, as specified by the delimiter.
     public static string[] SplitToStringArray(this string str, string split, bool removeEmpty)
@@ -47,5 +47,15 @@ internal static class HelperFunctions
     public static V? Read<K, V>(this Dictionary<K, V?> dict, K key)
     {
         return dict.ContainsKey(key) ? dict[key] : default(V);
+    }
+    
+    // Create a stack from a string.
+    public static Stack<char> CreateStack(string str)
+    {
+        var chars = str.ToCharArray();
+        var stack = new Stack<char>();
+        foreach (var ch in chars) stack.Push(ch);
+
+        return stack;
     }
 }

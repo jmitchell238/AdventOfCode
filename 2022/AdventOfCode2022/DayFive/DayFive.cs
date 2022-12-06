@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using static AdventOfCode2022.HelperFunctions;
 
 namespace AdventOfCode2022.DayFive;
 
@@ -10,6 +11,14 @@ namespace AdventOfCode2022.DayFive;
 public static class DayFive
 {
     private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DayFive/Day5.txt");
+    private static readonly string[] StacksInput = File.ReadAllLines("../../../../AdventOfCode2022/DayFive/Day5Stacks.txt");
+    private static readonly List<Stack<char>> Stacks1 = CreateStackList();
+    private static readonly List<Stack<char>> Stacks2 = CreateStackList();
+
+    private static List<Stack<char>> CreateStackList()
+    {
+        return StacksInput.Select(CreateStack).ToList();
+    }
 
     public static void Day5()
     {
@@ -31,32 +40,35 @@ public static class DayFive
         return GetFinalTopCratesCrateMover9001(input);
     }
 
-    public static string GetFinalTopCratesCrateMover9000(string[]? input = null)
+    public static string GetFinalTopCratesCrateMover9000(string[]? input = null, List<Stack<char>>? stack = null)
     {
         input ??= Input;
+        stack ??= Stacks1;
 
-        var inp = CreateStack(input, out var stacks, out var i);
-
-        for (; i < inp.Count; i++)
+        var inp = input.ToList();
+        
+        for (var i = 0; i < inp.Count; i++)
         {
             var moveCount = MoveCount(inp, i, out var moveFrom, out var moveTo);
+            
             for (var j = 0; j < moveCount; j++)
             {
-                stacks[moveTo].Push(stacks[moveFrom].Pop());
+                stack[moveTo].Push(stack[moveFrom].Pop());
             }
         }
 
-        return GetTopCrateLettersFromStacks(stacks);
+        return GetTopCrateLettersFromStacks(stack);
     }
 
-    public static string GetFinalTopCratesCrateMover9001(string[]? input = null)
+    public static string GetFinalTopCratesCrateMover9001(string[]? input = null, List<Stack<char>>? stacks = null)
     {
         input ??= Input;
+        stacks ??= Stacks2;
 
-        var inp = CreateStack(input, out var stacks, out var i);
-
+        var inp = input.ToList();
+        
         var lift = new Stack<char>();
-        for (; i < inp.Count; i++)
+        for (var i = 0; i < inp.Count; i++)
         {
             var moveCount = MoveCount(inp, i, out var moveFrom, out var moveTo);
             for (var j = 0; j < moveCount; j++)
@@ -80,41 +92,6 @@ public static class DayFive
         moveFrom = int.Parse(cmd[3]) - 1;
         moveTo = int.Parse(cmd[5]) - 1;
         return moveCount;
-    }
-
-    private static List<string> CreateStack(string[] input, out List<Stack<char>> stacks, out int i)
-    {
-        var inp = input.ToList();
-
-        var init = new List<List<char>>();
-        stacks = new List<Stack<char>>();
-
-        for (i = 1; i < inp[0].Length; i += 4)
-        {
-            init.Add(new List<char>());
-            stacks.Add(new Stack<char>());
-        }
-
-        for (i = 0; inp[i].IndexOf("[") != -1; i++)
-        {
-            for (var j = 1; j < inp[i].Length; j += 4)
-            {
-                if (inp[i][j] != ' ')
-                    init[j / 4].Add(inp[i][j]);
-            }
-        }
-
-        i += 2;
-
-        for (var j = 0; j < init.Count; j++)
-        {
-            for (var k = init[j].Count - 1; k >= 0; k--)
-            {
-                stacks[j].Push(init[j][k]);
-            }
-        }
-        
-        return inp;
     }
 
     private static string GetTopCrateLettersFromStacks(List<Stack<char>> stacks)
