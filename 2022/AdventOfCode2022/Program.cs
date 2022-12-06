@@ -8,29 +8,26 @@ public static class Program
     {
         Console.WriteLine("\n" + "Hello Advent of Code 2022!");
 
-        Console.WriteLine("\n---------------------------------");
-        Console.WriteLine("Day 1 Results:");
-        Console.WriteLine("---------------------------------");
+        OutputSpacer(1);
         DayOne.DayOne.Day1();
-        Console.WriteLine("\n---------------------------------");
-        Console.WriteLine("Day 2 Results:");
-        Console.WriteLine("---------------------------------");
+        OutputSpacer(2);
         DayTwo.DayTwo.Day2();
-        Console.WriteLine("\n---------------------------------");
-        Console.WriteLine("Day 3 Results:");
-        Console.WriteLine("---------------------------------");
+        OutputSpacer(3);
         DayThree.DayThree.Day3();
-        Console.WriteLine("\n---------------------------------");
-        Console.WriteLine("Day 4 Results:");
-        Console.WriteLine("---------------------------------");
+        OutputSpacer(4);
         DayFour.DayFour.Day4();
-        Console.WriteLine("\n---------------------------------");
-        Console.WriteLine("Day 5 Results:");
-        Console.WriteLine("---------------------------------");
+        OutputSpacer(5);
         DayFive.DayFive.Day5();
-        Console.WriteLine("\n---------------------------------");
-        Console.WriteLine("Day 6 Results:");
-        Console.WriteLine("---------------------------------");
+        OutputSpacer(6);
         DaySix.DaySix.Day6();
+        OutputSpacer(7);
+        // DaySeven.DaySeven.Day7();
+    }
+
+    private static void OutputSpacer(int day)
+    {
+        Console.WriteLine("\n---------------------------------");
+        Console.WriteLine($"Day {day} Results:");
+        Console.WriteLine("---------------------------------");
     }
 }

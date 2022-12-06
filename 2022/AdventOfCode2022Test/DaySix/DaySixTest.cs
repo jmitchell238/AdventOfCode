@@ -3,8 +3,6 @@ namespace AdventOfCode2022Test.DaySix;
 [TestClass]
 public class DaySixTest
 {
-    private readonly string[] _input = File.ReadAllLines("../../../../AdventOfCode2022Test/DaySix/Day6Test.txt");
-    
     [TestMethod]
     public void GetMarker_Called_Returns7()
     {
