@@ -21,131 +21,79 @@ public static class DaySeven
     {
         input ??= Input;
 
-        var cwd = string.Empty;
-        var dirs = new Dictionary<string, Dictionary<string, int>>();
+        var dirs = PrepareDirsDictionary(input);
 
-        foreach (var l in input)
-        {
-            if (l.Equals("$ cd .."))
-            {
-                var previousSlash = cwd.LastIndexOf('/', cwd.Length - 2) + 1;
-                var name = cwd[previousSlash..^1];
-                var parent = cwd[..previousSlash];
-
-                dirs[parent][name] = dirs[cwd].Values.Sum();
-
-                cwd = parent;
-            }
-            else if (l.StartsWith("$ cd "))
-            {
-                var path = l[5..];
-                cwd = path.StartsWith("/") ? path : $"{cwd}{path}/";
-            }
-            else if (l.StartsWith("dir"))
-            {
-                dirs.GetOrAdd(cwd, _ => new())[l[4..]] = 0;
-            }
-            else if (!l.StartsWith("$ ls"))
-            {
-                var size = int.Parse(l.Split()[0]);
-                var name = l.Split()[1];
-
-                dirs.GetOrAdd(cwd, _ => new())[name] = size;
-            }
-        }
-
-        while (cwd != "/")
-        {
-            var previousSlash = cwd.LastIndexOf('/', cwd.Length - 2) + 1;
-            var name = cwd[previousSlash..^1];
-            var parent = cwd[..previousSlash];
-
-            dirs[parent][name] = dirs[cwd].Values.Sum();
-
-            cwd = parent;
-        }
-
-        var part1 = dirs.Values.Select(v => v.Values.Sum())
+        var totalSizes = dirs.Values.Select(v => v.Values.Sum())
             .Where(x => x <= 100_000)
             .Sum()
             .ToString();
 
-        var unused = 70_000_000 - dirs["/"].Values.Sum();
-        var needed = 30_000_000 - unused;
-
-        var part2 = dirs.Values.Select(v => v.Values.Sum())
-            .Where(x => x >= needed)
-            .Min()
-            .ToString();
-
-        //return (part1, part2);
-        return part1;
+        return totalSizes;
     }
 
     public static string PartTwo(string[]? input = null)
     {
         input ??= Input;
 
-        var cwd = string.Empty;
-        var dirs = new Dictionary<string, Dictionary<string, int>>();
-
-        foreach (var l in input)
-        {
-            if (l.Equals("$ cd .."))
-            {
-                var previousSlash = cwd.LastIndexOf('/', cwd.Length - 2) + 1;
-                var name = cwd[previousSlash..^1];
-                var parent = cwd[..previousSlash];
-
-                dirs[parent][name] = dirs[cwd].Values.Sum();
-
-                cwd = parent;
-            }
-            else if (l.StartsWith("$ cd "))
-            {
-                var path = l[5..];
-                cwd = path.StartsWith("/") ? path : $"{cwd}{path}/";
-            }
-            else if (l.StartsWith("dir"))
-            {
-                dirs.GetOrAdd(cwd, _ => new())[l[4..]] = 0;
-            }
-            else if (!l.StartsWith("$ ls"))
-            {
-                var size = int.Parse(l.Split()[0]);
-                var name = l.Split()[1];
-
-                dirs.GetOrAdd(cwd, _ => new())[name] = size;
-            }
-        }
-
-        while (cwd != "/")
-        {
-            var previousSlash = cwd.LastIndexOf('/', cwd.Length - 2) + 1;
-            var name = cwd[previousSlash..^1];
-            var parent = cwd[..previousSlash];
-
-            dirs[parent][name] = dirs[cwd].Values.Sum();
-
-            cwd = parent;
-        }
+        var dirs = PrepareDirsDictionary(input);
 
         var unused = 70_000_000 - dirs["/"].Values.Sum();
         var needed = 30_000_000 - unused;
 
-        var part2 = dirs.Values.Select(v => v.Values.Sum())
+        var smallestDirDeleteSize = dirs.Values.Select(v => v.Values.Sum())
             .Where(x => x >= needed)
             .Min()
             .ToString();
 
-        return part2;
+        return smallestDirDeleteSize;
     }
-
-    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> func)
-        where TKey : notnull
+    
+    private static Dictionary<string, Dictionary<string, int>> PrepareDirsDictionary(string[] input)
     {
-        if (dict.TryGetValue(key, out var value))
-            return value;
-        return dict[key] = func(key);
+        var currentWorkingDir = string.Empty;
+        var dirs = new Dictionary<string, Dictionary<string, int>>();
+
+        foreach (var line in input)
+        {
+            if (line.Equals("$ cd .."))
+            {
+                var previousSlash = currentWorkingDir.LastIndexOf('/', currentWorkingDir.Length - 2) + 1;
+                var name = currentWorkingDir[previousSlash..^1];
+                var parent = currentWorkingDir[..previousSlash];
+
+                dirs[parent][name] = dirs[currentWorkingDir].Values.Sum();
+
+                currentWorkingDir = parent;
+            }
+            else if (line.StartsWith("$ cd "))
+            {
+                var path = line[5..];
+                currentWorkingDir = path.StartsWith("/") ? path : $"{currentWorkingDir}{path}/";
+            }
+            else if (line.StartsWith("dir"))
+            {
+                dirs.GetOrAdd(currentWorkingDir, _ => new())[line[4..]] = 0;
+            }
+            else if (!line.StartsWith("$ ls"))
+            {
+                var size = int.Parse(line.Split()[0]);
+                var name = line.Split()[1];
+
+                dirs.GetOrAdd(currentWorkingDir, _ => new())[name] = size;
+            }
+        }
+
+        while (currentWorkingDir != "/")
+        {
+            var previousSlash = currentWorkingDir.LastIndexOf('/', currentWorkingDir.Length - 2) + 1;
+            var name = currentWorkingDir[previousSlash..^1];
+            var parent = currentWorkingDir[..previousSlash];
+
+            dirs[parent][name] = dirs[currentWorkingDir].Values.Sum();
+
+            currentWorkingDir = parent;
+        }
+
+        return dirs;
     }
 }
