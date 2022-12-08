@@ -85,7 +85,10 @@ public class DayEight
                 return false;
             }
 
+            // Move further Left / Right
             x = x + xd;
+            
+            // Move further Up / Down
             y = y + yd;
         }
     }
