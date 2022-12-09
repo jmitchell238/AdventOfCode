@@ -24,6 +24,8 @@ public static class Program
         DaySeven.DaySeven.Day7();
         OutputSpacer(8);
         DayEight.DayEight.Day8();
+        OutputSpacer(9);
+        DayNine.DayNine.Day9();
     }
 
     private static void OutputSpacer(int day)
