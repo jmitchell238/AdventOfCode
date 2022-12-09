@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2022.DayNine
 {
@@ -56,7 +52,7 @@ namespace AdventOfCode2022.DayNine
                 }
             }
 
-            // Count total amount od places the tail had been.
+            // Count total amount of places the tail had been.
             return tailVisited.Count;
         }
 
@@ -94,40 +90,42 @@ namespace AdventOfCode2022.DayNine
 
                         // get tail position
                         tail = snake[j];
-                        //(int, int) newTail = new (0, 0);
 
-                        //if (head.x - tail.x > 1 && head.y - tail.y > 1) newTail = (head.x - 1, head.y - 1);
-                        //if (head.x - tail.x > 1 && head.y - tail.y < - 1) newTail = (head.x - 1, head.y + 1);
-                        //if (head.x - tail.x < - 1 && head.y - tail.y > 1) newTail = (head.x + 1, head.y - 1);
-                        //if (head.x - tail.x < - 1 && head.y - tail.y < - 1) newTail = (head.x + 1, head.y + 1);
-                        //if (head.x - tail.x > 1) newTail = (head.x + 1, head.y + 1);
-                        //if (head.x - tail.x < - 1) newTail = (head.x + 1, head.y + 1);
-                        //if (head.y - tail.y > 1) newTail = (head.x + 1, head.y - 1);
-                        //if (head.y - tail.y < - 1) newTail = (head.x, head.y + 1);
+                        // Move tail
+                        (int, int) newTail;
+                        if ((head.x - tail.x, head.y - tail.y) is (> 1, > 1))
+                            newTail = (head.x - 1, head.y - 1);
+                        else if ((head.x - tail.x, head.y - tail.y) is (> 1, < -1))
+                            newTail = (head.x - 1, head.y + 1);
+                        else if ((head.x - tail.x, head.y - tail.y) is (< -1, > 1))
+                            newTail = (head.x + 1, head.y - 1);
+                        else if ((head.x - tail.x, head.y - tail.y) is (< -1, < -1))
+                            newTail = (head.x + 1, head.y + 1);
+                        else if ((head.x - tail.x, head.y - tail.y) is (> 1, _))
+                            newTail = (head.x - 1, head.y);
+                        else if ((head.x - tail.x, head.y - tail.y) is (< -1, _))
+                            newTail = (head.x + 1, head.y);
+                        else if ((head.x - tail.x, head.y - tail.y) is (_, > 1))
+                            newTail = (head.x, head.y - 1);
+                        else if ((head.x - tail.x, head.y - tail.y) is (_, < -1))
+                            newTail = (head.x, head.y + 1);
+                        else
+                            newTail = (tail.x, tail.y);
 
-                        var newTail = (head.x - tail.x, head.y - tail.y) switch
-                        {
-                            ( > 1, > 1) => (head.x - 1, head.y - 1),
-                            ( > 1, < -1) => (head.x - 1, head.y + 1),
-                            ( < -1, > 1) => (head.x + 1, head.y - 1),
-                            ( < -1, < -1) => (head.x + 1, head.y + 1),
-                            ( > 1, _) => (head.x - 1, head.y),
-                            ( < -1, _) => (head.x + 1, head.y),
-                            (_, > 1) => (head.x, head.y - 1),
-                            (_, < -1) => (head.x, head.y + 1),
-                            _ => (tail.x, tail.y),
-                        };
-
+                        // If new position of tail is same as previous, break out of loop
                         if (newTail == tail)
                             break;
 
+                        // else move the tail
                         snake[j] = newTail;
                     }
 
+                    // Add the new tail position to Hashset
                     tailVisited.Add(snake[^1]);
                 }
             }
 
+            // Return the count of how many places the tail visited.
             return tailVisited.Count;
         }
     }
