@@ -22,6 +22,14 @@ public class DayThirteen
     {
         input ??= Input;
 
+        // Create variable ( int[] ) to hold indices of pairs not in the right order
+        // Sum those indeces together and that's the return value
+        
+        // Test data should be 13
+        
+        // Take first line, place in a temp variable (left)
+        // Take second line, place in a temp variable(right)
+
         return -1;
     }
 
@@ -31,4 +39,8 @@ public class DayThirteen
 
         return -1;
     }
+    
+    
+    
+    
 }
