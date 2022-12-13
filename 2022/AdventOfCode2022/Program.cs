@@ -30,6 +30,8 @@ public static class Program
         DayTen.DayTen.Day10();
         OutputSpacer(11);
         DayEleven.DayEleven.Day11();
+        OutputSpacer(12);
+        DayTwelve.DayTwelve.Day12();
     }
 
     private static void OutputSpacer(int day)

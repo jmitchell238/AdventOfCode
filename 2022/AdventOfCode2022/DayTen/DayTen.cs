@@ -60,7 +60,7 @@ public class DayTen
         var totalCycles = 1;
         var j = 0;
 
-        for (var i = 0; j < input.Length; i++, j++)
+        for (var i = 0; j < input?.Length; i++, j++)
         {
             string[] lineArray = input[j].Split(' ');
 

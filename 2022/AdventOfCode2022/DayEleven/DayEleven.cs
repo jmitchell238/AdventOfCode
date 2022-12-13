@@ -82,7 +82,7 @@ public class DayEleven
     private static void MonkeyInspectItems(bool partOne, List<Monkey> monkeys, Monkey monkey)
     {
         // Loop over the monkeys items
-        for (int index = 0; index < monkey.Items.Count; index++)
+        for (int index = 0; index < monkey?.Items?.Count; index++)
         {
             double item = monkey.Items[index];
 
@@ -167,7 +167,7 @@ public class DayEleven
             var worryOperation = input[i + 2].Split('=')[1].Split(' ')[2];
             monkey.WorryOperation = char.Parse(worryOperation);
             var worryMultiplierOriginal = input[i + 2].Split('=')[1].Split(' ')[3];
-            var worryMultiplier = 0;
+            int worryMultiplier = 0;
             int.TryParse(worryMultiplierOriginal, out worryMultiplier);
             monkey.WorryMultiplier = worryMultiplier;
             monkey.DivisibleNum = int.Parse(input[i + 3].Split(' ').Last());
@@ -182,11 +182,11 @@ public class DayEleven
 
 public class Monkey
 {
-    public List<double>? Items { get; set; }
+    public List<double> Items { get; set; }
     public double ItemInspections { get; set; } = 0;
     public char WorryOperation { get; set; }
     public double WorryMultiplier { get; set; }
     public double WorryMultiplierOperationNum { get; set; }
     public double DivisibleNum { get; set; }
-    public Dictionary<bool, int>? Decisions { get; set; }
+    public Dictionary<bool, int> Decisions { get; set; }
 }
