@@ -10,6 +10,7 @@
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
       <PackageReference Include="BenchmarkDotNet.Annotations" Version="0.13.2" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.4.0" />
       <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />
       <PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
     </ItemGroup>

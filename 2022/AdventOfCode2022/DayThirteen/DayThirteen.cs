@@ -1,46 +1,103 @@
-﻿using System;
+﻿using BenchmarkDotNet.Disassemblers;
+using BenchmarkDotNet.Engines;
+using Iced.Intel;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Numerics;
 using System.Text;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using static AdventOfCode2022.DayThirteen.DayThirteen;
+using static BenchmarkDotNet.Engines.Engine;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AdventOfCode2022.DayThirteen;
 
 public class DayThirteen
 {
-    // private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DayThirteen/Day13.txt");
-    private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DayThirteen/Day13Test.txt");
+    //private static readonly string Input = File.ReadAllText("../../../../AdventOfCode2022/DayThirteen/Day13Test.txt");
+    private static readonly string Input = File.ReadAllText("../../../../AdventOfCode2022/DayThirteen/Day13.txt");
 
     public static void Day13()
     {
-        Console.WriteLine($"Part 1: {PartOne()}");
-        Console.WriteLine($"Part 2: {PartTwo()}");
+        PartOneAndTwo();
     }
 
-    public static double PartOne(string[]? input = null)
+    public static (int, int) PartOneAndTwo(string? input = null)
     {
         input ??= Input;
 
-        // Create variable ( int[] ) to hold indices of pairs not in the right order
-        // Sum those indeces together and that's the return value
-        
-        // Test data should be 13
-        
-        // Take first line, place in a temp variable (left)
-        // Take second line, place in a temp variable(right)
+        var pairs = input.Split("\r\n\r\n");
+        var pairIndex = 0;
+        var correctPairs = 0;
 
-        return -1;
+        foreach (var pair in pairs)
+        {
+            pairIndex++;
+
+            var splitPair = pair.Split("\r\n");
+            var left = splitPair[0];
+            var right = splitPair[1];
+            var jsonLeft = JsonNode.Parse(left);
+            var jsonRight = JsonNode.Parse(right);
+            var isCorrect = Compare(jsonLeft, jsonRight);
+            if (isCorrect == true) correctPairs += pairIndex;
+        }
+
+        Console.WriteLine($"Part 1: {correctPairs}");
+
+        var allPackets = input.Split("\r\n").Where(l => !string.IsNullOrEmpty(l)).Select(l => JsonNode.Parse(l)).ToList();
+        var x = JsonNode.Parse("[[2]]");
+        var y = JsonNode.Parse("[[6]]");
+
+        allPackets.Add(x);
+        allPackets.Add(y);
+
+        allPackets.Sort((left, right) => Compare(left, right) == true ? -1 : 1);
+
+        Console.WriteLine($"Part 2: {(allPackets.IndexOf(x) + 1) * (allPackets.IndexOf(y) + 1)}");
+
+        return (correctPairs, (allPackets.IndexOf(x) + 1) * (allPackets.IndexOf(y) + 1));
     }
 
-    public static double PartTwo(string[]? input = null)
+    private static bool? Compare(JsonNode left, JsonNode right)
     {
-        input ??= Input;
+        if (left is JsonValue leftVal && right is JsonValue rightVal)
+        {
+            return CompareValues(leftVal, rightVal);
+        }
 
-        return -1;
+        if (left is not JsonArray leftArray) leftArray = new JsonArray(left.GetValue<int>());
+        if (right is not JsonArray rightArray) rightArray = new JsonArray(right.GetValue<int>());
+
+        return CompareArrays(leftArray, rightArray);
     }
-    
-    
-    
-    
+
+    private static bool? CompareValues(JsonValue leftVal, JsonValue rightVal)
+    {
+        var leftInt = leftVal.GetValue<int>();
+        var rightInt = rightVal.GetValue<int>();
+        return leftInt == rightInt ? null : leftInt < rightInt;
+    }
+
+    private static bool? CompareArrays(JsonArray leftArray, JsonArray rightArray)
+    {
+        for (var i = 0; i < Math.Min(leftArray.Count, rightArray.Count); i++)
+        {
+            var res = Compare(leftArray[i], rightArray[i]);
+            if (res.HasValue) { return res.Value; }
+        }
+
+        if (leftArray.Count < rightArray.Count) return true;
+        if (leftArray.Count > rightArray.Count) return false;
+        return null;
+    }
 }
