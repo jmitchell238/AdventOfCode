@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace AdventOfCode2022.DayFourteen;
 
@@ -49,7 +51,7 @@ public partial class Solver
         var counter = 0;
         var result = SandResult.Stopped;
         while (result is SandResult.Stopped)
-        {
+        { 
             result = cave.SimulateGrainOfSand();
             if (result is SandResult.Stopped or SandResult.SourceBlocked)
             {
@@ -57,6 +59,7 @@ public partial class Solver
             }
             // For debugging Advent of Code Part 2 example output with padding.
             // var visualization = cave.VisualizeChunk(new Point(488 + padding, 0), new Point(512 + padding, 11));
+            // Console.WriteLine(visualization);
         }
 
 
