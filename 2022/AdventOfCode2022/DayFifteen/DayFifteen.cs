@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using static AdventOfCode2022.DayFifteen.CalculatePartOne;
 using static AdventOfCode2022.DayFifteen.CalculatePartTwo;
@@ -26,13 +27,17 @@ public static class DayFifteen
     {
         input ??= Input;
 
-        _sensors = BuildSensorAndBeaconArray(input);
+        if (!_sensors.Any()) _sensors = BuildSensorAndBeaconArray(input);
 
         return PositionsThatCantContainBeaconInRow(_sensors, 2000000);
     }
 
     private static BigInteger PartTwo(string[]? input = null)
     {
-        return Solve2(_sensors, 4000000);
+        input ??= Input;
+        
+        if (!_sensors.Any()) _sensors = BuildSensorAndBeaconArray(input);
+
+        return GetTuningFrequency(_sensors, 4000000);
     }
 }

@@ -34,27 +34,11 @@ public static class Program
         // DayTwelve.DayTwelve.Day12();
         // OutputSpacer(13);
         // DayThirteen.DayThirteen.Day13();
-        OutputSpacer(14);
-        DayFourteen.DayFourteen.Day14();
-        // OutputSpacer(15);
-        // DayFifteen.DayFifteen.Day15();
+        // OutputSpacer(14);
+        // DayFourteen.DayFourteen.Day14();
+        OutputSpacer(15);
+        DayFifteen.DayFifteen.Day15();
         
-//         // Output some initial text
-//         Console.WriteLine("Initial text");
-//
-// // Wait for a bit
-//         System.Threading.Thread.Sleep(1000);
-//
-// // Output some new text that overwrites the previous line
-//         Console.Write("\rNew text");
-//
-// // Wait for a bit
-//         System.Threading.Thread.Sleep(1000);
-//
-// // Output some more new text that overwrites the previous line
-//         Console.Write("\rEven more new text");
-
-
     }
 
     private static void OutputSpacer(int day)

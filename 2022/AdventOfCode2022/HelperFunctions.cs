@@ -7,7 +7,7 @@ namespace AdventOfCode2022;
 /// <summary>
 /// This class contains code that usually are helpful on multiple days.
 /// </summary>
-public static class HelperFunctions
+public static partial class HelperFunctions
 {
     // Split a string into separate strings, as specified by the delimiter.
     public static string[] SplitToStringArray(this string str, string split, bool removeEmpty)
@@ -233,4 +233,7 @@ public static class HelperFunctions
             Direction.DOWN_RIGHT
         };
     }
+    
+    public static int ManhattanDistance((int x, int y) sensor, (int x, int y) beacon) =>
+        Math.Abs(sensor.x - beacon.x) + Math.Abs(sensor.y - beacon.y);
 }

@@ -7,7 +7,7 @@ namespace AdventOfCode2022.DayFifteen;
 
 public static class CalculatePartTwo
 {
-    public static BigInteger Solve2(List<Sensor> sensors, int maxBound)
+    public static BigInteger GetTuningFrequency(List<Sensor> sensors, int maxBound)
     {
         BigInteger result = 0;
         for (var y = 0; y <= maxBound; y++)

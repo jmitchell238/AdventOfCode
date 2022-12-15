@@ -1,4 +1,5 @@
 using System;
+using static AdventOfCode2022.HelperFunctions;
 
 namespace AdventOfCode2022.DayFifteen;
 
@@ -20,18 +21,10 @@ public class Sensor
         this.Y = y;
 
         this.ClosestBeacon = closestBeacon;
-        
-        DeltaX = Math.Abs(x - ClosestBeacon.X) + Math.Abs(y - ClosestBeacon.Y);
+
+        DeltaX = ManhattanDistance((X,Y),(ClosestBeacon.X,ClosestBeacon.Y));
     }
-    
+
     public int MinXAtY(int y) => X - DeltaX + Math.Abs(Y - y);
     public int MaxXAtY(int y) => X + DeltaX - Math.Abs(Y - y);
-
-    // method to calculate the distance to the closest beacon
-    public int DistanceToClosestBeacon()
-    {
-        // calculate the Manhattan distance using the formula
-        // distance = |sensor.x - beacon.x| + |sensor.y - beacon.y|
-        return Math.Abs(this.X - this.ClosestBeacon.X) + Math.Abs(this.Y - this.ClosestBeacon.Y);
-    }
 }
