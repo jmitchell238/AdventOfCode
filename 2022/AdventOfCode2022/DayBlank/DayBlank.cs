@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace AdventOfCode2022.DayBlank;
+namespace AdventOfCode2022.DayFifteen;
 
 public class DayBlank
 {
