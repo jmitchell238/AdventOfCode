@@ -15,7 +15,6 @@ public class DayFourteen
     public static void PartOne()
     {
         string input = File.ReadAllText("../../../../AdventOfCode2022/DayFourteen/Day14.txt");
-        //var input = File.ReadAllText(args[0]);
         var parser = new StoneParser();
         var solver = new Solver(parser);
         Console.WriteLine($"PART 1 - {solver.SolveForPartOne(input)}");
