@@ -1,29 +1,13 @@
-﻿using BenchmarkDotNet.Disassemblers;
-using BenchmarkDotNet.Engines;
-using Iced.Intel;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Numerics;
-using System.Text;
 using System.Text.Json.Nodes;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using static AdventOfCode2022.DayThirteen.DayThirteen;
-using static BenchmarkDotNet.Engines.Engine;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AdventOfCode2022.DayThirteen;
 
 public class DayThirteen
 {
-    //private static readonly string Input = File.ReadAllText("../../../../AdventOfCode2022/DayThirteen/Day13Test.txt");
+    // private static readonly string Input = File.ReadAllText("../../../../AdventOfCode2022/DayThirteen/Day13Test.txt");
     private static readonly string Input = File.ReadAllText("../../../../AdventOfCode2022/DayThirteen/Day13.txt");
 
     public static void Day13()
@@ -35,7 +19,7 @@ public class DayThirteen
     {
         input ??= Input;
 
-        var pairs = input.Split("\r\n\r\n");
+        var pairs = input.Split("\n\n");
         var pairIndex = 0;
         var correctPairs = 0;
 
@@ -43,18 +27,21 @@ public class DayThirteen
         {
             pairIndex++;
 
-            var splitPair = pair.Split("\r\n");
-            var left = splitPair[0];
-            var right = splitPair[1];
-            var jsonLeft = JsonNode.Parse(left);
-            var jsonRight = JsonNode.Parse(right);
-            var isCorrect = Compare(jsonLeft, jsonRight);
-            if (isCorrect == true) correctPairs += pairIndex;
+            var splitPair = pair.Split("\n");
+            // if (splitPair != null && splitPair.Length > 1)
+            // {
+                var left = splitPair[0];
+                var right = splitPair[1];
+                var jsonLeft = JsonNode.Parse(left);
+                var jsonRight = JsonNode.Parse(right);
+                var isCorrect = Compare(jsonLeft, jsonRight);
+                if (isCorrect == true) correctPairs += pairIndex;
+            // }
         }
 
         Console.WriteLine($"Part 1: {correctPairs}");
 
-        var allPackets = input.Split("\r\n").Where(l => !string.IsNullOrEmpty(l)).Select(l => JsonNode.Parse(l)).ToList();
+        var allPackets = input.Split("\n").Where(l => !string.IsNullOrEmpty(l)).Select(l => JsonNode.Parse(l)).ToList();
         var x = JsonNode.Parse("[[2]]");
         var y = JsonNode.Parse("[[6]]");
 
