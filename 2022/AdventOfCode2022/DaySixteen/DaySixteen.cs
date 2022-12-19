@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
@@ -12,65 +13,230 @@ namespace AdventOfCode2022.DaySixteen;
 
 public class DaySixteen
 {
-    private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DaySixteen/DaySixteenTest.txt");
-}
+    private static readonly string[] Input =
+        File.ReadAllLines("../../../../AdventOfCode2022/DaySixteen/DaySixteenTest.txt");
 
-//    public static void Day16()
-//    {
-//        Console.WriteLine($"Part 1: {PartOne()}");
-//        Console.WriteLine($"Part 2: {PartTwo()}");
-//    }
-
-//    public static int PartOne(string[]? input = null)
-//    {
-//        input ??= Input;
-
-//        List<Valve> valveList = parseValves(input);
-
-//        return Solve(valveList, true, 30);
-//    }
+    private static Dictionary<string, Valve> Valves;
+    private static Dictionary<string, Dictionary<string, int>> ShortestTimes;
+    private static List<string> JammedValves;
+    private static decimal BestPressure = 0;
     
-//    public static int PartTwo(string[]? input = null)
-//    {
-//        input ??= Input;
+    public static void Day16()
+    {
+        Console.WriteLine($"Part 1: {PartOne()}");
+        // Console.WriteLine($"Part 2: {PartTwo()}");
+    }
+
+    public static decimal PartOne(string[]? input = null)
+    {
+        input ??= Input;
         
-//        //input = File.ReadAllLines("../../../../AdventOfCode2022/DaySixteen/DaySixteenTest.txt");
+        List<bool> openValves = new List<bool>();
 
-//        Console.WriteLine("Part 2 not implemented yet");
-//        return -1;
-//    }
+        Valves = parseValves(input);
+        // Dictionary<string, Valve> valves = parseValves(input);
 
-//    private static List<Valve> parseValves(string[] input)
-//    {
-//        List<Valve> valves = new List<Valve>();
+        ShortestTimes = GetShortestTimes(Valves);
 
-//        foreach (var line in input)
-//        {
-//            string[] words = line.Split(' ');
+        JammedValves = GetJammedValves(Valves);
+        // Dictionary<string, Dictionary<string, int>> shortestTimes = GetShortestTimes(Valves);
 
-//            // Set the Valve name
-//            string valveName = words[1];
+        Solve("AA", 0, 31, new bool[Valves.Count]);
+        
+        // return Solve(valveList, true, 30);
+        return BestPressure;
+    }
 
-//            // Set the flow rate
-//            string flowRateString = words[4].Split('=').Last().Trim(';');
-//            int flowRate = Int32.Parse(flowRateString);
+    public static void Solve(string position, decimal totalPressure, int timeLeft,  bool[] openedValves)
+    {
+        var currentValve = Valves[position];
+        timeLeft--;
+        totalPressure = totalPressure;
 
-//            // Set the list of valves
-//            List<string> connectedValves = new List<string>();
-//            foreach (var word in words[9..])
-//            {
-//                connectedValves.Add(word.TrimEnd(','));
-//            }
+        if (timeLeft == 0)
+        {
+            if (totalPressure > BestPressure)
+            {
+                BestPressure = totalPressure;
+            }
+        }
+        
+        // Get connections
+        var tunnelConnections = ShortestTimes[currentValve.Name];
+        
+        // Open Current Valve
+        if (openedValves[currentValve.Id] == false)
+        {
+            openedValves[currentValve.Id] = true;
+            timeLeft--;
+            foreach (var connection in tunnelConnections)
+            {
+                var connectedValve = connection.Key;
+                var testDistance = ShortestTimes[currentValve.Name][Valves[connectedValve].Name];
+                if (!JammedValves.Contains(connectedValve) && openedValves[Valves[connectedValve].Id] == false)
+                {
+                    Solve(connectedValve, totalPressure + currentValve.FlowRate * timeLeft, timeLeft - testDistance, openedValves);
+                }
+            }
 
-//            // Create a new Valve object
-//            Valve valve = new Valve(0, valveName, flowRate, connectedValves);
+            openedValves[currentValve.Id] = false;
+        }
+    }
 
-//            // Add this Valve to the List<Tunnel>
-//            valves.Add(valve);
-//        }
+    public static List<string> GetJammedValves(Dictionary<string, Valve> valves)
+    {
+        List<string> jammedValves = new List<string>();
+        foreach (var valve in valves)
+        {
+            var currentValve = valve.Key;
+            if (valves[currentValve].FlowRate == 0)
+            {
+                jammedValves.Add(valves[currentValve].Name);
+            }
+        }
 
-//        return valves;
-//    }
+        return jammedValves;
+    }
+    
+    // public static void Solve(string position, decimal totalPressure, int timeLeft,  List<bool> openedValves)
+    // {
+    //     var currentValve = Valves[position];
+    //     timeLeft--;
+    //
+    //     if (timeLeft == 0)
+    //     {
+    //         if (totalPressure > BestPressure)
+    //         {
+    //             BestPressure = totalPressure;
+    //         }
+    //     }
+    //     
+    //     // Open Valve
+    //     if (currentValve.FlowRate > 0 && openedValves[currentValve.Id] == false)
+    //     {
+    //         openedValves[currentValve.Id] = true;
+    //         Solve(position, totalPressure + currentValve.FlowRate * timeLeft, timeLeft, openedValves);
+    //         openedValves[currentValve.Id] = false;
+    //     }
+    //     
+    //     // Move
+    //     foreach (var tunnel in currentValve.Tunnels)
+    //     {
+    //         Solve(tunnel, totalPressure, timeLeft, openedValves);
+    //     }
+    // }
+
+    private static Dictionary<string, Valve> parseValves(string[] input)
+    {
+        var valves = new Dictionary<string, Valve>();
+
+        var counter = 0;
+        foreach (var line in input)
+        {
+            string[] words = line.Split(' ');
+
+            // Set the Valve name
+            string valveName = words[1];
+
+            // Set the flow rate
+            string flowRateString = words[4].Split('=').Last().Trim(';');
+            int flowRate = Int32.Parse(flowRateString);
+
+            // Set the list of valves
+            List<string> connectedValves = new List<string>();
+
+            foreach (var word in words[9..])
+            {
+                connectedValves.Add(word.TrimEnd(','));
+            }
+
+            // Create a new Valve object
+            Valve valve = new Valve(counter, valveName, flowRate, connectedValves);
+
+            // Add this Valve to the List<Tunnel>
+            valves.Add(valveName, valve);
+            
+            // Increase counter / id
+            counter++;
+        }
+
+        return valves;
+    }
+    
+    public static Dictionary<string, Dictionary<string, int>> GetShortestTimes(Dictionary<string, Valve> valves)
+    {
+        Dictionary<string, Dictionary<string, int>> shortestTimes = new Dictionary<string, Dictionary<string, int>>();
+        
+        foreach (var valve in valves)
+        {
+            string startValve = valve.Key;
+            Dictionary<string, int> times = new Dictionary<string, int>();
+
+            foreach (var endValve in valves.Keys)
+            {
+                if (startValve != endValve)
+                {
+                    int time = GetTimeToTravelBetweenValves(startValve, endValve, valves);
+                    times[endValve] = time;
+                }
+            }
+
+            shortestTimes[startValve] = times;
+        }
+
+        return shortestTimes;
+    }
+    
+    public static int GetTimeToTravelBetweenValves(string startValve, string endValve, Dictionary<string, Valve> valves)
+    {
+        // Create a queue to store the valves that are waiting to be processed
+        Queue<string> queue = new Queue<string>();
+
+        // Create a dictionary to store the time it takes to reach each valve
+        Dictionary<string, int> times = new Dictionary<string, int>();
+
+        // Add the start valve to the queue and set the time to reach it to 0
+        queue.Enqueue(startValve);
+        times[startValve] = 0;
+
+        // While there are valves in the queue
+        while (queue.Count > 0)
+        {
+            // Get the next valve in the queue
+            string valve = queue.Dequeue();
+
+            // If the current valve is the end valve, return the time it takes to reach it
+            if (valve == endValve)
+            {
+                return times[valve];
+            }
+
+            // Get the connections for the current valve
+            List<string> connections = valves[valve].Tunnels;
+
+            // Iterate over the connections
+            foreach (var connection in connections)
+            {
+                // If the time to reach the connected valve has not been set yet
+                if (!times.ContainsKey(connection))
+                {
+                    // Calculate the time it takes to reach the connected valve
+                    int timeToReachConnection = times[valve] + 1;
+
+                    // Set the time to reach the connected valve
+                    times[connection] = timeToReachConnection;
+
+                    // Add the connected valve to the queue
+                    queue.Enqueue(connection);
+                }
+            }
+        }
+
+        // If the end valve was not reached, return -1
+        return -1;
+    }
+
+}
 
 
 //    static int Solve(List<Valve> valveList, bool singlePlayer, int time)

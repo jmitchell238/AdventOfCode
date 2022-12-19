@@ -13,33 +13,33 @@ public class TestingClass
 {
     private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DaySixteen/DaySixteenTest.txt");
 
-    public static void Day16()
-    {
-        //Console.WriteLine($"Part 1: {PartOne()}");
-        PartOne();
-    }
+    // public static void Day16()
+    // {
+    //     //Console.WriteLine($"Part 1: {PartOne()}");
+    //     PartOne();
+    // }
 
-    public static void PartOne(string[]? input = null)
-    {
-        input ??= Input;
-
-        // Parse the input and create the valve network
-        ValveNetwork network = new ValveNetwork();
-        network.Valves["AA"] = new Valve("AA", 0, new List<string> { "DD", "II", "BB" });
-        network.Valves["BB"] = new Valve("BB", 13, new List<string> { "CC", "AA" });
-        network.Valves["CC"] = new Valve("CC", 2, new List<string> { "DD", "BB" });
-        network.Valves["DD"] = new Valve("DD", 20, new List<string> { "CC", "AA", "EE" });
-        network.Valves["EE"] = new Valve("EE", 3, new List<string> { "FF", "DD" });
-        network.Valves["FF"] = new Valve("FF", 0, new List<string> { "EE", "GG" });
-        network.Valves["GG"] = new Valve("GG", 0, new List<string> { "FF", "HH" });
-        network.Valves["HH"] = new Valve("HH", 22, new List<string> { "GG" });
-        network.Valves["II"] = new Valve("II", 0, new List<string> { "AA", "JJ" });
-        network.Valves["JJ"] = new Valve("JJ", 21, new List<string> { "II" });
-
-        // Find the maximum pressure release
-        int maxPressureRelease = MaxPressureRelease(network);
-        Console.WriteLine(maxPressureRelease);
-    }
+    // public static void PartOne(string[]? input = null)
+    // {
+    //     input ??= Input;
+    //
+    //     // Parse the input and create the valve network
+    //     ValveNetwork network = new ValveNetwork();
+    //     network.Valves["AA"] = new Valve("AA", 0, new List<string> { "DD", "II", "BB" });
+    //     network.Valves["BB"] = new Valve("BB", 13, new List<string> { "CC", "AA" });
+    //     network.Valves["CC"] = new Valve("CC", 2, new List<string> { "DD", "BB" });
+    //     network.Valves["DD"] = new Valve("DD", 20, new List<string> { "CC", "AA", "EE" });
+    //     network.Valves["EE"] = new Valve("EE", 3, new List<string> { "FF", "DD" });
+    //     network.Valves["FF"] = new Valve("FF", 0, new List<string> { "EE", "GG" });
+    //     network.Valves["GG"] = new Valve("GG", 0, new List<string> { "FF", "HH" });
+    //     network.Valves["HH"] = new Valve("HH", 22, new List<string> { "GG" });
+    //     network.Valves["II"] = new Valve("II", 0, new List<string> { "AA", "JJ" });
+    //     network.Valves["JJ"] = new Valve("JJ", 21, new List<string> { "II" });
+    //
+    //     // Find the maximum pressure release
+    //     int maxPressureRelease = MaxPressureRelease(network);
+    //     Console.WriteLine(maxPressureRelease);
+    // }
 
     //public static int MaxPressureRelease(ValveNetwork network)
     //{
@@ -254,132 +254,132 @@ public class TestingClass
     //    return maxFlow;
     //}
 
-    public static int MaxPressureRelease(ValveNetwork network)
-    {
-        // Initialize the flow, residual capacities, and adjacency list
-        Dictionary<string, int> flow = new Dictionary<string, int>();
-        Dictionary<string, int> residualCapacities = new Dictionary<string, int>();
-        Dictionary<string, List<string>> adjacencyList = new Dictionary<string, List<string>>();
-
-        // Initialize the flow and residual capacities for each valve
-        foreach (Valve valve in network.Valves.Values)
-        {
-            flow[valve.Name] = 0;
-            residualCapacities[valve.Name] = valve.FlowRate;
-        }
-
-        // Initialize the adjacency list
-        foreach (Valve valve in network.Valves.Values)
-        {
-            adjacencyList[valve.Name] = new List<string>();
-            foreach (string connection in valve.Connections)
-            {
-                adjacencyList[valve.Name].Add(connection);
-            }
-        }
-
-        // While there is an augmenting path from the source to the sink
-        while (true)
-        {
-            // Use a queue to store the valves that need to be visited
-            Queue<string> queue = new Queue<string>();
-            Dictionary<string, string> predecessor = new Dictionary<string, string>();
-
-            // Start at the source valve
-            queue.Enqueue("AA");
-            predecessor["AA"] = null;
-
-            // BFS loop
-            while (queue.Count > 0)
-            {
-                string current = queue.Dequeue();
-
-                // Check the connections of the current valve
-                foreach (string connection in adjacencyList[current])
-                {
-                    // Skip valves that have no residual capacity
-                    if (residualCapacities[connection] == 0 || predecessor.ContainsKey(connection))
-                    {
-                        continue;
-                    }
-
-                    predecessor[connection] = current;
-                    queue.Enqueue(connection);
-
-                    // Break if we have reached the sink
-                    if (connection == "HH")
-                    {
-                        break;
-                    }
-                }
-            }
-
-            // Break if there are no more augmenting paths
-            if (!predecessor.ContainsKey("HH"))
-            {
-                break;
-            }
-
-            // Find the minimum residual capacity along the augmenting path
-            int minResidualCapacity = int.MaxValue;
-            string currentValve = "HH";
-            while (predecessor[currentValve] != null)
-            {
-                minResidualCapacity = Math.Min(minResidualCapacity, residualCapacities[currentValve]);
-                currentValve = predecessor[currentValve];
-            }
-
-            // Update the flow and residual capacities along the augmenting path
-            currentValve = "HH";
-            while (predecessor[currentValve] != null)
-            {
-                flow[currentValve] += minResidualCapacity;
-                residualCapacities[currentValve] -= minResidualCapacity;
-                residualCapacities[predecessor[currentValve]] += minResidualCapacity;
-                currentValve = predecessor[currentValve];
-            }
-
-            // Update the adjacency list to reflect the changes in the flow and residual capacities
-            foreach (string valveName in adjacencyList.Keys)
-            {
-                adjacencyList[valveName].Clear();
-                foreach (string connection in network.Valves[valveName].Connections)
-                {
-                    if (residualCapacities[connection] > 0)
-                    {
-                        adjacencyList[valveName].Add(connection);
-                    }
-                }
-            }
-        }
-
-        // Return the sum of the flow through all the valves
-        return flow.Values.Sum();
-    }
+    // public static int MaxPressureRelease(ValveNetwork network)
+    // {
+    //     // Initialize the flow, residual capacities, and adjacency list
+    //     Dictionary<string, int> flow = new Dictionary<string, int>();
+    //     Dictionary<string, int> residualCapacities = new Dictionary<string, int>();
+    //     Dictionary<string, List<string>> adjacencyList = new Dictionary<string, List<string>>();
+    //
+    //     // Initialize the flow and residual capacities for each valve
+    //     foreach (Valve valve in network.Valves.Values)
+    //     {
+    //         flow[valve.Name] = 0;
+    //         residualCapacities[valve.Name] = valve.FlowRate;
+    //     }
+    //
+    //     // Initialize the adjacency list
+    //     foreach (Valve valve in network.Valves.Values)
+    //     {
+    //         adjacencyList[valve.Name] = new List<string>();
+    //         foreach (string connection in valve.Connections)
+    //         {
+    //             adjacencyList[valve.Name].Add(connection);
+    //         }
+    //     }
+    //
+    //     // While there is an augmenting path from the source to the sink
+    //     while (true)
+    //     {
+    //         // Use a queue to store the valves that need to be visited
+    //         Queue<string> queue = new Queue<string>();
+    //         Dictionary<string, string> predecessor = new Dictionary<string, string>();
+    //
+    //         // Start at the source valve
+    //         queue.Enqueue("AA");
+    //         predecessor["AA"] = null;
+    //
+    //         // BFS loop
+    //         while (queue.Count > 0)
+    //         {
+    //             string current = queue.Dequeue();
+    //
+    //             // Check the connections of the current valve
+    //             foreach (string connection in adjacencyList[current])
+    //             {
+    //                 // Skip valves that have no residual capacity
+    //                 if (residualCapacities[connection] == 0 || predecessor.ContainsKey(connection))
+    //                 {
+    //                     continue;
+    //                 }
+    //
+    //                 predecessor[connection] = current;
+    //                 queue.Enqueue(connection);
+    //
+    //                 // Break if we have reached the sink
+    //                 if (connection == "HH")
+    //                 {
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //
+    //         // Break if there are no more augmenting paths
+    //         if (!predecessor.ContainsKey("HH"))
+    //         {
+    //             break;
+    //         }
+    //
+    //         // Find the minimum residual capacity along the augmenting path
+    //         int minResidualCapacity = int.MaxValue;
+    //         string currentValve = "HH";
+    //         while (predecessor[currentValve] != null)
+    //         {
+    //             minResidualCapacity = Math.Min(minResidualCapacity, residualCapacities[currentValve]);
+    //             currentValve = predecessor[currentValve];
+    //         }
+    //
+    //         // Update the flow and residual capacities along the augmenting path
+    //         currentValve = "HH";
+    //         while (predecessor[currentValve] != null)
+    //         {
+    //             flow[currentValve] += minResidualCapacity;
+    //             residualCapacities[currentValve] -= minResidualCapacity;
+    //             residualCapacities[predecessor[currentValve]] += minResidualCapacity;
+    //             currentValve = predecessor[currentValve];
+    //         }
+    //
+    //         // Update the adjacency list to reflect the changes in the flow and residual capacities
+    //         foreach (string valveName in adjacencyList.Keys)
+    //         {
+    //             adjacencyList[valveName].Clear();
+    //             foreach (string connection in network.Valves[valveName].Connections)
+    //             {
+    //                 if (residualCapacities[connection] > 0)
+    //                 {
+    //                     adjacencyList[valveName].Add(connection);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     // Return the sum of the flow through all the valves
+    //     return flow.Values.Sum();
+    // }
 }
 
-public class Valve
-{
-    public string Name { get; set; }
-    public int FlowRate { get; set; }
-    public List<string> Connections { get; set; }
-
-    public Valve(string name, int flowRate, List<string> connections)
-    {
-        Name = name;
-        FlowRate = flowRate;
-        Connections = connections;
-    }
-}
-
-public class ValveNetwork
-{
-    public Dictionary<string, Valve> Valves { get; set; }
-
-    public ValveNetwork()
-    {
-        Valves = new Dictionary<string, Valve>();
-    }
-}
+// public class Valve
+// {
+//     public string Name { get; set; }
+//     public int FlowRate { get; set; }
+//     public List<string> Connections { get; set; }
+//
+//     public Valve(string name, int flowRate, List<string> connections)
+//     {
+//         Name = name;
+//         FlowRate = flowRate;
+//         Connections = connections;
+//     }
+// }
+//
+// public class ValveNetwork
+// {
+//     public Dictionary<string, Valve> Valves { get; set; }
+//
+//     public ValveNetwork()
+//     {
+//         Valves = new Dictionary<string, Valve>();
+//     }
+// }
 
 
