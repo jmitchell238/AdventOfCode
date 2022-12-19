@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode2022.DaySixteen;
 
+
 public class DaySixteen
 {
     private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DaySixteen/DaySixteenTest.txt");
