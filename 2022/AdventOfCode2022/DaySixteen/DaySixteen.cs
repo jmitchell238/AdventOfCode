@@ -1,523 +1,406 @@
-using AdventOfCode2022.DayFourteen;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 
-namespace AdventOfCode2022.DaySixteen;
-
-
-public class DaySixteen
+namespace AdventOfCode2022.DaySixteen
 {
-    private static readonly string[] Input =
-        File.ReadAllLines("../../../../AdventOfCode2022/DaySixteen/DaySixteenTest.txt");
-
-    private static Dictionary<string, Valve> Valves;
-    private static Dictionary<string, Dictionary<string, int>> ShortestTimes;
-    private static List<string> JammedValves;
-    private static decimal BestPressure = 0;
-    
-    public static void Day16()
+    public class DaySixteen
     {
-        Console.WriteLine($"Part 1: {PartOne()}");
-        // Console.WriteLine($"Part 2: {PartTwo()}");
-    }
+        private static readonly string[] Input = File.ReadAllLines("../../../../AdventOfCode2022/DaySixteen/DaySixteen.txt");
 
-    public static decimal PartOne(string[]? input = null)
-    {
-        input ??= Input;
-        
-        List<bool> openValves = new List<bool>();
+        private static Dictionary<string, Valve>? Valves;
+        private static Dictionary<string, Dictionary<string, int>>? ShortestTimes;
+        private static List<string>? JammedValves;
+        public static int BestPressure { get; set; } = 0;
+        public static int MaxFlowRate { get; set; } = 0;
 
-        Valves = parseValves(input);
-        // Dictionary<string, Valve> valves = parseValves(input);
-
-        ShortestTimes = GetShortestTimes(Valves);
-
-        JammedValves = GetJammedValves(Valves);
-        // Dictionary<string, Dictionary<string, int>> shortestTimes = GetShortestTimes(Valves);
-
-        Solve("AA", 0, 31, new bool[Valves.Count]);
-        
-        // return Solve(valveList, true, 30);
-        return BestPressure;
-    }
-
-    public static void Solve(string position, decimal totalPressure, int timeLeft,  bool[] openedValves)
-    {
-        var currentValve = Valves[position];
-        timeLeft--;
-        totalPressure = totalPressure;
-
-        if (timeLeft == 0)
+        public static void Day16()
         {
+            Console.WriteLine($"Part 1: {PartOne()}");
+            Console.WriteLine($"Part 2: {PartTwo()}");
+        }
+
+        public static int PartOne(string[]? input = null)
+        {
+            input ??= Input;
+
+            Valves = ParseValves(input);
+            ShortestTimes = GetShortestTimes(Valves);
+            JammedValves = GetJammedValves(Valves);
+
+            Solve("AA", 0, 30, new bool[Valves.Count]);
+
+            return BestPressure;
+        }
+
+        public static int PartTwo(string[]? input = null)
+        {
+            // If no input is provided, use the default input
+            input ??= Input;
+
+            // Parse the input into a dictionary of valves
+            Valves = ParseValves(input);
+
+            // Calculate the shortest times between each pair of valves
+            ShortestTimes = GetShortestTimes(Valves);
+
+            // Get the list of jammed valves
+            JammedValves = GetJammedValves(Valves);
+
+            // Get an array of valves with a flow rate greater than 0
+            Valve[] valvesToOpen = Valves.Values.Where(valve => valve.FlowRate > 0).ToArray();
+
+            // Initialize a cache for storing the results of recursive calls to MaxFlow
+            var cache = new Dictionary<string, int>();
+
+            // Determine whether to only consider human valves
+            var humanOnly = false;
+
+            // If humanOnly is true, return the maximum flow rate for all human valves
+            if (humanOnly)
+            {
+                return MaxFlow(cache, ShortestTimes, Valves["AA"], valvesToOpen.ToHashSet(), 30);
+            }
+            // Otherwise, return the maximum flow rate for all possible combinations of human and elephant valves
+            else
+            {
+                // Get all possible combinations of human and elephant valves
+                return Combinations(valvesToOpen).Select(combination =>
+                     // Calculate the maximum flow rate for the human valves
+                     MaxFlow(cache, ShortestTimes, Valves["AA"], combination.human, 26) +
+                     // Calculate the maximum flow rate for the elephant valves
+                     MaxFlow(cache, ShortestTimes, Valves["AA"], combination.elephant, 26)
+                // Return the maximum flow rate of all combinations
+                ).Max();
+            }
+        }
+
+        // Divide the valves between human and elephant in all possible ways
+        public static void Solve(string position, int totalPressure, int timeLeft, bool[] openedValves)
+        {
+            var currentValve = Valves[position];
+
+            // Update totalPressure by adding the flow rate of the current valve multiplied by the time left
+            totalPressure += currentValve.FlowRate * timeLeft;
+
             if (totalPressure > BestPressure)
             {
                 BestPressure = totalPressure;
             }
-        }
-        
-        // Get connections
-        var tunnelConnections = ShortestTimes[currentValve.Name];
-        
-        // Open Current Valve
-        if (openedValves[currentValve.Id] == false)
-        {
-            openedValves[currentValve.Id] = true;
-            timeLeft--;
-            foreach (var connection in tunnelConnections)
+
+            var numOfJammedValves = JammedValves.Count;
+            var numOfOpenedValves = openedValves.Where(v => v == true).Count();
+
+            Valve firstValve = Valves["AA"];
+            if (firstValve.FlowRate == 0)
             {
-                var connectedValve = connection.Key;
-                var testDistance = ShortestTimes[currentValve.Name][Valves[connectedValve].Name];
-                if (!JammedValves.Contains(connectedValve) && openedValves[Valves[connectedValve].Id] == false)
+                if (numOfJammedValves + numOfOpenedValves == Valves.Count + 1)
                 {
-                    Solve(connectedValve, totalPressure + currentValve.FlowRate * timeLeft, timeLeft - testDistance, openedValves);
+                    return;
+                }
+            }
+            else
+            {
+                if (numOfJammedValves + numOfOpenedValves == Valves.Count)
+                {
+                    return;
                 }
             }
 
-            openedValves[currentValve.Id] = false;
-        }
-    }
-
-    public static List<string> GetJammedValves(Dictionary<string, Valve> valves)
-    {
-        List<string> jammedValves = new List<string>();
-        foreach (var valve in valves)
-        {
-            var currentValve = valve.Key;
-            if (valves[currentValve].FlowRate == 0)
+            if (timeLeft <= 0)
             {
-                jammedValves.Add(valves[currentValve].Name);
+                return;
+            }
+
+            // Get connections
+            var tunnelConnections = ShortestTimes[currentValve.Name];
+
+            // Open Current Valve
+            if (openedValves[currentValve.Id] == false)
+            {
+                openedValves[currentValve.Id] = true;
+
+                // Decrement timeLeft if the valve is open
+                if (openedValves[currentValve.Id])
+                {
+                    timeLeft--;
+                }
+
+                foreach (var connection in tunnelConnections)
+                {
+                    var connectedValve = connection.Key;
+                    var distance = ShortestTimes[currentValve.Name][Valves[connectedValve].Name];
+                    var distanceToTimeLeft = timeLeft - distance;
+                    var isNotJammed = !JammedValves.Contains(connectedValve);
+                    var isNotOpened = openedValves[Valves[connectedValve].Id] == false;
+                    if (isNotJammed && isNotOpened)
+                    {
+                        // Create a copy of openedValves and pass it to the recursive call
+                        bool[] openedValvesCopy = (bool[])openedValves.Clone();
+                        Solve(connectedValve, totalPressure, distanceToTimeLeft, openedValvesCopy);
+                    }
+                }
+
+                openedValves[currentValve.Id] = false;
             }
         }
 
-        return jammedValves;
-    }
-    
-    // public static void Solve(string position, decimal totalPressure, int timeLeft,  List<bool> openedValves)
-    // {
-    //     var currentValve = Valves[position];
-    //     timeLeft--;
-    //
-    //     if (timeLeft == 0)
-    //     {
-    //         if (totalPressure > BestPressure)
-    //         {
-    //             BestPressure = totalPressure;
-    //         }
-    //     }
-    //     
-    //     // Open Valve
-    //     if (currentValve.FlowRate > 0 && openedValves[currentValve.Id] == false)
-    //     {
-    //         openedValves[currentValve.Id] = true;
-    //         Solve(position, totalPressure + currentValve.FlowRate * timeLeft, timeLeft, openedValves);
-    //         openedValves[currentValve.Id] = false;
-    //     }
-    //     
-    //     // Move
-    //     foreach (var tunnel in currentValve.Tunnels)
-    //     {
-    //         Solve(tunnel, totalPressure, timeLeft, openedValves);
-    //     }
-    // }
-
-    private static Dictionary<string, Valve> parseValves(string[] input)
-    {
-        var valves = new Dictionary<string, Valve>();
-
-        var counter = 0;
-        foreach (var line in input)
+        /* This method calculates the maximum flow that can be obtained from a set of valves, given a certain 
+           amount of remaining time. It does this by recursively calling itself with different subsets of the 
+           valves, and using a cache to avoid recalculating the same result multiple times. It returns the maximum 
+           flow that can be obtained as an integer. */
+        public static int MaxFlow(
+            Dictionary<string, int> cache,
+            Dictionary<string, Dictionary<string, int>> shortestTimes,
+            Valve currentValve,
+            HashSet<Valve> valves,
+            int remainingTime
+        )
         {
-            string[] words = line.Split(' ');
+            // Create a key to use as a cache index
+            string key =
+                remainingTime + "-" +
+                currentValve.Id + "-" +
+                string.Join("-", valves.OrderBy(valve => valve.Id).Select(valve => valve.Id));
 
-            // Set the Valve name
-            string valveName = words[1];
-
-            // Set the flow rate
-            string flowRateString = words[4].Split('=').Last().Trim(';');
-            int flowRate = Int32.Parse(flowRateString);
-
-            // Set the list of valves
-            List<string> connectedValves = new List<string>();
-
-            foreach (var word in words[9..])
+            // If the cache does not contain this key
+            if (!cache.ContainsKey(key))
             {
-                connectedValves.Add(word.TrimEnd(','));
+                // Calculate the flow from the current valve
+                var flowFromValve = currentValve.FlowRate * remainingTime;
+
+                // Initialize the flow from the rest of the valves
+                var flowFromRest = 0;
+
+                // Convert the valves set to an array
+                foreach (var valve in valves.ToArray())
+                {
+                    // Get the distance between the current valve and the valve in the array
+                    var distance = shortestTimes[currentValve.Name][valve.Name];
+
+                    // If there is enough remaining time to reach the valve in the array
+                    if (remainingTime >= distance + 1)
+                    {
+                        // Remove the valve from the set
+                        valves.Remove(valve);
+
+                        // Decrement the remaining time by the distance plus 1
+                        remainingTime -= distance + 1;
+
+                        // Recursively call MaxFlow to get the maximum flow from the rest of the valves
+                        flowFromRest = Math.Max(flowFromRest, MaxFlow(cache, shortestTimes, valve, valves, remainingTime));
+
+                        // Increment the remaining time by the distance plus 1
+                        remainingTime += distance + 1;
+
+                        // Add the valve back to the set
+                        valves.Add(valve);
+                    }
+                }
+
+                // Store the result in the cache
+                cache[key] = flowFromValve + flowFromRest;
             }
 
-            // Create a new Valve object
-            Valve valve = new Valve(counter, valveName, flowRate, connectedValves);
-
-            // Add this Valve to the List<Tunnel>
-            valves.Add(valveName, valve);
-            
-            // Increase counter / id
-            counter++;
+            // Return the result from the cache
+            return cache[key];
         }
 
-        return valves;
-    }
-    
-    public static Dictionary<string, Dictionary<string, int>> GetShortestTimes(Dictionary<string, Valve> valves)
-    {
-        Dictionary<string, Dictionary<string, int>> shortestTimes = new Dictionary<string, Dictionary<string, int>>();
-        
-        foreach (var valve in valves)
+        /* Generates all possible combinations of valves that can be opened by the human and the elephant
+           This method generates all possible combinations of valves that can be opened by the human and the elephant,
+           and returns them as a sequence of tuples.Each tuple contains two sets: one set of valves opened by the human
+           and one set of valves opened by the elephant. */
+        public static IEnumerable<(HashSet<Valve> human, HashSet<Valve> elephant)> Combinations(Valve[] valves)
         {
-            string startValve = valve.Key;
+            // Generate a binary mask with valves.Length number of 1s
+            var maxMask = 1 << (valves.Length);
+
+            // Iterate over all possible combinations of valves that can be opened by the human and the elephant
+            for (var mask = 0; mask < maxMask; mask++)
+            {
+                // Set of valves opened by the elephant
+                var elephant = new HashSet<Valve>();
+                // Set of valves opened by the human
+                var human = new HashSet<Valve>();
+
+                // For each valve, determine if it will be opened by the elephant or the human
+                for (var ivalve = 0; ivalve < valves.Length; ivalve++)
+                {
+                    if ((mask & (1 << ivalve)) == 0)
+                    {
+                        // If the bit at position ivalve is 0, add the valve to the set of valves opened by the human
+                        human.Add(valves[ivalve]);
+                    }
+                    else
+                    {
+                        // If the bit at position ivalve is 1, add the valve to the set of valves opened by the elephant
+                        elephant.Add(valves[ivalve]);
+                    }
+                }
+                // Return the combination of valves opened by the human and the elephant as a tuple
+                yield return (human, elephant);
+            }
+        }
+
+        // Parses the input strings and creates a dictionary of Valve objects
+        private static Dictionary<string, Valve> ParseValves(string[] input)
+        {
+            // Dictionary to store the Valve objects
+            var valves = new Dictionary<string, Valve>();
+
+            // Counter to assign unique IDs to each Valve
+            var counter = 0;
+
+            // For each line in the input
+            foreach (var line in input)
+            {
+                // Split the line into an array of words
+                string[] words = line.Split(' ');
+
+                // Set the Valve name
+                string valveName = words[1];
+
+                // Set the flow rate
+                string flowRateString = words[4].Split('=').Last().Trim(';');
+                int flowRate = Int32.Parse(flowRateString);
+
+                // Set the list of valves
+                List<string> connectedValves = new List<string>();
+
+                // For each word in the words array starting at the 9th index
+                foreach (var word in words[9..])
+                {
+                    // Add the word to the list of connected valves, with the comma trimmed off the end
+                    connectedValves.Add(word.TrimEnd(','));
+                }
+
+                // Create a new Valve object
+                Valve valve = new Valve(counter, valveName, flowRate, connectedValves);
+
+                // Add this Valve to the dictionary
+                valves.Add(valveName, valve);
+
+                // Increase counter / id
+                counter++;
+            }
+
+            // Return the dictionary of Valve objects
+            return valves;
+        }
+
+        /* Returns a list of jammed valves (valves with a flow rate of 0)
+           The GetJammedValves method returns a list of jammed valves, which are defined as valves 
+           with a flow rate of 0. It does this by iterating over the dictionary of valves and checking 
+           the flow rate of each valve. If the flow rate is 0, the method adds the name of the valve to 
+           the list of jammed valves. */
+        public static List<string> GetJammedValves(Dictionary<string, Valve> valves)
+        {
+            // List to store the names of jammed valves
+            List<string> jammedValves = new List<string>();
+
+            // For each valve in the dictionary of valves
+            foreach (var valve in valves)
+            {
+                // The current valve being processed
+                var currentValve = valve.Key;
+                // If the flow rate of the current valve is 0
+                if (valves[currentValve].FlowRate == 0)
+                {
+                    // Add the name of the current valve to the list of jammed valves
+                    jammedValves.Add(valves[currentValve].Name);
+                }
+            }
+
+            // Return the list of jammed valves
+            return jammedValves;
+        }
+
+        // Calculates the shortest time it takes to travel between all pairs of valves
+        public static Dictionary<string, Dictionary<string, int>> GetShortestTimes(Dictionary<string, Valve> valves)
+        {
+            // Dictionary to store the shortest time it takes to travel between each pair of valves
+            Dictionary<string, Dictionary<string, int>> shortestTimes = new Dictionary<string, Dictionary<string, int>>();
+
+            // For each valve in the dictionary of valves
+            foreach (var valve in valves)
+            {
+                // The starting valve for the current iteration
+                string startValve = valve.Key;
+                // Dictionary to store the shortest times it takes to travel to other valves from the starting valve
+                Dictionary<string, int> times = new Dictionary<string, int>();
+
+                // For each end valve in the dictionary of valves
+                foreach (var endValve in valves.Keys)
+                {
+                    // If the starting valve and the end valve are not the same
+                    if (startValve != endValve)
+                    {
+                        // Calculate the time it takes to travel between the starting valve and the end valve
+                        int time = GetTimeToTravelBetweenValves(startValve, endValve, valves);
+                        // Add the shortest time to the dictionary
+                        times[endValve] = time;
+                    }
+                }
+
+                // Add the dictionary of shortest times to the dictionary of shortest times
+                shortestTimes[startValve] = times;
+            }
+
+            // Return the dictionary of shortest times
+            return shortestTimes;
+        }
+
+        // Calculates the shortest time required to travel between two valves
+        public static int GetTimeToTravelBetweenValves(string startValve, string endValve, Dictionary<string, Valve> valves)
+        {
+            // Create a queue to store the valves that are waiting to be processed
+            Queue<string> queue = new Queue<string>();
+
+            // Create a dictionary to store the time it takes to reach each valve
             Dictionary<string, int> times = new Dictionary<string, int>();
 
-            foreach (var endValve in valves.Keys)
+            // Add the start valve to the queue and set the time to reach it to 0
+            queue.Enqueue(startValve);
+            times[startValve] = 0;
+
+            // While there are valves in the queue
+            while (queue.Count > 0)
             {
-                if (startValve != endValve)
+                // Get the next valve in the queue
+                string valve = queue.Dequeue();
+
+                // If the current valve is the end valve, return the time it takes to reach it
+                if (valve == endValve)
                 {
-                    int time = GetTimeToTravelBetweenValves(startValve, endValve, valves);
-                    times[endValve] = time;
+                    return times[valve];
+                }
+
+                // Get the connections for the current valve
+                List<string> connections = valves[valve].Tunnels;
+
+                // Iterate over the connections
+                foreach (var connection in connections)
+                {
+                    // If the time to reach the connected valve has not been set yet
+                    if (!times.ContainsKey(connection))
+                    {
+                        // Calculate the time it takes to reach the connected valve
+                        int timeToReachConnection = times[valve] + 1;
+
+                        // Set the time to reach the connected valve
+                        times[connection] = timeToReachConnection;
+
+                        // Add the connected valve to the queue
+                        queue.Enqueue(connection);
+                    }
                 }
             }
 
-            shortestTimes[startValve] = times;
+            // If the end valve was not reached, return -1
+            return -1;
         }
-
-        return shortestTimes;
     }
-    
-    public static int GetTimeToTravelBetweenValves(string startValve, string endValve, Dictionary<string, Valve> valves)
-    {
-        // Create a queue to store the valves that are waiting to be processed
-        Queue<string> queue = new Queue<string>();
-
-        // Create a dictionary to store the time it takes to reach each valve
-        Dictionary<string, int> times = new Dictionary<string, int>();
-
-        // Add the start valve to the queue and set the time to reach it to 0
-        queue.Enqueue(startValve);
-        times[startValve] = 0;
-
-        // While there are valves in the queue
-        while (queue.Count > 0)
-        {
-            // Get the next valve in the queue
-            string valve = queue.Dequeue();
-
-            // If the current valve is the end valve, return the time it takes to reach it
-            if (valve == endValve)
-            {
-                return times[valve];
-            }
-
-            // Get the connections for the current valve
-            List<string> connections = valves[valve].Tunnels;
-
-            // Iterate over the connections
-            foreach (var connection in connections)
-            {
-                // If the time to reach the connected valve has not been set yet
-                if (!times.ContainsKey(connection))
-                {
-                    // Calculate the time it takes to reach the connected valve
-                    int timeToReachConnection = times[valve] + 1;
-
-                    // Set the time to reach the connected valve
-                    times[connection] = timeToReachConnection;
-
-                    // Add the connected valve to the queue
-                    queue.Enqueue(connection);
-                }
-            }
-        }
-
-        // If the end valve was not reached, return -1
-        return -1;
-    }
-
 }
-
-
-//    static int Solve(List<Valve> valveList, bool singlePlayer, int time)
-//    {
-//        // initialize and run MaxFlow()
-
-//        var map = CreateMap(valveList);
-
-//        var start = map.valves.Single(x => x.name == "AA");
-
-//        var valvesToOpen = new BitArray(map.valves.Length);
-//        for (var i = 0; i < map.valves.Length; i++)
-//        {
-//            if (map.valves[i].flowRate > 0)
-//            {
-//                valvesToOpen[i] = true;
-//            }
-//        }
-
-//        //if (singlePlayer)
-//        //{
-//            // int.MaxValue is used here as a dummy player that doesn't really do anything, it just
-//            // walks towards the start node
-//            return MaxFlow(map, 0, 0, new Player(start, 0), new Player(start, int.MaxValue), valvesToOpen, time);
-//        //}
-//        //else
-//        //{
-//        //    return MaxFlow(map, 0, 0, new Player(start, 0), new Player(start, 0), valvesToOpen, time);
-//        //}
-//    }
-
-//    record Map(int[,] distances, Valve[] valves);
-//    //record Valve(int id, string name, int flowRate, string[] tunnels);
-//    record Player(Valve valve, int distance);
-
-//    // Recursively find the maximum available flow in the map by moving the players, opening valves and advancing
-//    // time according to the task description
-//    static int MaxFlow(
-//        Map map,               // this is our map as per task input.
-//        int maxFlow,           // is the current maximum we found (call with 0), this is used internally to shortcut
-//        int currentFlow,       // the flow produced by the currently investigated steps (on the stack)
-//        Player player0,        // this is the 'human' player
-//        Player player1,        // this can be a second player, use distance = int.MaxValue to make it inactive
-//        BitArray valvesToOpen, // these valves can still be open
-//        int remainingTime      // and the remaining time
-//    )
-//    {
-
-//        // briefly: we advance the simulation and collect what states the players can go -> recurse
-//        // use lots of early exits to make this approach practical (Residue is an important concept)
-
-//        // One of the players is standing next to a valve:
-//        if (player0.distance != 0 && player1.distance != 0)
-//        {
-//            throw new ArgumentException();
-//        }
-
-//        // Compute the next states for each player:
-//        var nextStatesByPlayer = new Player[2][];
-
-//        for (var iplayer = 0; iplayer < 2; iplayer++)
-//        {
-
-//            var player = iplayer == 0 ? player0 : player1;
-
-//            if (player.distance > 0)
-//            {
-//                // this player just steps forward towards the valve
-//                nextStatesByPlayer[iplayer] = new[] { player with { distance = player.distance - 1 } };
-
-//            }
-//            else if (valvesToOpen[player.valve.id])
-//            {
-//                // the player is next to the valve, the valve is still closed, let's open:
-//                // (this takes 1 time, so multiply with remainingTime -1)
-//                currentFlow += player.valve.flowRate * (remainingTime - 1);
-
-//                if (currentFlow > maxFlow)
-//                {
-//                    maxFlow = currentFlow;
-//                }
-
-//                valvesToOpen = new BitArray(valvesToOpen); // copy on write
-//                valvesToOpen[player.valve.id] = false;
-
-//                // in the next round this player will take some new target, 
-//                // but it already used up it's 1 second this round for opening the valve
-//                nextStatesByPlayer[iplayer] = new[] { player };
-
-//            }
-//            else
-//            {
-//                // the valve is already open, let's try each valves that are still closed:
-//                // this is where brancing happens
-
-//                var nextStates = new List<Player>();
-
-//                for (var i = 0; i < valvesToOpen.Length; i++)
-//                {
-//                    if (valvesToOpen[i])
-//                    {
-//                        var nextValve = map.valves[i];
-//                        var distance = map.distances[player.valve.id, nextValve.id];
-//                        // the player moves in this time slot towards the valve, so use distance - 1 here
-//                        nextStates.Add(new Player(nextValve, distance - 1));
-//                    }
-//                }
-
-//                nextStatesByPlayer[iplayer] = nextStates.ToArray();
-//            }
-//        }
-
-//        // ran out of time, cannot improve maxFlow
-//        remainingTime--;
-//        if (remainingTime < 1)
-//        {
-//            return maxFlow;
-//        }
-
-//        // the is not enough juice left for the remaining time to improve on maxFlow
-//        // we can shortcut here
-//        if (currentFlow + Residue(valvesToOpen, map, remainingTime) <= maxFlow)
-//        {
-//            return maxFlow;
-//        }
-
-//        // all is left is going over every possible step combinations for each players:
-//        for (var i0 = 0; i0 < nextStatesByPlayer[0].Length; i0++)
-//        {
-//            for (var i1 = 0; i1 < nextStatesByPlayer[1].Length; i1++)
-//            {
-
-//                player0 = nextStatesByPlayer[0][i0];
-//                player1 = nextStatesByPlayer[1][i1];
-
-//                // there is no point in walking to the same valve
-//                // if one of the players has other thing to do:
-//                if ((nextStatesByPlayer[0].Length > 1 || nextStatesByPlayer[1].Length > 1) && player0.valve == player1.valve)
-//                {
-//                    continue;
-//                }
-
-//                // this is an other optimization, if both players are walking
-//                // we can advance time until one of them reaches target:
-//                var advance = 0;
-//                if (player0.distance > 0 && player1.distance > 0)
-//                {
-//                    advance = Math.Min(player0.distance, player1.distance);
-//                    player0 = player0 with { distance = player0.distance - advance };
-//                    player1 = player1 with { distance = player1.distance - advance };
-//                }
-
-//                maxFlow = MaxFlow(
-//                    map,
-//                    maxFlow,
-//                    currentFlow,
-//                    player0,
-//                    player1,
-//                    valvesToOpen,
-//                    remainingTime - advance
-//                );
-//            }
-//        }
-
-//        return maxFlow;
-//    }
-
-//    static int Residue(BitArray valvesToOpen, Map map, int remainingTime)
-//    {
-//        // Some upper bound for the possible amount of flow that we can
-//        // still produce in the remaining time. 
-
-//        // IT'S JUST AN UPPER BOUND. HEURISTICAL
-
-//        // The valves are in decreasing order of flowRate. We open the 
-//        // first two (we have two players), this takes 1 time then we 
-//        // step to the next two valves supposing that each valve is 
-//        // just one step away. Open these as well. Continue until we run 
-//        // out of time.
-
-//        var flow = 0;
-//        for (var i = 0; i < valvesToOpen.Length; i++)
-//        {
-//            if (valvesToOpen[i])
-//            {
-//                if (remainingTime <= 0)
-//                {
-//                    break;
-//                }
-
-//                flow += map.valves[i].flowRate * (remainingTime - 1);
-
-//                if ((i & 1) == 0)
-//                {
-//                    remainingTime--;
-//                }
-//            }
-//        }
-//        return flow;
-//    }
-
-//    static Map CreateMap(List<Valve> valveList)
-//    {
-//        // Valve BB has flow rate=0; tunnels lead to valve CC
-//        // Valve CC has flow rate=10; tunnels lead to valves DD, EE
-        
-//        var valves = valveList
-//            .OrderByDescending(valve => valve.flowRate)
-//            .Select((v, i) => v with { id = i })
-//            .ToArray();
-
-//        return new Map(ComputeDistances(valves), valves);
-//    }
-
-//    static int[,] ComputeDistances(Valve[] valves)
-//    {
-//        // Bellman-Ford style distance calculation for every pair of valves
-//        var distances = new int[valves.Length, valves.Length];
-//        for (var i = 0; i < valves.Length; i++)
-//        {
-//            for (var j = 0; j < valves.Length; j++)
-//            {
-//                distances[i, j] = int.MaxValue;
-//            }
-//        }
-//        foreach (var valve in valves)
-//        {
-//            foreach (var target in valve.connectedValves)
-//            {
-//                var targetNode = valves.Single(x => x.name == target);
-//                distances[valve.id, targetNode.id] = 1;
-//                distances[targetNode.id, valve.id] = 1;
-//            }
-//        }
-
-//        var n = distances.GetLength(0);
-//        var done = false;
-//        while (!done)
-//        {
-//            done = true;
-//            for (var source = 0; source < n; source++)
-//            {
-//                for (var target = 0; target < n; target++)
-//                {
-//                    if (source != target)
-//                    {
-//                        for (var through = 0; through < n; through++)
-//                        {
-//                            if (distances[source, through] == int.MaxValue || distances[through, target] == int.MaxValue)
-//                            {
-//                                continue;
-//                            }
-//                            var cost = distances[source, through] + distances[through, target];
-//                            if (cost < distances[source, target])
-//                            {
-//                                done = false;
-//                                distances[source, target] = cost;
-//                                distances[target, source] = cost;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return distances;
-//    }
-//}
-
-//public record class Valve
-//{
-//    public int id { get; set; }
-//    public string name { get; private set; }
-//    public int flowRate { get; private set; }
-//    public List<string> connectedValves { get; private set; }
-
-//    public Valve(int id, string name, int flowRate, List<string> connectedValves)
-//    {
-//        this.id = id;
-//        this.name = name;
-//        this.flowRate = flowRate;
-//        this.connectedValves = connectedValves;
-//    }
-//}
-
