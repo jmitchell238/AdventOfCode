@@ -18,7 +18,7 @@ You can find the solutions to the corresponding years in their folders: 2023, et
 ### Java
 - Version: 21
 - IDE: IntelliJ IDEA
-- Build tool: Gradle
+- Build tool: Maven
 - Testing framework: JUnit 5
 - Code style: Google Java Style
 - Code formatter: Google Java Format
