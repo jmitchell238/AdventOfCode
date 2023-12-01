@@ -4,12 +4,16 @@ target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-.idea/workspace.xml
-.idea/sonarlint/
+Java/AdventOfCodeJava/.idea/modules.xml
+Java/AdventOfCodeJava/.idea/jarRepositories.xml
+Java/AdventOfCodeJava/.idea/compiler.xml
+Java/AdventOfCodeJava/.idea/libraries/
+Java/AdventOfCodeJava/.idea/workspace.xml
+Java/AdventOfCodeJava/.idea/sonarlint/
+Java/AdventOfCodeJava/.idea/sonarlint/issuestore/
+Java/AdventOfCodeJava/.idea/*.iws
+Java/AdventOfCodeJava/.idea/*.iml
+Java/AdventOfCodeJava/.idea/*.ipr
 *.iws
 *.iml
 *.ipr
