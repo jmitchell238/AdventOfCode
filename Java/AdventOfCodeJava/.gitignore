@@ -42,3 +42,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+!/.idea/sonarlint/issuestore/
+!/.idea/sonarlint/
+!/.idea/compiler.xml
+!/.idea/git_toolbox_prj.xml
+!/.idea/jarRepositories.xml
+!/.idea/workspace.xml
