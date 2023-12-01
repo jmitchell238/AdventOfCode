@@ -83,27 +83,18 @@ public class Day1 {
 
 
   public static int Part1(File day1Part1Input) throws FileNotFoundException {
-// Open the resources/aoc2023/day1.txt file and read it into a String
-    // For each line in the file, strip all but numerical characters
-    // Each line number should be 2 digits
-    // If there are more than 2 digits, take the first and last
-    // If there is only 1 digit, use it as the first and the last
-// Print the total
-
     int total = 0;
 
     try (Scanner scanner = new Scanner(day1Part1Input);) {
       while (scanner.hasNextLine()) {
         String line = scanner.nextLine();
-        String number = line.replaceAll("[^0-9]", "");
-        String firstNumber = number.substring(0, 1);
-        String lastNumber = number.substring(number.length() - 1);
-        number = firstNumber + lastNumber;
-//      System.out.println(number); // Debug line.
-        total += Integer.parseInt(number);
+        StringBuilder numberString = new StringBuilder(line.replaceAll("[^0-9]", ""));
+
+
+        total = getTotal(numberString, total);
       }
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+    } catch (FileNotFoundException ignored) {
+      // ignored
     }
 
     return total;
@@ -114,92 +105,74 @@ public class Day1 {
 
     try (Scanner scanner = new Scanner(day1Part2Input);) {
       while (scanner.hasNextLine()) {
-        // This time I need a dictionary of words to numbers because I don't know how to do this in Java.
-        Map<String, Integer> wordToNumber = new HashMap<>();
-        wordToNumber.put("one", 1);
-        wordToNumber.put("1", 1);
-        wordToNumber.put("two", 2);
-        wordToNumber.put("2", 2);
-        wordToNumber.put("three", 3);
-        wordToNumber.put("3", 3);
-        wordToNumber.put("four", 4);
-        wordToNumber.put("4", 4);
-        wordToNumber.put("five", 5);
-        wordToNumber.put("5", 5);
-        wordToNumber.put("six", 6);
-        wordToNumber.put("6", 6);
-        wordToNumber.put("seven", 7);
-        wordToNumber.put("7", 7);
-        wordToNumber.put("eight", 8);
-        wordToNumber.put("8", 8);
-        wordToNumber.put("nine", 9);
-        wordToNumber.put("9", 9);
-//        wordToNumber.put("zero", 0);
-
+        Map<String, Integer> wordToNumber = getWordToNumber();
         String line = scanner.nextLine();
-
         StringBuilder newString = new StringBuilder();
-        System.out.println(newString);
-
-        // iterate over the line and add any words that are numbers or numbers to a new line, An example would be
-        // "eightwothree" would become "83"
-        // "two1nine" would become "29"
-
-        // go left to right on the line and find each matching word in the dictionary and add to newString
-        // each Key in the dictionary and see if it is in the line
-        // if so, insert the value into the starting index of that word in the new string
-
         int index = 0;
 
         for (char c : line.toCharArray()) {
           if (Character.isDigit(c)) {
             newString.append(c);
-            System.out.println("Appended Digit " + c + " to " + newString);
             index++;
             continue;
           }
 
           if (!Character.isDigit(c)) {
-            System.out.println("Character " + c + " is at index " + index);
             for (String key : wordToNumber.keySet()) {
-              // I want to check the line starting at the current character to see if the key is there, if so, add the value to the newString
-              // if I get an index out of bounds exception, I want to catch it and continue
               try {
                 int keyLength = key.length();
-                // check to see if the key is at the current index,
-                // if so, add the value to the newString and break out of the
-                // for each key in keySet loop
                 String lineSubstring = line.substring(index, index + keyLength);
                 if (Objects.equals(key, lineSubstring)) {
                   newString.append(wordToNumber.get(key));
-                  // break out of the for each key in keySet loop
-                  System.out.println("Appended character " + wordToNumber.get(key) + " to " + newString);
                   break;
                 }
-              } catch (StringIndexOutOfBoundsException e) {
-                // do nothing
+              } catch (StringIndexOutOfBoundsException ignored) {
+                // ignored
               }
             }
           }
-          System.out.println(newString);
 
           index++;
         }
 
-
-
-//        newString = new StringBuilder(newString.toString().replaceAll("[^0-9]", ""));
-        int firstNumber = Integer.parseInt(newString.substring(0, 1));
-        int lastNumber = Integer.parseInt(newString.substring(newString.length() - 1));
-        String number = String.valueOf(firstNumber + "" + lastNumber);
-        System.out.println(number);
-        total += Integer.parseInt(number);
+        total = getTotal(newString, total);
       }
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+    } catch (FileNotFoundException ignored) {
+      // ignored
     }
 
     return total;
+  }
+
+  private static int getTotal(StringBuilder newString, int total) {
+    int firstNumber = Integer.parseInt(newString.substring(0, 1));
+    int lastNumber = Integer.parseInt(newString.substring(newString.length() - 1));
+    String number = String.valueOf(firstNumber + "" + lastNumber);
+    total += Integer.parseInt(number);
+    return total;
+  }
+
+  private static Map<String, Integer> getWordToNumber() {
+    Map<String, Integer> wordToNumber = new HashMap<>();
+    wordToNumber.put("one", 1);
+    wordToNumber.put("1", 1);
+    wordToNumber.put("two", 2);
+    wordToNumber.put("2", 2);
+    wordToNumber.put("three", 3);
+    wordToNumber.put("3", 3);
+    wordToNumber.put("four", 4);
+    wordToNumber.put("4", 4);
+    wordToNumber.put("five", 5);
+    wordToNumber.put("5", 5);
+    wordToNumber.put("six", 6);
+    wordToNumber.put("6", 6);
+    wordToNumber.put("seven", 7);
+    wordToNumber.put("7", 7);
+    wordToNumber.put("eight", 8);
+    wordToNumber.put("8", 8);
+    wordToNumber.put("nine", 9);
+    wordToNumber.put("9", 9);
+    return wordToNumber;
   }
 }
 
