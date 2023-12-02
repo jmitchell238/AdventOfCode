@@ -36,19 +36,19 @@ class Day02Tests {
     String day02Part2Input = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input_test.txt";
 
     // Assert
-    int expected = 8;
+    int expected = 2286;
 
     // Act
     assertThat(Day02.Part2(day02Part2Input)).isEqualTo(expected);
   }
 
   @Test
-  void DayO2Part2_CalledWithRealInput_Expect2286() {
+  void DayO2Part2_CalledWithRealInput_Expect84911() {
     // Arrange
     String day02Part2Input = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input.txt";
 
     // Assert
-    int expected = 2006;
+    int expected = 84911;
 
     // Act
     assertThat(Day02.Part2(day02Part2Input)).isEqualTo(expected);

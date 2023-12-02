@@ -2,7 +2,11 @@ package org.jmitchell238.aoc.aoc2023.day02;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Day02 {
 
@@ -21,74 +25,129 @@ public class Day02 {
 
     public static int Part1(String inputString) {
         File input = new File(inputString);
+        Map<String, Integer> totalNumberOfCubesPossibleByColorForSet = getPossibleCubesByColor();
 
-        // Total Number of cubes possible for each color In a SET (not a full round)
-        Map<String, Integer> total_number_of_cubes_possible_by_color = new HashMap<>();
-        total_number_of_cubes_possible_by_color.put("red", 12);
-        total_number_of_cubes_possible_by_color.put("green", 13);
-        total_number_of_cubes_possible_by_color.put("blue", 14);
-
-        List<Integer> possible_games = new ArrayList<>();
-        possible_games.add(0);
+        List<Integer> possibleGames = new ArrayList<>();
+        possibleGames.add(0);
 
         try {
             Scanner scanner = new Scanner(input);
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] line_split = line.split(":");
-                Integer game_id = Integer.parseInt(line_split[0].split(" ")[1]);
-                String[] sets = line_split[1].split(";");
-                boolean not_possible = false;
+
+                String[] lineSplit = line.split(":");
+                Integer gameId = Integer.parseInt(lineSplit[0].split(" ")[1]);
+
+                String[] sets = lineSplit[1].split(";");
+                boolean notPossible = false;
 
                 for (String set : sets) {
-                    String[] cubes_by_color = set.split(",");
-                    Map<String, Integer> cubes_in_set = new HashMap<>();
-                    not_possible = false;
+                    String[] cubesByColorWithAmount = set.split(",");
+                    Map<String, Integer> cubesInSet = new HashMap<>();
 
-                    for (String cube_color : cubes_by_color) {
-                        cube_color = cube_color.trim();
-                        String cubeColor = cube_color.split(" ")[1];
-                        Integer cubeAmount = Integer.parseInt(cube_color.split(" ")[0]);
-                        cubes_in_set.put(cubeColor, cubeAmount);
+                    for (String cubeColorWithAmount : cubesByColorWithAmount) {
+                        cubeColorWithAmount = cubeColorWithAmount.trim();
+                        String currentCubeColor = cubeColorWithAmount.split(" ")[1];
+                        Integer cubeAmount = Integer.parseInt(cubeColorWithAmount.split(" ")[0]);
+                        cubesInSet.put(currentCubeColor, cubeAmount);
 
-                        int current_color_amount_in_set = cubes_in_set.get(cubeColor);
-                        int possible_cubes_by_current_color = total_number_of_cubes_possible_by_color.get(cubeColor);
-                        if (cubes_in_set.get(cubeColor) > total_number_of_cubes_possible_by_color.get(cubeColor)) {
-                            not_possible = true;
+                        int currentColorAmountInSet = cubesInSet.get(currentCubeColor);
+                        int possibleCubesByCurrentColor = totalNumberOfCubesPossibleByColorForSet.get(currentCubeColor);
+                        if (currentColorAmountInSet > possibleCubesByCurrentColor) {
+                            notPossible = true;
                             break;
                         }
                     }
 
-                    if (not_possible) {
+                    if (notPossible) {
                         break;
                     }
                 }
 
-                if (not_possible) {
+                if (notPossible) {
                     continue;
                 }
 
-                possible_games.add(game_id);
+                possibleGames.add(gameId);
             }
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        return possible_games.stream().mapToInt(Integer::intValue).sum();
+        return possibleGames.stream().mapToInt(Integer::intValue).sum();
     }
 
     public static int Part2(String inputString) {
         File input = new File(inputString);
+        List<Integer> powersOfNecessaryCubeAmounts = new ArrayList<>();
 
         try {
             Scanner scanner = new Scanner(input);
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+
+                String[] sets = line.split(":")[1].split(";");
+                int round = Integer.parseInt(line.split(":")[0].split(" ")[1]);
+
+                // DEBUGGING - Printing each round to console
+                // System.out.println("\nRound " + round + ": ");
+
+                Map<String, Integer> highestAmountByColorInRound = new HashMap<>();
+                highestAmountByColorInRound.put("green", 0);
+                highestAmountByColorInRound.put("red", 0);
+                highestAmountByColorInRound.put("blue", 0);
+
+                for (String set : sets) {
+                    String[] cubesByColorWithAmount = set.split(",");
+                    Map<String, Integer> cubesInSet = new HashMap<>();
+                    cubesInSet.put("green", 0);
+                    cubesInSet.put("red", 0);
+                    cubesInSet.put("blue", 0);
+
+                    for (String cubeColorWithAmount : cubesByColorWithAmount) {
+                        cubeColorWithAmount = cubeColorWithAmount.trim();
+                        String currentCubeColor = cubeColorWithAmount.split(" ")[1];
+                        Integer currentCubeAmount = Integer.parseInt(cubeColorWithAmount.split(" ")[0]);
+
+                        int totalCubeColorAmount = cubesInSet.get(currentCubeColor) + currentCubeAmount;
+                        cubesInSet.put(currentCubeColor, totalCubeColorAmount);
+                    }
+
+                    // Update cubeAmount in the original map if the new value is higher
+                    highestAmountByColorInRound.replaceAll((key, oldValue) -> Math.max(oldValue, cubesInSet.getOrDefault(key, oldValue)));
+                }
+
+                // DEBUGGING - print the highest number of cubes by color in the found
+                // System.out.println("Highest amount of cubes by color in this round:");
+                // highestAmountByColorInRound.forEach((key, value) -> System.out.println(key + ": " + value));
+
+                // Multiply all values together
+                int power = highestAmountByColorInRound.values().stream().reduce(1, (a, b) -> a * b);
+
+                // Add this power to the powersOfNecessaryCubeAmounts List
+                powersOfNecessaryCubeAmounts.add(power);
+
+                // DEBUGGING - Print the Power of the total cubes needed. DEBUGGING
+                // System.out.println("Power of needed cubes: " + power);
+            }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        return -1;
+//        return -1;
+        return powersOfNecessaryCubeAmounts.stream().mapToInt(Integer::intValue).sum();
+    }
+
+    private static Map<String, Integer> getPossibleCubesByColor() {
+        Map<String, Integer> totalNumberOfCubesPossibleByColor = new HashMap<>();
+        totalNumberOfCubesPossibleByColor.put("red", 12);
+        totalNumberOfCubesPossibleByColor.put("green", 13);
+        totalNumberOfCubesPossibleByColor.put("blue", 14);
+
+        return totalNumberOfCubesPossibleByColor;
     }
 }
