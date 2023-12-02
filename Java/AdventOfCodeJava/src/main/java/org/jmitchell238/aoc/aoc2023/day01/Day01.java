@@ -1,4 +1,4 @@
-package org.jmitchell238.aoc.aoc2023.Day01;
+package org.jmitchell238.aoc.aoc2023.day01;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,14 +11,15 @@ import java.util.Scanner;
 public class Day01 {
 
   public static void Day01() throws FileNotFoundException {
-    System.out.println("Day 1: Trebuchet?!");
+    String dayOneInput = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day01\\day1.txt";
+    System.out.println("\n--- Day 1: Trebuchet?! ---\n");
 
-    File day1Part1Input = new File("/Users/jamesm.mitchell/james-workspace/AdventOfCode/Java/AdventOfCodeJava/src/main/resources/aoc2023/day1.txt");
+    File day1Part1Input = new File(dayOneInput);
     int partOneTotal = Part1(day1Part1Input);
 
     System.out.println("Part 1: Answer: " + partOneTotal);
 
-    File day1Part2Input = new File("/Users/jamesm.mitchell/james-workspace/AdventOfCode/Java/AdventOfCodeJava/src/main/resources/aoc2023/day1.txt");
+    File day1Part2Input = new File(dayOneInput);
 
     int partTwoTotal = Part2(day1Part2Input);
     System.out.println("Part 2: Answer:" + partTwoTotal);

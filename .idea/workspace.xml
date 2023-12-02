@@ -5,115 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de351c93-d946-48c0-a730-e4bc084e06b0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/google-java-format.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Csharp/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Java/AdventOfCodeJava/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Java/AdventOfCodeJava/src/test/java/org/jmitchell238/aoc/MainTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/AdventOfCode2022.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/AdventOfCode2022.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayBlank/DayBlank.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayBlank/DayBlank.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayBlank/DayBlank.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayBlank/DayBlank.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayBlank/DayBlankTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayBlank/DayBlankTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayEight/Day8.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayEight/Day8.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayEight/DayEight.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayEight/DayEight.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayEleven/Day11.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayEleven/Day11.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayEleven/DayEleven.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayEleven/DayEleven.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFifteen/Beacon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFifteen/Beacon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFifteen/BuildArray.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFifteen/BuildArray.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFifteen/CalculatePartOne.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFifteen/CalculatePartOne.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFifteen/CalculatePartTwo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFifteen/CalculatePartTwo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFifteen/DayFifteen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFifteen/DayFifteen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFifteen/DayFifteen.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFifteen/DayFifteen.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFifteen/DayFifteenTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFifteen/DayFifteenTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFifteen/Sensor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFifteen/Sensor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFive/Day5.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFive/Day5.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFive/Day5Stacks.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFive/Day5Stacks.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFive/Day5original.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFive/Day5original.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFive/DayFive.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFive/DayFive.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFour/Day4.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFour/Day4.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFour/DayFour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFour/DayFour.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/CaveSlice.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/CaveSlice.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/Cell.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/Cell.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/Day14.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/Day14.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/Day14Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/Day14Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/DayFourteen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/DayFourteen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/ParserResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/ParserResult.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/SandResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/SandResult.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/Solver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/Solver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayFourteen/StoneParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayFourteen/StoneParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayNine/Day9.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayNine/Day9.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayNine/DayNine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayNine/DayNine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayOne/Day1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayOne/Day1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayOne/DayOne.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayOne/DayOne.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySeven/Day7.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySeven/Day7.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySeven/DaySeven.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySeven/DaySeven.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySeventeen/DaySeventeen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySeventeen/DaySeventeen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySeventeen/DaySeventeen.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySeventeen/DaySeventeen.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySeventeen/DaySeventeenTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySeventeen/DaySeventeenTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySix/Day6.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySix/Day6.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySix/DaySix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySix/DaySix.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySixteen/DaySixteen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySixteen/DaySixteen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySixteen/DaySixteen.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySixteen/DaySixteen.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySixteen/DaySixteenTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySixteen/DaySixteenTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DaySixteen/Valve.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DaySixteen/Valve.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayTen/Day10.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayTen/Day10.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayTen/DayTen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayTen/DayTen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayThirteen/Compare.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayThirteen/Compare.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayThirteen/CompareValues.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayThirteen/CompareValues.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayThirteen/Day13.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayThirteen/Day13.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayThirteen/Day13Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayThirteen/Day13Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayThirteen/DayThirteen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayThirteen/DayThirteen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayThree/Day3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayThree/Day3.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayThree/DayThree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayThree/DayThree.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayTwelve/Day12.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayTwelve/Day12.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayTwelve/Day12Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayTwelve/Day12Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayTwelve/DayTwelve.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayTwelve/DayTwelve.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayTwo/Day2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayTwo/Day2.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/DayTwo/DayTwo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/DayTwo/DayTwo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/HelperFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/HelperFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/AdventOfCode2022Test.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/AdventOfCode2022Test.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayBlank/DayBlankTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayBlank/DayBlankTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayBlank/DayBlankTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayBlank/DayBlankTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayEight/Day8Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayEight/Day8Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayEight/DayEightTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayEight/DayEightTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayEleven/Day11Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayEleven/Day11Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayEleven/DayElevenTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayEleven/DayElevenTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayFifteen/DayFifteenTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayFifteen/DayFifteenTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayFifteen/DayFifteenTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayFifteen/DayFifteenTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayFive/Day5StacksTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayFive/Day5StacksTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayFive/Day5Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayFive/Day5Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayFive/Day5TestOriginal.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayFive/Day5TestOriginal.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayFive/DayFiveTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayFive/DayFiveTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayFour/Day4Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayFour/Day4Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayFour/DayFourTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayFour/DayFourTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayNine/Day9Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayNine/Day9Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayNine/DayNineTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayNine/DayNineTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayOne/Day1Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayOne/Day1Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayOne/DayOneTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayOne/DayOneTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DaySeven/Day7Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DaySeven/Day7Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DaySeven/DaySevenTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DaySeven/DaySevenTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DaySix/Day6Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DaySix/Day6Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DaySix/DaySixTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DaySix/DaySixTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DaySixteen/DaySixteenTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DaySixteen/DaySixteenTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DaySixteen/DaySixteenTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DaySixteen/DaySixteenTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayTen/Day10Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayTen/Day10Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayTen/DayTenTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayTen/DayTenTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayThirteen/Day13Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayThirteen/Day13Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayThirteen/DayThirteenTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayThirteen/DayThirteenTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayThree/Day3Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayThree/Day3Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayThree/DayThreeTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayThree/DayThreeTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayTwelve/Day12Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayTwelve/Day12Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayTwelve/DayTwelveTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayTwelve/DayTwelveTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayTwo/Day2Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayTwo/Day2Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/DayTwo/DayTwoTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/DayTwo/DayTwoTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2022/AdventOfCode2022Test/Usings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/2022/AdventOfCode2022Test/Usings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/AdventOfCode.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode2022.sln.DotSettings.user" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/global.json" beforeDir="false" afterPath="$PROJECT_DIR$/Csharp/global.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/AdventOfCodeJava/src/main/java/org/jmitchell238/aoc/aoc2023/day02/Day02.java" beforeDir="false" afterPath="$PROJECT_DIR$/Java/AdventOfCodeJava/src/main/java/org/jmitchell238/aoc/aoc2023/day02/Day02.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,9 +19,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2YonI6r45pr93pExbq7bImsYmz5" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -139,12 +32,14 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/Users/jamesm.mitchell/james-workspace/AdventOfCode/Csharp",
+    "git-widget-placeholder": "jmm/AOC/2023/Java/Day2",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/jmitc/workspace/AdventOfCode",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -165,6 +60,7 @@
       <option name="presentableId" value="Default" />
       <updated>1701200716330</updated>
       <workItem from="1701200717515" duration="1027000" />
+      <workItem from="1701547258470" duration="645000" />
     </task>
     <servers />
   </component>
