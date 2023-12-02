@@ -1,6 +1,9 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+/misc.xml
+/compiler.xml
+/jarRepositories.xml
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
@@ -12,3 +15,7 @@
 !/git_toolbox_prj.xml
 !/jarRepositories.xml
 !/workspace.xml
+!/misc.xml
+/sonarlint/issuestore/
+/sonarlint/
+/sonarlint/securityhotspotstore/

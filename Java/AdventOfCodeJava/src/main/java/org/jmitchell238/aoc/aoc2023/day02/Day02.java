@@ -13,11 +13,9 @@ public class Day02 {
         String input_test = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input_test.txt";
 
         int partOneAnswer = Part1(input);
-
         System.out.println("Part 1: Answer: Possible set ID's sum = " + partOneAnswer);
 
         int partTwoAnswer = Part2(input_test);
-
         System.out.println("Part 2: Answer: Power of each set minimum cubes sum = " + partTwoAnswer);
     }
 
@@ -30,8 +28,6 @@ public class Day02 {
         total_number_of_cubes_possible_by_color.put("green", 13);
         total_number_of_cubes_possible_by_color.put("blue", 14);
 
-        // Need a List/Map that keeps count of each game and whether it's possible or not.
-        // Then at the end I need to SUM the ID's of the POSSIBLE games.
         List<Integer> possible_games = new ArrayList<>();
         possible_games.add(0);
 
@@ -56,7 +52,6 @@ public class Day02 {
                         Integer cubeAmount = Integer.parseInt(cube_color.split(" ")[0]);
                         cubes_in_set.put(cubeColor, cubeAmount);
 
-                        // If the cube_color in cubes_in_set has a greater value than the same cube_color in total_number_of_cubes_possible_by_color then break out and go to next line in while loop
                         int current_color_amount_in_set = cubes_in_set.get(cubeColor);
                         int possible_cubes_by_current_color = total_number_of_cubes_possible_by_color.get(cubeColor);
                         if (cubes_in_set.get(cubeColor) > total_number_of_cubes_possible_by_color.get(cubeColor)) {
@@ -81,12 +76,18 @@ public class Day02 {
             e.printStackTrace();
         }
 
-        // Calculating the sum using a stream
         return possible_games.stream().mapToInt(Integer::intValue).sum();
     }
 
     public static int Part2(String inputString) {
         File input = new File(inputString);
+
+        try {
+            Scanner scanner = new Scanner(input);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return -1;
     }
