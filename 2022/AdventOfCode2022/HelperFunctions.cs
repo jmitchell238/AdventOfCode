@@ -236,4 +236,53 @@ public static partial class HelperFunctions
     
     public static int ManhattanDistance((int x, int y) sensor, (int x, int y) beacon) =>
         Math.Abs(sensor.x - beacon.x) + Math.Abs(sensor.y - beacon.y);
+
+    public static (int start, int length) FindPattern(this int[] values, int minSize = 3, int startAt = 0)
+    {
+        int val, nextIx, nextVal, distance, size, j;
+        for (int i = startAt; i < values.Length; ++i)
+        {
+            val = values[i];
+            distance = -1;
+
+            for (j = i + minSize; j < values.Length; j++)
+            {
+                nextVal = values[j];
+                if (nextVal == val)
+                {
+                    distance = j - i;
+                    break;
+                }
+            }
+
+            if (distance > 0)
+            {
+                size = 1;
+                j = 0;
+
+                while (size < distance && values[i + ++j] == values[i + distance + j])
+                {
+                    ++size;
+                }
+
+                if (size == distance)
+                {
+                    return (i, size);
+                }
+                else if (size >= minSize)
+                {
+                    // find more?
+                    return (i, size);
+                }
+                else
+                {
+                    // too small
+                    Console.WriteLine("");
+                }
+            }
+        }
+
+        return (0, 0);
+    }
+
 }

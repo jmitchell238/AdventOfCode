@@ -9,7 +9,7 @@ public static class Program
     {
         Console.WriteLine("\n" + "Hello Advent of Code 2022!");
 
-        RunDaySolution(16);
+        RunDaySolution(18);
         
     }
 
@@ -57,6 +57,10 @@ public static class Program
             DayFifteen.DayFifteen.Day15();
         else if (day == 16)
             DaySixteen.DaySixteen.Day16();
+        else if (day == 17)
+            DaySeventeen.DaySeventeen.Day17();
+        else if (day == 18)
+            DayEighteen.DayEighteen.Day18();
         // else if (day == 99)
         //     DaySixteen.TestingClass.Day16();
         else
