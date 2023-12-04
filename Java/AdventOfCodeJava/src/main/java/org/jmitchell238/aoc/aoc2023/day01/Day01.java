@@ -11,7 +11,8 @@ import java.util.Scanner;
 public class Day01 {
 
   public static void Day01() throws FileNotFoundException {
-    String dayOneInput = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day01\\day1.txt";
+    String dayOneInput = "src/main/java/org/jmitchell238/aoc/aoc2023/day01/day1.txt";
+
     System.out.println("\n--- Day 1: Trebuchet?! ---\n");
 
     File day1Part1Input = new File(dayOneInput);

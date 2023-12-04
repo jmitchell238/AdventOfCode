@@ -13,8 +13,8 @@ public class Day02 {
     public static void Day02() {
         System.out.println("\n--- Day 2: Cube Conundrum ---\n");
 
-        String input = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input.txt";
-        String input_test = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input_test.txt";
+        String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day02/input.txt";
+        String input_test = "src/main/java/org/jmitchell238/aoc/aoc2023/day02/input_test.txt";
 
         int partOneAnswer = Part1(input);
         System.out.println("Part 1: Answer: Possible set ID's sum = " + partOneAnswer);

@@ -9,7 +9,7 @@ class Day02Tests {
   @Test
   void DayO2Part1_CalledWithTestInput_Expect8() {
     // Arrange
-    String day02Part1Input = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input_test.txt";
+    String day02Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2023/Day02/input_test.txt";
 
     // Assert
     int expected = 8;
@@ -21,7 +21,7 @@ class Day02Tests {
   @Test
   void DayO2Part1_CalledWithRealInput_Expect2006() {
     // Arrange
-    String day02Part1Input = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input.txt";
+    String day02Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2023/Day02/input.txt";
 
     // Assert
     int expected = 2006;
@@ -33,7 +33,7 @@ class Day02Tests {
   @Test
   void DayO2Part2_CalledWithTestInput_Expect2286() {
     // Arrange
-    String day02Part2Input = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input_test.txt";
+    String day02Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/Day02/input_test.txt";
 
     // Assert
     int expected = 2286;
@@ -45,7 +45,7 @@ class Day02Tests {
   @Test
   void DayO2Part2_CalledWithRealInput_Expect84911() {
     // Arrange
-    String day02Part2Input = "C:\\Users\\jmitc\\workspace\\AdventOfCode\\Java\\AdventOfCodeJava\\src\\main\\java\\org\\jmitchell238\\aoc\\aoc2023\\Day02\\input.txt";
+    String day02Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/Day02/input.txt";
 
     // Assert
     int expected = 84911;
