@@ -402,3 +402,18 @@ FodyWeavers.xsd
 .idea/tasks.xml
 .idea/gradle.xml
 .idea/sonarlint/
+
+# IntelliJ in the Java/AdventOfCode directory
+Java/AdventOfCode/.idea/
+Java/AdventOfCode/.idea/workspace.xml
+Java/AdventOfCode/.idea/tasks.xml
+Java/AdventOfCode/.idea/compiler.xml
+Java/AdventOfCode/.idea/git_toolbox_prj.xml
+Java/AdventOfCode/.idea/jarRepositories.xml
+Java/AdventOfCode/.idea/misc.xml
+
+# SonarLint in the Java/AdventOfCode/.idea directory
+Java/AdventOfCode/.idea/sonarlint/
+Java/AdventOfCode/.idea/sonarlint/issuestore/
+Java/AdventOfCode/.idea/sonarlint/securityhotspotstore/
+
