@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
-
 public class Day01 {
 
   public static void Day01() throws FileNotFoundException {
@@ -26,15 +25,15 @@ public class Day01 {
     System.out.println("Part 2: Answer:" + partTwoTotal);
   }
 
-
   public static int Part1(File day1Part1Input) throws FileNotFoundException {
     int total = 0;
 
-    try (Scanner scanner = new Scanner(day1Part1Input);) {
+    try (Scanner scanner = new Scanner(day1Part1Input); ) {
       while (scanner.hasNextLine()) {
         String line = scanner.nextLine();
-        StringBuilder numberString = new StringBuilder(line.replaceAll("\\D", "")); // "\\D" is a regex for non-digits same as [^0-9]
-
+        StringBuilder numberString =
+            new StringBuilder(
+                line.replaceAll("\\D", "")); // "\\D" is a regex for non-digits same as [^0-9]
 
         total = getTotal(numberString, total);
       }
@@ -48,7 +47,7 @@ public class Day01 {
   public static int Part2(File day1Part2Input) throws FileNotFoundException {
     int total = 0;
 
-    try (Scanner scanner = new Scanner(day1Part2Input);) {
+    try (Scanner scanner = new Scanner(day1Part2Input); ) {
       while (scanner.hasNextLine()) {
         Map<String, Integer> wordToNumber = getWordToNumber();
         String line = scanner.nextLine();
@@ -120,4 +119,3 @@ public class Day01 {
     return wordToNumber;
   }
 }
-

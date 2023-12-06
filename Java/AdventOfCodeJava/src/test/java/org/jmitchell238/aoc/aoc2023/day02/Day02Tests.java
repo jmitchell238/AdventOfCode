@@ -1,8 +1,8 @@
 package org.jmitchell238.aoc.aoc2023.day02;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 class Day02Tests {
 
@@ -53,5 +53,4 @@ class Day02Tests {
     // Act
     assertThat(Day02.Part2(day02Part2Input)).isEqualTo(expected);
   }
-
 }

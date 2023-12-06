@@ -1,7 +1,6 @@
 package org.jmitchell238.aoc.aoc2023.day00;
 
 import java.io.FileNotFoundException;
-
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,8 @@ class Day00Tests {
   @Test
   void Day00Part1_CalledWithTestInput_ExpectCorrectAnswer() throws FileNotFoundException {
     // Arrange
-    String day00Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day00/input_test_part1.txt";
+    String day00Part1Input =
+        "src/main/java/org/jmitchell238/aoc/aoc2023/day00/input_test_part1.txt";
 
     // Assert
     int expected = 00;
@@ -34,7 +34,8 @@ class Day00Tests {
   @Test
   void Day00Part2_CalledWithTestInput_ExpectCorrectAnswer() throws FileNotFoundException {
     // Arrange
-    String day00Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day00/input_test_part2.txt";
+    String day00Part2Input =
+        "src/main/java/org/jmitchell238/aoc/aoc2023/day00/input_test_part2.txt";
 
     // Assert
     int expected = 00;
