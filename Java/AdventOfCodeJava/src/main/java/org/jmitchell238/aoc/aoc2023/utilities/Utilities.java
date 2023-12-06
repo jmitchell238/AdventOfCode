@@ -21,6 +21,10 @@ public class Utilities {
 
   private Utilities() {}
 
+  public static char[] splitToCharArray(String str) {
+    return str.toCharArray();
+  }
+
   /**
    * Splits a string into an array of substrings based on the specified delimiter.
    *
