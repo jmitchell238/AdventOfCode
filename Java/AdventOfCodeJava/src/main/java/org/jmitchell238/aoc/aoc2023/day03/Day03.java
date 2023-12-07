@@ -48,8 +48,8 @@ public class Day03 {
       long partNumberSum = 0;
 
       for (int y = 0 ; y < char2dArray.size() ; y++) {
-        for (int x = 0 ; x < char2dArray.get(x).length - 1 ; x++) {
-          Point currentPoint = new Point(x,y);
+        for (int x = 0; x < char2dArray.get(x).length - 1; x++) {
+          Point currentPoint = new Point(x, y);
           char currentChar = coordinateMap.get(currentPoint);
           boolean isDigit = Character.isDigit(currentChar);
           StringBuilder partNumber = new StringBuilder();
@@ -60,8 +60,6 @@ public class Day03 {
             partNumber.append(currentChar);
 
             while (isDigit) {
-//              partnumberLength++;
-
               partNumber.append(coordinateMap.get(new Point(currentPoint.x + partnumberLength, currentPoint.y)));
 
               partnumberLength++;
@@ -73,86 +71,84 @@ public class Day03 {
               System.out.println("Part Number: " + partNumber);
             }
 
-
-//            if (partnumberLength > 1) {
-//              if (currentPoint.x > 0) {
-//                Point previousPoint = new Point(currentPoint.x - 1, currentPoint.y);
-//                char previousChar = coordinateMap.get(previousPoint);
-//                boolean isPreviousCharDigit = Character.isDigit(previousChar);
-//                if (isPreviousCharDigit) {
-//                  continue;
-//                }
-//              }
-//              if (currentPoint.y > 0) {
-//                Point previousPoint = new Point(currentPoint.x, currentPoint.y - 1);
-//                char previousChar = coordinateMap.get(previousPoint);
-//                boolean isPreviousCharDigit = Character.isDigit(previousChar);
-//                if (isPreviousCharDigit) {
-//                  continue;
-//                }
-//              }
-//              if (currentPoint.x > 0 && currentPoint.y > 0) {
-//                Point previousPoint = new Point(currentPoint.x - 1, currentPoint.y - 1);
-//                char previousChar = coordinateMap.get(previousPoint);
-//                boolean isPreviousCharDigit = Character.isDigit(previousChar);
-//                if (isPreviousCharDigit) {
-//                  continue;
-//                }
-//              }
-//              if (currentPoint.x > 0 && currentPoint.y < char2dArray.size() - 1) {
-//                Point previousPoint = new Point(currentPoint.x - 1, currentPoint.y + 1);
-//                char previousChar = coordinateMap.get(previousPoint);
-//                boolean isPreviousCharDigit = Character.isDigit(previousChar);
-//                if (isPreviousCharDigit) {
-//                  continue;
-//                }
-//              }
-//                if (currentPoint.y < char2dArray.size() - 1) {
-//                    Point previousPoint = new Point(currentPoint.x, currentPoint.y + 1);
-//                    char previousChar = coordinateMap.get(previousPoint);
-//                    boolean isPreviousCharDigit = Character.isDigit(previousChar);
-//                    if (isPreviousCharDigit) {
-//                    continue;
-//                    }
-//                }
-//                if (currentPoint.x < char2dArray.get(x).length - 1) {
-//                    Point previousPoint = new Point(currentPoint.x + 1, currentPoint.y);
-//                    char previousChar = coordinateMap.get(previousPoint);
-//                    boolean isPreviousCharDigit = Character.isDigit(previousChar);
-//                    if (isPreviousCharDigit) {
-//                    continue;
-//                    }
-//                }
-//                if (currentPoint.x < char2dArray.get(x).length - 1 && currentPoint.y < char2dArray.size() - 1) {
-//                    Point previousPoint = new Point(currentPoint.x + 1, currentPoint.y + 1);
-//                    char previousChar = coordinateMap.get(previousPoint);
-//                    boolean isPreviousCharDigit = Character.isDigit(previousChar);
-//                    if (isPreviousCharDigit) {
-//                    continue;
-//                    }
-//                }
-//                if (currentPoint.x < char2dArray.get(x).length - 1 && currentPoint.y > 0) {
-//                    Point previousPoint = new Point(currentPoint.x + 1, currentPoint.y - 1);
-//                    char previousChar = coordinateMap.get(previousPoint);
-//                    boolean isPreviousCharDigit = Character.isDigit(previousChar);
-//                    if (isPreviousCharDigit) {
-//                    continue;
-//                    }
-//                }
-//            }
-
             String partNumberString = partNumber.toString();
             Long partNumberLong = Long.parseLong(partNumberString);
             partNumberSum += partNumberLong;
             x += partnumberLength - 1;
             partNumber = new StringBuilder();
-            }
+
           }
         }
 
-      // Create an iterator - PartNumLength = 0
-      // iterate left to right, find "DIGIT/NUMBER"
-      // Set number length to start at 1
+        if (!isDigit) {
+          System.out.println("Part Number: " + partNumber);
+
+          if (partNumber.length() > 1) {
+            if (currentPoint.x > 0) {
+              Point previousPoint = new Point(currentPoint.x - 1, currentPoint.y);
+              char previousChar = coordinateMap.get(previousPoint);
+              boolean isPreviousCharDigit = Character.isDigit(previousChar);
+              if (isPreviousCharDigit) {
+                continue;
+              }
+            }
+          }
+//                if (currentPoint.y > 0) {
+//                  Point previousPoint = new Point(currentPoint.x, currentPoint.y - 1);
+//                  char previousChar = coordinateMap.get(previousPoint);
+//                  boolean isPreviousCharDigit = Character.isDigit(previousChar);
+//                  if (isPreviousCharDigit) {
+//                    continue;
+//                  }
+//                }
+//                if (currentPoint.x > 0 && currentPoint.y > 0) {
+//                  Point previousPoint = new Point(currentPoint.x - 1, currentPoint.y - 1);
+//                  char previousChar = coordinateMap.get(previousPoint);
+//                  boolean isPreviousCharDigit = Character.isDigit(previousChar);
+//                  if (isPreviousCharDigit) {
+//                    continue;
+//                  }
+//                }
+//                if (currentPoint.x > 0 && currentPoint.y < char2dArray.size() - 1) {
+//                  Point previousPoint = new Point(currentPoint.x - 1, currentPoint.y + 1);
+//                  char previousChar = coordinateMap.get(previousPoint);
+//                  boolean isPreviousCharDigit = Character.isDigit(previousChar);
+//                  if (isPreviousCharDigit) {
+//                    continue;
+//                  }
+//                }
+//                if (currentPoint.y < char2dArray.size() - 1) {
+//                  Point previousPoint = new Point(currentPoint.x, currentPoint.y + 1);
+//                  char previousChar = coordinateMap.get(previousPoint);
+//                  boolean isPreviousCharDigit = Character.isDigit(previousChar);
+//                  if (isPreviousCharDigit) {
+//                    continue;
+//                  }
+//                }
+//                if (currentPoint.x < char2dArray.get(x).length - 1) {
+//                  Point previousPoint = new Point(currentPoint.x + 1, currentPoint.y);
+//                  char previousChar = coordinateMap.get(previousPoint);
+//                  boolean isPreviousCharDigit = Character.isDigit(previousChar);
+//                  if (isPreviousCharDigit) {
+//                    continue;
+//                  }
+//                }
+//                if (currentPoint.x < char2dArray.get(x).length - 1 && currentPoint.y < char2dArray.size() - 1) {
+//                  Point previousPoint = new Point(currentPoint.x + 1, currentPoint.y + 1);
+//                  char previousChar = coordinateMap.get(previousPoint);
+//                  boolean isPreviousCharDigit = Character.isDigit(previousChar);
+//                  if (isPreviousCharDigit) {
+//                    continue;
+//                  }
+//                }
+//              }
+//      }
+
+          // Create an iterator - PartNumLength = 0
+          // iterate left to right, find "DIGIT/NUMBER"
+          // Set number length to start at 1
+        }
+      }
 
       System.out.println("Part Number Sum: " + partNumberSum);
     } catch(FileNotFoundException e) {
