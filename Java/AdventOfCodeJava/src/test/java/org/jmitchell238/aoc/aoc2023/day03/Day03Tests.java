@@ -10,7 +10,7 @@ class Day03Tests {
   void Day03Part1_CalledWithTestInput_Expect4361() throws FileNotFoundException {
     // Arrange
     String day03Part1Input =
-        "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input_test_part1.txt";
+        "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input_test_custom.txt";
 
     // Assert
     int expected = 4361;
