@@ -5,21 +5,27 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Day03 {
 
-  private static final Boolean DEBUGGING = true;
+  private static final Boolean DEBUGGING = false;
   private static final Boolean VERBOSE = false;
+  private static Map<Point, Character> coordinateMap;
+  private static Map<Long, ArrayList<Point>> partNumberMap;
+  private static ArrayList<Point> asterickList;
 
   public static void Day03() throws FileNotFoundException {
     System.out.println("%nDay 03: Gear Ratios");
 
     String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input.txt";
-    String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input_test_part1.txt";
+    String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input_test.txt";
 
     Long partOneAnswer = Part1(inputTest);
+
+    Long partTwoAnswer = Part2(inputTest);
 
   }
 
@@ -31,7 +37,7 @@ public class Day03 {
       Scanner scanner = new Scanner(input);
 
       ArrayList<char[]> char2dArray = new ArrayList<>();
-      Map<Point, Character> coordinateMap = createCoordinateMap(scanner, char2dArray);
+      coordinateMap = createCoordinateMap(scanner, char2dArray);
 
       // Get Part Numbers and check around them for symbols.
       for (int y = 0 ; y < char2dArray.size() ; y++) {
@@ -56,9 +62,9 @@ public class Day03 {
             }
 
             isDigit = false;
-            if (!isDigit) {
-              System.out.println("Part Number: " + partNumber);
-            }
+//            if (!isDigit) {
+//              System.out.println("Part Number: " + partNumber);
+//            }
 
             String partNumberString = partNumber.toString();
             partNumberLong = Long.parseLong(partNumberString);
@@ -72,6 +78,7 @@ public class Day03 {
             // Check the symbol to the left of part number.
             if (checkCharToLeftOfPartNumber(currentPoint, coordinateMap)) {
               partNumberSum += partNumberLong;
+
               partNumberLong = 0L;
               continue;
             }
@@ -104,13 +111,46 @@ public class Day03 {
       System.out.println("Part Number Sum: " + partNumberSum);
       return partNumberSum;
     } catch(FileNotFoundException e) {
-      // do nothing
       return -1L;
     }
   }
 
-  public static int Part2(String input) {
-    return 0;
+  public static Long Part2(String inputString) {
+    try {
+      File input = new File(inputString);
+      Scanner scanner = new Scanner(input);
+      ArrayList<char[]> char2dArray = new ArrayList<>();
+      coordinateMap = createCoordinateMap(scanner, char2dArray);
+      partNumberMap = createPartNumberMap(char2dArray, coordinateMap);
+
+      Long gearRatioSum = 0L;
+
+      for (Point asterick : asterickList) {
+
+        Long partNumberLong = 0L;
+
+        for (int x = asterick.x - 1 ; x <= asterick.x + 1 ; x++) {
+          for (int y = asterick.y - 1; y <= asterick.y + 1; y++) {
+            Point currentPoint = new Point(x, y);
+
+            Long coordinatePartNumber = getPartNumberForPoint(currentPoint);
+
+            if (coordinatePartNumber != -2L) {
+              if (partNumberLong == 0L) {
+                partNumberLong = coordinatePartNumber;
+              } else {
+                gearRatioSum += partNumberLong * coordinatePartNumber;
+              }
+            }
+          }
+        }
+      }
+
+        System.out.println("Gear Ratio Sum: " + gearRatioSum);
+      return gearRatioSum;
+    } catch (FileNotFoundException e) {
+      return -1L;
+    }
   }
 
   private static boolean checkCharToLeftOfPartNumber(Point currentPoint, Map<Point, Character> coordinateMap) {
@@ -133,8 +173,6 @@ public class Day03 {
       return false;
     }
   }
-
-
 
   private static boolean checkRowAbovePartNumber(Point currentPoint, int partnumberLength, Long partNumberLong, Long partNumberSum, Map<Point, Character> coordinateMap) {
     for (int i = currentPoint.x - 1 ; i <= currentPoint.x + partnumberLength ; i++) {
@@ -163,7 +201,8 @@ public class Day03 {
   }
 
   private static Map<Point, Character> createCoordinateMap(Scanner scanner, ArrayList<char[]> char2dArray) {
-    Map<Point, Character> coordinateMap = new HashMap<>();
+    coordinateMap = new HashMap<>();
+    asterickList = new ArrayList<>();
 
     while (scanner.hasNextLine()) {
       char2dArray.add(scanner.nextLine().toCharArray());
@@ -196,6 +235,14 @@ public class Day03 {
 
       for (int x = 0 ; x < currentCharArray.length ; x++) {
         coordinateMap.put(new Point(x,y), currentCharArray[x]);
+
+        if (currentCharArray[x] == '*') {
+          asterickList.add(new Point(x,y));
+
+          if (DEBUGGING) {
+            System.out.println("Asterick at: " + x + "," + y);
+          }
+        }
       }
     }
 
@@ -207,6 +254,75 @@ public class Day03 {
 
     return coordinateMap;
   }
+
+  private static Map<Long, ArrayList<Point>> createPartNumberMap(ArrayList<char[]> char2dArray, Map<Point, Character> coordinateMap) {
+    partNumberMap = new HashMap<>();
+
+    for (int y = 0 ; y < char2dArray.size() ; y++) {
+      for (int x = 0 ; x < char2dArray.get(0).length - 1 ; x++) {
+        Point currentPoint = new Point(x, y);
+        char currentChar = coordinateMap.get(currentPoint);
+        boolean isDigit = Character.isDigit(currentChar);
+
+        StringBuilder partNumber = new StringBuilder();
+        int partnumberLength = 0;
+        Long partNumberLong = 0L;
+
+        if (isDigit) {
+
+          for (int i = 0; i < 5; i++) {
+            partNumber.append(currentChar);
+            partnumberLength++;
+            currentChar = coordinateMap.get(new Point(currentPoint.x + partnumberLength, currentPoint.y));
+            if (currentChar == '.' || !Character.isDigit(currentChar)) {
+              break;
+            }
+          }
+
+          partNumberLong = Long.parseLong(partNumber.toString());
+
+          addPointToPartNumberMap(partNumberLong, currentPoint);
+          partNumberLong = Long.parseLong(partNumber.toString());
+          isDigit = false;
+        }
+      }
+    }
+
+    return partNumberMap;
+  }
+
+  private static void addPartNumberToGearRatioMap(Long partNumberLong, Point currentPoint, int partnumberLength) {
+    ArrayList<Point> partNumberCoordinates = new ArrayList<>();
+    for (int i = 0 ; i < partnumberLength ; i++) {
+      partNumberCoordinates.add(new Point(currentPoint.x + i, currentPoint.y));
+    }
+
+    addPointToPartNumberMap(partNumberLong, currentPoint);
+  }
+
+  private static void addPointToPartNumberMap(Long partNumber, Point point) {
+    partNumberMap.computeIfAbsent(partNumber, k -> new ArrayList<>()).add(point);
+
+    if (DEBUGGING) {
+      System.out.println("Part Number: " + partNumber);
+      System.out.println("Point: " + point);
+    }
+  }
+
+  private static ArrayList<Point> getPointsForPartNumber(Map<Integer, ArrayList<Point>> partNumberMap, int partNumber) {
+    return partNumberMap.getOrDefault(partNumber, new ArrayList<>());
+  }
+
+  private static Long getPartNumberForPoint(Point point) {
+    for (Map.Entry<Long, ArrayList<Point>> entry : partNumberMap.entrySet()) {
+      if (entry.getValue().contains(point)) {
+        return entry.getKey();
+      }
+    }
+    // Return a default value (you may want to handle this case differently based on your requirements)
+    return -2L;
+  }
+
 
   private static void printCoordinateMapToConsole(Map<Point, Character> coordinateMap, int char2dArraySize, int char2dArrayLineLength) {
     if (Boolean.FALSE.equals(DEBUGGING)) {
