@@ -545,6 +545,12 @@ public class Utilities {
         .toArray(Boolean[][]::new);
   }
 
+//  public static char[][] mapAsChar(String[] lines) {
+//    return Arrays.stream(lines)
+//        .map(row -> row.chars().mapToObj(x -> x == mapAsTrue).toArray(Boolean[]::new))
+//        .toArray(Boolean[][]::new);
+//  }
+
   /**
    * Finds the indices of true values in a 2D array of booleans.
    *
