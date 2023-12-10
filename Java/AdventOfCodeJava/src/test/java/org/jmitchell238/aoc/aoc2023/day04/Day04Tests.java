@@ -10,7 +10,7 @@ class Day04Tests {
   void Day04Part1_CalledWithTestInput_Expect13() throws FileNotFoundException {
     // Arrange
     String day04Part1Input =
-        "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input_test_part1.txt";
+        "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input_test.txt";
 
     // Assert
     int expected = 13;
@@ -35,7 +35,7 @@ class Day04Tests {
   void Day04Part2_CalledWithTestInput_ExpectCorrectAnswer() throws FileNotFoundException {
     // Arrange
     String day04Part2Input =
-        "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input_test_part2.txt";
+        "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input_test.txt";
 
     // Assert
     int expected = 0;
