@@ -19,6 +19,6 @@ public class Main {
     Day02.Day02();
 
     // Day 3
-    Day03.Day03();
+    Day03.main(args);
   }
 }
