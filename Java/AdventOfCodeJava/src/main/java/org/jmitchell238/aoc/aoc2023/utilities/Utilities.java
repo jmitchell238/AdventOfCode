@@ -21,6 +21,10 @@ public class Utilities {
 
   private Utilities() {}
 
+  public static char[] splitToCharArray(String str) {
+    return str.toCharArray();
+  }
+
   /**
    * Splits a string into an array of substrings based on the specified delimiter.
    *
@@ -540,6 +544,12 @@ public class Utilities {
         .map(row -> row.chars().mapToObj(x -> x == mapAsTrue).toArray(Boolean[]::new))
         .toArray(Boolean[][]::new);
   }
+
+//  public static char[][] mapAsChar(String[] lines) {
+//    return Arrays.stream(lines)
+//        .map(row -> row.chars().mapToObj(x -> x == mapAsTrue).toArray(Boolean[]::new))
+//        .toArray(Boolean[][]::new);
+//  }
 
   /**
    * Finds the indices of true values in a 2D array of booleans.
