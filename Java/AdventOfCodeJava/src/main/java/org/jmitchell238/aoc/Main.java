@@ -21,6 +21,7 @@ public class Main {
     Day03.main(args);
 
     // Day 4
-    Day04.main(args);
+    Day04 day04 = new Day04();
+    day04.main(args);
   }
 }
