@@ -16,7 +16,7 @@ class Day00Tests {
     int expected = 00;
 
     // Act
-    AssertionsForClassTypes.assertThat(Day00.Part1(day00Part1Input)).isEqualTo(expected);
+    AssertionsForClassTypes.assertThat(Day00.part1(day00Part1Input)).isEqualTo(expected);
   }
 
   @Test
@@ -28,7 +28,7 @@ class Day00Tests {
     int expected = 00;
 
     // Act
-    AssertionsForClassTypes.assertThat(Day00.Part1(day00Part1Input)).isEqualTo(expected);
+    AssertionsForClassTypes.assertThat(Day00.part1(day00Part1Input)).isEqualTo(expected);
   }
 
   @Test
@@ -41,7 +41,7 @@ class Day00Tests {
     int expected = 00;
 
     // Act
-    AssertionsForClassTypes.assertThat(Day00.Part2(day00Part2Input)).isEqualTo(expected);
+    AssertionsForClassTypes.assertThat(Day00.part2(day00Part2Input)).isEqualTo(expected);
   }
 
   @Test
@@ -53,6 +53,6 @@ class Day00Tests {
     int expected = 00;
 
     // Act
-    AssertionsForClassTypes.assertThat(Day00.Part2(day00Part2Input)).isEqualTo(expected);
+    AssertionsForClassTypes.assertThat(Day00.part2(day00Part2Input)).isEqualTo(expected);
   }
 }

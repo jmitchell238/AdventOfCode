@@ -7,16 +7,16 @@ import org.junit.jupiter.api.Test;
 class Day04Tests {
 
   @Test
-  void Day04Part1_CalledWithTestInput_ExpectCorrectAnswer() throws FileNotFoundException {
+  void Day04Part1_CalledWithTestInput_Expect13() throws FileNotFoundException {
     // Arrange
     String day04Part1Input =
         "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input_test_part1.txt";
 
     // Assert
-    int expected = 0;
+    int expected = 13;
 
     // Act
-    AssertionsForClassTypes.assertThat(Day04.Part1(day04Part1Input)).isEqualTo(expected);
+    AssertionsForClassTypes.assertThat(Day04.part1(day04Part1Input)).isEqualTo(expected);
   }
 
   @Test
@@ -28,7 +28,7 @@ class Day04Tests {
     int expected = 0;
 
     // Act
-    AssertionsForClassTypes.assertThat(Day04.Part1(day04Part1Input)).isEqualTo(expected);
+    AssertionsForClassTypes.assertThat(Day04.part1(day04Part1Input)).isEqualTo(expected);
   }
 
   @Test
@@ -41,7 +41,7 @@ class Day04Tests {
     int expected = 0;
 
     // Act
-    AssertionsForClassTypes.assertThat(Day04.Part2(day04Part2Input)).isEqualTo(expected);
+    AssertionsForClassTypes.assertThat(Day04.part2(day04Part2Input)).isEqualTo(expected);
   }
 
   @Test
@@ -53,6 +53,6 @@ class Day04Tests {
     int expected = 0;
 
     // Act
-    AssertionsForClassTypes.assertThat(Day04.Part2(day04Part2Input)).isEqualTo(expected);
+    AssertionsForClassTypes.assertThat(Day04.part2(day04Part2Input)).isEqualTo(expected);
   }
 }
