@@ -22,7 +22,7 @@ public class Day01 {
     File day1Part2Input = new File(dayOneInput);
 
     int partTwoTotal = Part2(day1Part2Input);
-    System.out.println("Part 2: Answer:" + partTwoTotal);
+    System.out.println("Part 2: Answer: " + partTwoTotal);
   }
 
   public static int Part1(File day1Part1Input) throws FileNotFoundException {
