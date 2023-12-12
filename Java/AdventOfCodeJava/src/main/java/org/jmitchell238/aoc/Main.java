@@ -6,6 +6,7 @@ import org.jmitchell238.aoc.aoc2023.day02.Day02;
 import org.jmitchell238.aoc.aoc2023.day03.Day03;
 import org.jmitchell238.aoc.aoc2023.day04.Day04;
 import org.jmitchell238.aoc.aoc2023.day05.Day05;
+import org.jmitchell238.aoc.aoc2023.day06.Day06;
 
 public class Main {
 
@@ -28,5 +29,9 @@ public class Main {
     // Day 5
     Day05 day05 = new Day05();
     day05.main(args);
+
+    // Day 6
+    Day06 day06 = new Day06();
+    day06.main(args);
   }
 }
