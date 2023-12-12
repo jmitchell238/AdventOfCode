@@ -5,57 +5,71 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.io.FileNotFoundException;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.jmitchell238.aoc.aoc2023.day00.Day00;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class Day05Tests {
 
+  @AfterEach
+  void tearDown() {
+    Day05.reset();
+  }
+
   @Test
-  void Day05Part1_CalledWithTestInput_ExpectCorrectAnswer() throws FileNotFoundException {
+  void Day05Part1_CalledWithTestInput_Expect35() throws FileNotFoundException {
     // Arrange
     String day05Part1Input =
-        "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input_test_part1.txt";
+        "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input_test.txt";
+    Day05 day05 = new Day05();
 
     // Assert
-    int expected = 00;
+    long expected = 35L;
+    long actual = day05.part1(day05Part1Input);
 
     // Act
-    assertThat(Day05.part1(day05Part1Input)).isEqualTo(expected);
+    assertThat(actual).isEqualTo(expected);
   }
 
   @Test
-  void Day05Part1_CalledWithRealInput_ExpectCorrectAnswer() throws FileNotFoundException {
+  void Day05Part1_CalledWithRealInput_Expect31599214() throws FileNotFoundException {
     // Arrange
     String day05Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input.txt";
+    Day05 day05 = new Day05();
 
     // Assert
-    int expected = 00;
+    long expected = 31599214L;
+    long actual = day05.part1(day05Part1Input);
 
     // Act
-    assertThat(org.jmitchell238.aoc.aoc2023.day05.Day05.part1(day05Part1Input)).isEqualTo(expected);
+    assertThat(actual).isEqualTo(expected);
   }
 
   @Test
-  void Day05Part2_CalledWithTestInput_ExpectCorrectAnswer() throws FileNotFoundException {
+  void Day05Part2_CalledWithTestInput_Expect46() throws FileNotFoundException {
     // Arrange
     String day05Part2Input =
-        "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input_test_part2.txt";
-
-    // Assert
-    int expected = 00;
+        "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input_test.txt";
+    Day05 day05 = new Day05();
 
     // Act
-    assertThat(org.jmitchell238.aoc.aoc2023.day05.Day05.part2(day05Part2Input)).isEqualTo(expected);
+    long expected = 46L;
+    long actual = day05.part2(day05Part2Input);
+
+    // Assert
+    assertThat(actual).isEqualTo(expected);
   }
 
   @Test
-  void Day05Part2_CalledWithRealInput_ExpectCorrectAnswer() throws FileNotFoundException {
+  void Day05Part2_CalledWithRealInput_Expect20358599() throws FileNotFoundException {
     // Arrange
     String day05Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input.txt";
-
-    // Assert
-    int expected = 00;
+    Day05 day05 = new Day05();
 
     // Act
-    assertThat(Day05.part2(day05Part2Input)).isEqualTo(expected);
+    long expected = 20358599L;
+    long actual = day05.part2(day05Part2Input);
+
+    // Assert
+    assertThat(actual).isEqualTo(expected);
   }
 }

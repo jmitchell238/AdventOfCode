@@ -26,6 +26,7 @@ public class Main {
     day04.main(args);
 
     // Day 5
-    Day05.main(args);
+    Day05 day05 = new Day05();
+    day05.main(args);
   }
 }
