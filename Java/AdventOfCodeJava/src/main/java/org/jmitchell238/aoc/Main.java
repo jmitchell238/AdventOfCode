@@ -7,6 +7,8 @@ import org.jmitchell238.aoc.aoc2023.day03.Day03;
 import org.jmitchell238.aoc.aoc2023.day04.Day04;
 import org.jmitchell238.aoc.aoc2023.day05.Day05;
 import org.jmitchell238.aoc.aoc2023.day06.Day06;
+import org.jmitchell238.aoc.aoc2023.day07.Day07;
+import org.jmitchell238.aoc.aoc2023.day08.Day08;
 
 public class Main {
 
@@ -33,5 +35,13 @@ public class Main {
     // Day 6
     Day06 day06 = new Day06();
     day06.main(args);
+
+    // Day 7
+    Day07 day07 = new Day07();
+    day07.main(args);
+
+    // Day 8
+    Day08 day08 = new Day08();
+    day08.main(args);
   }
 }
