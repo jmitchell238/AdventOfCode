@@ -680,6 +680,19 @@ class UtilitiesTests {
   }
 
   @Test
+  void gcf_CalledWithTwoLongs_ReturnsGreatestCommonFactor() {
+    // Arrange
+    long a = 24;
+    long b = 36;
+
+    // Act
+    long result = Utilities.gcf(a, b);
+
+    // Assert
+    assertThat(result).isEqualTo(12);
+  }
+
+  @Test
   void lcm_CalledWithTwoIntegers_ReturnsLeastCommonMultiple() {
     // Arrange
     int a = 12;
@@ -690,6 +703,36 @@ class UtilitiesTests {
 
     // Assert
     assertThat(result).isEqualTo(36);
+  }
+
+  @Test
+  void lcm_CalledWithTwoLongs_ReturnsLeastCommonMultiple() {
+    // Arrange
+    long a = 12;
+    long b = 18;
+
+    // Act
+    long result = Utilities.lcm(a, b);
+
+    // Assert
+    assertThat(result).isEqualTo(36);
+  }
+
+  @Test
+  void lcmSix_CalledWithSixLongs_ReturnsLeastCommonMultiple() {
+    // Arrange
+    long a = 12;
+    long b = 18;
+    long c = 24;
+    long d = 36;
+    long e = 48;
+    long f = 72;
+
+    // Act
+    long result = Utilities.lcmSix(a, b, c, d, e, f);
+
+    // Assert
+    assertThat(result).isEqualTo(144);
   }
 
   @Test

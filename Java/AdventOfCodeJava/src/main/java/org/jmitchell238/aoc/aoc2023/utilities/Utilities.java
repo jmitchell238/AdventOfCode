@@ -651,6 +651,22 @@ public class Utilities {
   }
 
   /**
+   * Calculates the greatest common factor of two longs.
+   *
+   * @param a The first long.
+   * @param b The second long.
+   * @return The greatest common factor.
+   */
+  public static long gcf(long a, long b) {
+    while (b != 0) {
+      long temp = b;
+      b = a % b;
+      a = temp;
+    }
+    return a;
+  }
+
+  /**
    * Calculates the least common multiple of two integers.
    *
    * @param a The first integer.
@@ -659,6 +675,31 @@ public class Utilities {
    */
   public static int lcm(int a, int b) {
     return (a / gcf(a, b)) * b;
+  }
+
+  /**
+   * Calculates the least common multiple of two longs.
+   *
+   * @param a The first long.
+   * @param b The second long.
+   * @return The least common multiple.
+   */
+  public static long lcm(long a, long b) {
+    return ((a / gcf(a, b)) * b);
+  }
+  /**
+   * Calculates the least common multiple of six longs.
+   *
+   * @param a The first long.
+   * @param b The second long.
+   * @param c The third long.
+   * @param d The fourth long.
+   * @param e The fifth long.
+   * @param f The sixth long.
+   * @return The least common multiple.
+   */
+  public static long lcmSix(long a, long b, long c, long d, long e, long f) {
+    return lcm(lcm(lcm(lcm(lcm(a, b), c), d), e), f);
   }
 
   /**
