@@ -687,6 +687,7 @@ public class Utilities {
   public static long lcm(long a, long b) {
     return ((a / gcf(a, b)) * b);
   }
+
   /**
    * Calculates the least common multiple of six longs.
    *
