@@ -2,7 +2,9 @@ package org.jmitchell238.aoc.aoc2023.day12;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +12,7 @@ public class Day12 {
   private static final Boolean DEBUGGING = false;
   @Getter @Setter
   private Boolean isPartTwo = false;
-
-
+  private SpringConditionRecordsList springConditionRecordsList = new SpringConditionRecordsList();
 
   public void main(String[] args) throws FileNotFoundException {
     Day12Run();
@@ -26,8 +27,8 @@ public class Day12 {
     long partOneAnswer = part1(input_test);
     System.out.println(STR."Part 1: Answer: \{partOneAnswer}");
 
-    long partTwoAnswer = part2(input_test);
-    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
+//    long partTwoAnswer = part2(input_test);
+//    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
   }
 
   public long part1(String filePath) throws FileNotFoundException {
@@ -47,11 +48,11 @@ public class Day12 {
 
     while (scanner.hasNextLine()) {
       String line = scanner.nextLine();
-      if (DEBUGGING) {
-        System.out.println(line);
-      }
+      SpringConditionRecord springConditionRecord = new SpringConditionRecord(line);
+      springConditionRecordsList.getSpringConditionRecordsList().add(springConditionRecord);
     }
 
+    springConditionRecordsList.printAllRecordsConditions();
     scanner.close();
   }
 }
