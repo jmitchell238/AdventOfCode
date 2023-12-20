@@ -3,20 +3,19 @@ package org.jmitchell238.aoc.aoc2023.day11;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.io.FileNotFoundException;
-import org.jmitchell238.aoc.aoc2023.day09.Day11;
 import org.junit.jupiter.api.Test;
 
 class Day11Tests {
 
   @Test
-  void Day11Part1_CalledWithTestInput_Expect4() throws FileNotFoundException {
+  void Day11Part1_CalledWithTestInput_Expect374() throws FileNotFoundException {
     // Arrange
     String day11Part1Input =
-        "src/main/java/org/jmitchell238/aoc/aoc2023/day11/input_test_1.txt";
+        "src/main/java/org/jmitchell238/aoc/aoc2023/day11/input_test.txt";
     Day11 day11 = new Day11();
 
     // Assert
-    long expected = 4L;
+    long expected = 374L;
     long actual = day11.part1(day11Part1Input);
 
     // Act
@@ -24,28 +23,13 @@ class Day11Tests {
   }
 
   @Test
-  void Day11Part1_CalledWithTestInput2_Expect_() throws FileNotFoundException {
-    // Arrange
-    String day11Part1Input =
-        "src/main/java/org/jmitchell238/aoc/aoc2023/day11/input_test_2.txt";
-    Day11 day11 = new Day11();
-
-    // Assert
-    long expected = 9L;
-    long actual = day11.part1(day11Part1Input);
-
-    // Act
-    assertThat(actual).isEqualTo(expected);
-  }
-
-  @Test
-  void Day11Part1_CalledWithRealInput_Expect_() throws FileNotFoundException {
+  void Day11Part1_CalledWithRealInput_Expect9647174() throws FileNotFoundException {
     // Arrange
     String day11Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day11/input.txt";
     Day11 day11 = new Day11();
 
     // Assert
-    long expected = 6773L;
+    long expected = 9647174L;
     long actual = day11.part1(day11Part1Input);
 
     // Act
@@ -53,15 +37,32 @@ class Day11Tests {
   }
 
   @Test
-  void Day11Part2_CalledWithRealInput_Expect493() throws FileNotFoundException {
+  void Day11Part2_CalledWithTestInput10TimesExpansion_Expect1030() throws FileNotFoundException {
     // Arrange
-    String day11Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day11/input.txt";
+    String day11Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day11/input_test.txt";
+
     Day11 day11 = new Day11();
-    day11.setIsPartTwo(true);
+    long expansionFactor = 10L;
 
     // Act
-    long expected = 493L;
-    long actual = day11.part2(day11Part2Input);
+    long expected = 1030L;
+    long actual = day11.part2(day11Part2Input, expansionFactor);
+
+    // Assert
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  void Day11Part2_CalledWithRealInput1000000TimesExpansion_Expect377318892554() throws FileNotFoundException {
+    // Arrange
+    String day11Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day11/input.txt";
+
+    Day11 day11 = new Day11();
+    long expansionFactor = 1000000L;
+
+    // Act
+    long expected = 377318892554L;
+    long actual = day11.part2(day11Part2Input, expansionFactor);
 
     // Assert
     assertThat(actual).isEqualTo(expected);
