@@ -10,9 +10,8 @@ import java.util.Vector;
 
 public class FloodFill {
 
-  private final ArrayList<Character> PIPE_CHARS = new ArrayList<Character>(Arrays.asList(
-      'S', 'L', 'J', '7', 'F', '-', '|'
-  ));
+  private final ArrayList<Character> PIPE_CHARS =
+      new ArrayList<Character>(Arrays.asList('S', 'L', 'J', '7', 'F', '-', '|'));
 
   private final Map<Point, Character> map; // Your Map representing the grid
   private final Map<Point, Character> originalMap;
@@ -23,7 +22,8 @@ public class FloodFill {
   int count = 0;
 
   // Constructor - assuming you provide these values somehow
-  public FloodFill(Map<Point, Character> map, ArrayList<Point> pipePoints, Map<Point, Character> originalMap) {
+  public FloodFill(
+      Map<Point, Character> map, ArrayList<Point> pipePoints, Map<Point, Character> originalMap) {
     this.map = map;
     this.originalMap = originalMap;
     this.gridWidth = map.keySet().stream().mapToInt(p -> p.x).max().orElse(0);
@@ -32,10 +32,12 @@ public class FloodFill {
   }
 
   private boolean isValidPoint(Point point) {
-    return point.x >= 0 && point.x < gridWidth &&
-        point.y >= 0 && point.y < gridHeight &&
-        !visited.contains(point) &&
-        !isPipePoint(point);
+    return point.x >= 0
+        && point.x < gridWidth
+        && point.y >= 0
+        && point.y < gridHeight
+        && !visited.contains(point)
+        && !isPipePoint(point);
   }
 
   private boolean isPipePoint(Point point) {
@@ -110,6 +112,6 @@ public class FloodFill {
         queue.add(pointToRight);
       }
     }
-      return count;
+    return count;
   }
 }

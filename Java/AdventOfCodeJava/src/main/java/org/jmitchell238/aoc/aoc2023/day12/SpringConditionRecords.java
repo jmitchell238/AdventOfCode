@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import lombok.Data;
 
 @Data
-public class SpringConditionRecordsList {
+public class SpringConditionRecords {
   private ArrayList<SpringConditionRecord> springConditionRecordsList = new ArrayList<>();
 
   public void printAllRecordsConditions() {

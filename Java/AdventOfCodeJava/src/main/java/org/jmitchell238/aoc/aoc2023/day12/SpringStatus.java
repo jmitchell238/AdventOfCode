@@ -28,6 +28,6 @@ public enum SpringStatus {
     char inputChar = '#';
 
     SpringStatus springStatus = SpringStatus.fromChar(inputChar);
-    System.out.println("Char '" + inputChar + "' maps to: " + springStatus);
+    System.out.println(STR."Char '\{inputChar}' maps to: \{springStatus}");
   }
 }
