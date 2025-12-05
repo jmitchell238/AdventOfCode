@@ -6,17 +6,17 @@ import lombok.Data;
 
 @Data
 public class Galaxies {
-  private final List<Galaxy> galaxyList = new ArrayList<>();
+    private final List<Galaxy> galaxyList = new ArrayList<>();
 
-  public void addGalaxy(Galaxy galaxy) {
-    galaxyList.add(galaxy);
-  }
+    public void addGalaxy(Galaxy galaxy) {
+        galaxyList.add(galaxy);
+    }
 
-  public void removeGalaxy(Galaxy galaxy) {
-    galaxyList.remove(galaxy);
-  }
+    public void removeGalaxy(Galaxy galaxy) {
+        galaxyList.remove(galaxy);
+    }
 
-  public Galaxy getGalaxyById(int id) {
-    return galaxyList.get(id - 1);
-  }
+    public Galaxy getGalaxyById(int id) {
+        return galaxyList.get(id - 1);
+    }
 }

@@ -12,145 +12,148 @@ import lombok.Setter;
 import org.jmitchell238.aoc.aoc2023.utilities.Utilities;
 
 public class Day09 {
-  private static final Boolean DEBUGGING = true;
-  private static final Boolean VERBOSE = false;
-  @Getter @Setter
-  private Boolean isPartTwo = false;
-  private final List<List<Integer>> sequences = new ArrayList<>();
+    private static final Boolean DEBUGGING = true;
+    private static final Boolean VERBOSE = false;
 
-  public void main(String[] args) throws FileNotFoundException {
-    Day09Run();
-  }
+    @Getter
+    @Setter
+    private Boolean isPartTwo = false;
 
-  public void Day09Run() throws FileNotFoundException {
-    System.out.println("\n--- Day 9: Mirage Maintenance ---\n");
+    private final List<List<Integer>> sequences = new ArrayList<>();
 
-    String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day09/input.txt";
-    String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day09/input_test.txt";
-
-    long partOneAnswer = part1(input);
-    System.out.println("Part 1: Answer: " + partOneAnswer);
-
-    long partTwoAnswer = part2(input);
-    System.out.println("Part 2: Answer: " + partTwoAnswer);
-  }
-
-  public long part1(String filePath) throws FileNotFoundException {
-    processFile(filePath);
-
-    int sum = 0;
-
-    List<List<Integer>> changedSequences = new ArrayList<>();
-
-    for (List<Integer> sequence : sequences) {
-      List<Integer> changedSequence = findNextNumberInSequenceReturnSequence(sequence);
-      changedSequences.add(changedSequence);
+    public void main(String[] args) throws FileNotFoundException {
+        Day09Run();
     }
 
-    for (List<Integer> changedSequence : changedSequences) {
-      sum += changedSequence.getLast();
+    public void Day09Run() throws FileNotFoundException {
+        System.out.println("\n--- Day 9: Mirage Maintenance ---\n");
+
+        String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day09/input.txt";
+        String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day09/input_test.txt";
+
+        long partOneAnswer = part1(input);
+        System.out.println("Part 1: Answer: " + partOneAnswer);
+
+        long partTwoAnswer = part2(input);
+        System.out.println("Part 2: Answer: " + partTwoAnswer);
     }
 
-    return sum;
-  }
+    public long part1(String filePath) throws FileNotFoundException {
+        processFile(filePath);
 
-  public long part2(String filePath) throws FileNotFoundException {
-    processFile(filePath);
+        int sum = 0;
 
-    int sum = 0;
+        List<List<Integer>> changedSequences = new ArrayList<>();
 
-    List<List<Integer>> changedSequences = new ArrayList<>();
+        for (List<Integer> sequence : sequences) {
+            List<Integer> changedSequence = findNextNumberInSequenceReturnSequence(sequence);
+            changedSequences.add(changedSequence);
+        }
 
-    for (List<Integer> sequence : sequences) {
-      List<Integer> changedSequence = findPreviousNumberInSequenceReturnSequence(sequence);
-      changedSequences.add(changedSequence);
+        for (List<Integer> changedSequence : changedSequences) {
+            sum += changedSequence.getLast();
+        }
+
+        return sum;
     }
 
-    for (List<Integer> changedSequence : changedSequences) {
-      sum += changedSequence.getFirst();
+    public long part2(String filePath) throws FileNotFoundException {
+        processFile(filePath);
+
+        int sum = 0;
+
+        List<List<Integer>> changedSequences = new ArrayList<>();
+
+        for (List<Integer> sequence : sequences) {
+            List<Integer> changedSequence = findPreviousNumberInSequenceReturnSequence(sequence);
+            changedSequences.add(changedSequence);
+        }
+
+        for (List<Integer> changedSequence : changedSequences) {
+            sum += changedSequence.getFirst();
+        }
+
+        return sum;
     }
 
-    return sum;
-  }
+    private void processFile(String filePath) throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(filePath));
 
-  private void processFile(String filePath) throws FileNotFoundException {
-    Scanner scanner = new Scanner(new File(filePath));
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            int[] sequence = Utilities.splitToIntArray(line, " ");
+            if (DEBUGGING) System.out.println("Sequence: " + Arrays.toString(sequence));
 
-    while (scanner.hasNextLine()) {
-      String line = scanner.nextLine();
-      int[] sequence = Utilities.splitToIntArray(line, " ");
-      if (DEBUGGING) System.out.println("Sequence: " + Arrays.toString(sequence));
-
-      sequences.add(Arrays.stream(sequence).boxed().collect(Collectors.toList()));
-    }
-  }
-
-  private int findNextNumberInSequence(List<Integer> sequence) {
-    List<Integer> differences = new ArrayList<>();
-
-    for (int i = 0; i < sequence.size() - 1; i++) {
-      differences.add(sequence.get(i + 1) - sequence.get(i));
+            sequences.add(Arrays.stream(sequence).boxed().collect(Collectors.toList()));
+        }
     }
 
-    if (!differences.stream().allMatch(difference -> difference == 0)) {
-      int nextNumber = findNextNumberInSequence(differences);
+    private int findNextNumberInSequence(List<Integer> sequence) {
+        List<Integer> differences = new ArrayList<>();
 
-      return sequence.getLast() + nextNumber;
+        for (int i = 0; i < sequence.size() - 1; i++) {
+            differences.add(sequence.get(i + 1) - sequence.get(i));
+        }
+
+        if (!differences.stream().allMatch(difference -> difference == 0)) {
+            int nextNumber = findNextNumberInSequence(differences);
+
+            return sequence.getLast() + nextNumber;
+        }
+
+        return sequence.getLast();
     }
 
-    return sequence.getLast();
-  }
+    private List<Integer> findNextNumberInSequenceReturnSequence(List<Integer> sequence) {
+        List<Integer> differences = new ArrayList<>();
 
-  private List<Integer> findNextNumberInSequenceReturnSequence(List<Integer> sequence) {
-    List<Integer> differences = new ArrayList<>();
+        for (int i = 0; i < sequence.size() - 1; i++) {
+            differences.add(sequence.get(i + 1) - sequence.get(i));
+        }
 
-    for (int i = 0; i < sequence.size() - 1; i++) {
-      differences.add(sequence.get(i + 1) - sequence.get(i));
+        // If the differences List doesn't contain all 0's, recursively call this function with the differences List
+        if (!differences.stream().allMatch(difference -> difference == 0)) {
+            int nextNumber = findNextNumberInSequence(differences);
+
+            // Calculate the next number in the sequence
+            sequence.add(sequence.getLast() + nextNumber);
+            return sequence;
+        }
+
+        // Return the last number in the original sequence
+        return sequence;
     }
 
-    // If the differences List doesn't contain all 0's, recursively call this function with the differences List
-    if (!differences.stream().allMatch(difference -> difference == 0)) {
-      int nextNumber = findNextNumberInSequence(differences);
+    private int findPreviousNumberInSequence(List<Integer> sequence) {
+        List<Integer> differences = new ArrayList<>();
 
-      // Calculate the next number in the sequence
-      sequence.add(sequence.getLast() + nextNumber);
-      return sequence;
+        for (int i = 0; i < sequence.size() - 1; i++) {
+            differences.add(sequence.get(i + 1) - sequence.get(i));
+        }
+
+        if (!differences.stream().allMatch(difference -> difference == 0)) {
+            int previousNumber = findPreviousNumberInSequence(differences);
+
+            return sequence.getFirst() - previousNumber;
+        }
+
+        return sequence.getFirst();
     }
 
-    // Return the last number in the original sequence
-    return sequence;
-  }
+    private List<Integer> findPreviousNumberInSequenceReturnSequence(List<Integer> sequence) {
+        List<Integer> differences = new ArrayList<>();
 
-  private int findPreviousNumberInSequence(List<Integer> sequence) {
-    List<Integer> differences = new ArrayList<>();
+        for (int i = 0; i < sequence.size() - 1; i++) {
+            differences.add(sequence.get(i + 1) - sequence.get(i));
+        }
 
-    for (int i = 0; i < sequence.size() - 1; i++) {
-      differences.add(sequence.get(i + 1) - sequence.get(i));
+        if (!differences.stream().allMatch(difference -> difference == 0)) {
+            int previousNumber = findPreviousNumberInSequence(differences);
+
+            sequence.addFirst(sequence.getFirst() - previousNumber);
+            return sequence;
+        }
+
+        return sequence;
     }
-
-    if (!differences.stream().allMatch(difference -> difference == 0)) {
-      int previousNumber = findPreviousNumberInSequence(differences);
-
-      return sequence.getFirst() - previousNumber;
-    }
-
-    return sequence.getFirst();
-  }
-
-  private List<Integer> findPreviousNumberInSequenceReturnSequence(List<Integer> sequence) {
-    List<Integer> differences = new ArrayList<>();
-
-    for (int i = 0; i < sequence.size() - 1; i++) {
-      differences.add(sequence.get(i + 1) - sequence.get(i));
-    }
-
-    if (!differences.stream().allMatch(difference -> difference == 0)) {
-      int previousNumber = findPreviousNumberInSequence(differences);
-
-      sequence.addFirst(sequence.getFirst() - previousNumber);
-      return sequence;
-    }
-
-    return sequence;
-  }
 }

@@ -15,7 +15,10 @@ import java.util.function.Consumer;
 @SuppressWarnings({"java:S106"})
 public class Day01 {
 
-    private enum LogLevel { VERBOSE, DEBUG }
+    private enum LogLevel {
+        VERBOSE,
+        DEBUG
+    }
 
     // Configuration flags
     private static final boolean DEBUGGING = false;
@@ -146,7 +149,6 @@ public class Day01 {
         return crossings;
     }
 
-
     /**
      * Normalize the dial value into the range [0, 99].
      * <p>
@@ -215,7 +217,7 @@ public class Day01 {
         }
     }
 
-    //region Helper Methods
+    // region Helper Methods
 
     // ========== Boundary Crossing Detection ==========
 
@@ -265,5 +267,5 @@ public class Day01 {
         return (Math.abs(endValue) - 1) / 100;
     }
 
-    //endregion
+    // endregion
 }
