@@ -67,10 +67,10 @@ public class Day07 {
     String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day07/input_test.txt";
 
     long partOneAnswer = part1(inputTest);
-    System.out.println(STR."Part 1: Answer: \{partOneAnswer}");
+    System.out.println("Part 1: Answer: " + partOneAnswer);
 
     long partTwoAnswer = part2(inputTest);
-    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
+    System.out.println("Part 2: Answer: " + partTwoAnswer);
   }
 
   public long part1(String filePath) {
@@ -102,7 +102,7 @@ public class Day07 {
 
         String[] lineSplit = line.split(" ");
         if (DEBUGGING)
-          System.out.print(STR."Hand: \{lineSplit[0]} | Bid: \{lineSplit[1]} | \n");
+          System.out.print("Hand: " + lineSplit[0] + " | Bid: " + lineSplit[1] + " | \n");
 
         char[] hand = new char[5];
         for (int i = 0; i < 5; i++) {
@@ -129,7 +129,7 @@ public class Day07 {
       }
       scanner.close();
     } catch (FileNotFoundException e) {
-      System.out.println(STR."File not found, \{filePath}");
+      System.out.println("File not found, " + filePath);
       e.printStackTrace();
     }
   }

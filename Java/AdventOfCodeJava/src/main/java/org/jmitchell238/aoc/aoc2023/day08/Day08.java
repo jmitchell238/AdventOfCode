@@ -31,10 +31,10 @@ public class Day08 {
     String inputTest2 = "src/main/java/org/jmitchell238/aoc/aoc2023/day08/input_test_2.txt";
 
     long partOneAnswer = part1(input);
-    System.out.println(STR."Part 1: Answer: \{partOneAnswer}");
+    System.out.println("Part 1: Answer: " + partOneAnswer);
 
     long partTwoAnswer = part2(input);
-    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
+    System.out.println("Part 2: Answer: " + partTwoAnswer);
   }
 
   public long part1(String filePath) throws FileNotFoundException {
@@ -96,7 +96,7 @@ public class Day08 {
     }
 
     if (DEBUGGING) {
-      System.out.println(STR."Node Lengths to Z: \{nodeLengthsToZ.toString()}");
+      System.out.println("Node Lengths to Z: " + nodeLengthsToZ.toString());
     }
 
     long lcm;
@@ -107,7 +107,7 @@ public class Day08 {
     }
 
     if (DEBUGGING) {
-      System.out.println(STR."LCM: \{lcm}");
+      System.out.println("LCM: " + lcm);
     }
 
     return lcm;

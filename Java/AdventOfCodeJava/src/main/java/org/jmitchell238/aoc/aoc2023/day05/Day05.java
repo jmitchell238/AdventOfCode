@@ -47,10 +47,10 @@ public class Day05 {
     String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input_test.txt";
 
     long partOneAnswer = part1(input);
-    System.out.println(STR."Part 1: Answer: \{partOneAnswer}");
+    System.out.println("Part 1: Answer: " + partOneAnswer);
 
     long partTwoAnswer = part2(input);
-    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
+    System.out.println("Part 2: Answer: " + partTwoAnswer);
   }
 
   public long part1(String inputString) throws FileNotFoundException {
@@ -117,7 +117,7 @@ public class Day05 {
       answer = processSeedsLinePart2();
     }
 
-    System.out.println(STR."Lowest Location number for provided seeds: \{answer}");
+    System.out.println("Lowest Location number for provided seeds: " + answer);
 
     return answer;
   }

@@ -25,11 +25,11 @@ public class Day04 {
     String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input_test.txt";
 
     int partOneAnswer = part1(input);
-    System.out.println(STR."Part 1: Answer: \{partOneAnswer}");
+    System.out.println("Part 1: Answer: " + partOneAnswer);
 
 
     int partTwoAnswer = this.part2(input);
-    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
+    System.out.println("Part 2: Answer: " + partTwoAnswer);
   }
 
   public static int part1(String inputString) {
@@ -60,16 +60,16 @@ public class Day04 {
         winningNumbers = stream(line.get(1).split(" ")).filter(n -> !Objects.equals(n, "")).mapToInt(Integer::parseInt).boxed()
             .collect(toCollection(ArrayList::new));
         if (DEBUGGING) {
-          System.out.print(STR."\n\{line.getFirst()}:\n");
+          System.out.print("\n" + line.getFirst() + ":\n");
           System.out.print("Winning Numbers: ");
-          for (Integer number : winningNumbers) System.out.print(STR."\{number},");
+          for (Integer number : winningNumbers) System.out.print(number + ",");
         }
 
         scratchNumbers = stream(line.get(2).split(" ")).filter(n -> !Objects.equals(n, "")).mapToInt(Integer::parseInt).boxed()
             .collect(toCollection(ArrayList::new));
         if (DEBUGGING) {
           System.out.print("\nScratch Numbers:");
-          for (Integer number : scratchNumbers) System.out.print(STR."\{number},");
+          for (Integer number : scratchNumbers) System.out.print(number + ",");
         }
 
         for (Integer number : scratchNumbers) {
@@ -80,11 +80,11 @@ public class Day04 {
 
         if (DEBUGGING) {
           System.out.print("\nMatching Numbers:");
-          for (Integer number : matchingNumbers) System.out.print(STR."\{number},");
+          for (Integer number : matchingNumbers) System.out.print(number + ",");
         }
 
         int points = 0;
-        for (Integer _ : matchingNumbers) {
+        for (Integer ignored : matchingNumbers) {
           if (points == 0) {
             points++;
           } else {
@@ -92,7 +92,7 @@ public class Day04 {
           }
         }
 
-        if (DEBUGGING) System.out.println(STR."\nPoints: \{points}\n");
+        if (DEBUGGING) System.out.println("\nPoints: " + points + "\n");
 
         totalPoints = totalPoints + points;
       }
@@ -136,9 +136,9 @@ public class Day04 {
         winningNumbers = stream(inputSplitWithCount.get(i).getList().get(0).get(1).split(" ")).filter(n -> !Objects.equals(n, "")).mapToInt(Integer::parseInt).boxed()
             .collect(toCollection(ArrayList::new));
         if (DEBUGGING) {
-          System.out.print(STR."\n\{inputSplitWithCount.get(i).getList().get(0).getFirst()}:\n");
+          System.out.print("\n" + inputSplitWithCount.get(i).getList().get(0).getFirst() + ":\n");
           System.out.print("Winning Numbers: ");
-          for (Integer number : winningNumbers) System.out.print(STR."\{number},");
+          for (Integer number : winningNumbers) System.out.print(number + ",");
         }
 
         scratchNumbers = stream(inputSplitWithCount.get(i).getList().get(0).get(2).split(" ")).filter(n -> !Objects.equals(n, "")).mapToInt(Integer::parseInt).boxed()
@@ -146,7 +146,7 @@ public class Day04 {
 
         if (DEBUGGING) {
           System.out.print("\nScratch Numbers:");
-          for (Integer number : scratchNumbers) System.out.print(STR."\{number},");
+          for (Integer number : scratchNumbers) System.out.print(number + ",");
         }
 
         for (Integer number : scratchNumbers) {
@@ -156,13 +156,13 @@ public class Day04 {
         }
         if (DEBUGGING) {
           System.out.print("\nMatching Numbers:");
-          for (Integer number : matchingNumbers) System.out.print(STR."\{number},");
+          for (Integer number : matchingNumbers) System.out.print(number + ",");
         }
 
         int extraCards = matchingNumbers.size();
 
         for (int p = 0; p < inputSplitWithCount.size(); p++) {
-          if (DEBUGGING) System.out.println(STR."\nAmount of Cards: \{inputSplitWithCount.get(p).getCount()}");
+          if (DEBUGGING) System.out.println("\nAmount of Cards: " + inputSplitWithCount.get(p).getCount());
           if (DEBUGGING) System.out.println(inputSplitWithCount.get(p).getList());
         }
 
@@ -180,7 +180,7 @@ public class Day04 {
       if (DEBUGGING) System.out.println("\nAFTER WORKING ON ADDING CARDS");
 
       for (int i = 0; i < inputSplitWithCount.size(); i++) {
-        if (DEBUGGING) System.out.println(STR."\nAmount of Cards: \{inputSplitWithCount.get(i).getCount()}");
+        if (DEBUGGING) System.out.println("\nAmount of Cards: " + inputSplitWithCount.get(i).getCount());
         if (DEBUGGING) System.out.println(inputSplitWithCount.get(i).getList());
       }
 

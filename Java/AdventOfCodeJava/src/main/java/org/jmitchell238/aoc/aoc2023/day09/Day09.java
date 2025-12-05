@@ -29,10 +29,10 @@ public class Day09 {
     String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day09/input_test.txt";
 
     long partOneAnswer = part1(input);
-    System.out.println(STR."Part 1: Answer: \{partOneAnswer}");
+    System.out.println("Part 1: Answer: " + partOneAnswer);
 
     long partTwoAnswer = part2(input);
-    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
+    System.out.println("Part 2: Answer: " + partTwoAnswer);
   }
 
   public long part1(String filePath) throws FileNotFoundException {
@@ -79,7 +79,7 @@ public class Day09 {
     while (scanner.hasNextLine()) {
       String line = scanner.nextLine();
       int[] sequence = Utilities.splitToIntArray(line, " ");
-      if (DEBUGGING) System.out.println(STR."Sequence: \{Arrays.toString(sequence)}");
+      if (DEBUGGING) System.out.println("Sequence: " + Arrays.toString(sequence));
 
       sequences.add(Arrays.stream(sequence).boxed().collect(Collectors.toList()));
     }

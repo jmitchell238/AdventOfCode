@@ -3,8 +3,6 @@ package org.jmitchell238.aoc.aoc2023.day05;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.io.FileNotFoundException;
-import org.assertj.core.api.AssertionsForClassTypes;
-import org.jmitchell238.aoc.aoc2023.day00.Day00;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

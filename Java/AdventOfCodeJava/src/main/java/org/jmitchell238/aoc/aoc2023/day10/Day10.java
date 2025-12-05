@@ -37,10 +37,10 @@ public class Day10 {
     String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day10/input_test.txt";
 
     long partOneAnswer = part1(input);
-    System.out.println(STR."Part 1: Answer: \{partOneAnswer}");
+    System.out.println("Part 1: Answer: " + partOneAnswer);
 
     long partTwoAnswer = part2(input);
-    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
+    System.out.println("Part 2: Answer: " + partTwoAnswer);
   }
 
   public long part1(String filePath) throws FileNotFoundException {
@@ -93,8 +93,8 @@ public class Day10 {
         doubledGrid.put(new Point(x * 2, y * 2), originalChar);
 
         if (originalChar == 'S') {
-          System.out.println(STR."Start Point: \{originalPoint}");
-          System.out.println(STR."Start Point in double map: \{new Point(x * 2, y * 2)}");
+          System.out.println("Start Point: " + originalPoint);
+          System.out.println("Start Point in double map: " + new Point(x * 2, y * 2));
         }
       }
     }
@@ -111,7 +111,7 @@ public class Day10 {
       }
 
       Point StartPoint = grid.keySet().stream().filter(p -> grid.get(p) == 'S').findFirst().get();
-      System.out.println(STR."Start Point: \{StartPoint}");
+      System.out.println("Start Point: " + StartPoint);
 
       addSurroundingPoints(char2dArrayList.getFirst().length, char2dArrayList.size());
     }
@@ -199,7 +199,7 @@ public class Day10 {
 
     if (grid.get(currentPoint) == 'S') {
       if (DEBUGGING) {
-        System.out.println(STR."Starting to traverse pipes.");
+        System.out.println("Starting to traverse pipes.");
       }
 
       Point pointAbove = new Point(currentPoint.x, currentPoint.y - 1);
@@ -225,8 +225,8 @@ public class Day10 {
 
       if (charAbove != ' ' && ( charAbove == '|' || charAbove == '7' || charAbove == 'F')) {
         if (DEBUGGING) {
-          System.out.println(STR."Point Above: \{pointAbove}");
-          System.out.println(STR."Char Above: \{charAbove}");
+          System.out.println("Point Above: " + pointAbove);
+          System.out.println("Char Above: " + charAbove);
         }
 
         steps++;
@@ -235,8 +235,8 @@ public class Day10 {
         addPipePointToArrayList(currentPoint);
       } else if (charRight != ' ' && (charRight == '-' || charRight == '7' || charRight == 'J')) {
         if (DEBUGGING) {
-          System.out.println(STR."Point Right: \{pointRight}");
-          System.out.println(STR."Char Right: \{charRight}");
+          System.out.println("Point Right: " + pointRight);
+          System.out.println("Char Right: " + charRight);
         }
 
         steps++;
@@ -245,8 +245,8 @@ public class Day10 {
         addPipePointToArrayList(currentPoint);
       } else if (charBelow != ' ' && (charBelow == '|' || charBelow == 'J' || charBelow == 'L')) {
         if (DEBUGGING) {
-          System.out.println(STR."Point Below: \{pointBelow}");
-          System.out.println(STR."Char Below: \{charBelow}");
+          System.out.println("Point Below: " + pointBelow);
+          System.out.println("Char Below: " + charBelow);
         }
 
         steps++;
@@ -255,8 +255,8 @@ public class Day10 {
         addPipePointToArrayList(currentPoint);
       } else if (charLeft != ' ' && (charLeft == '-' || charLeft == 'F' || charLeft == 'L')) {
         if (DEBUGGING) {
-          System.out.println(STR."Point Left: \{pointLeft}");
-          System.out.println(STR."Char Left: \{charLeft}");
+          System.out.println("Point Left: " + pointLeft);
+          System.out.println("Char Left: " + charLeft);
         }
 
         steps++;
@@ -270,8 +270,8 @@ public class Day10 {
       if (grid.get(currentPoint) == 'S' && !Objects.equals(previousPoint.toString(),
           StartPoint.toString())) {
         if (DEBUGGING) {
-          System.out.println(STR."Found Start Point");
-          System.out.println(STR."Steps: \{steps}");
+          System.out.println("Found Start Point");
+          System.out.println("Steps: " + steps);
         }
         isSearching = false;
         break;
@@ -290,8 +290,8 @@ public class Day10 {
 
         if (Objects.equals(pointAbove.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Above: \{pointBelow}");
-            System.out.println(STR."Char Above: \{charBelow}");
+            System.out.println("Point Above: " + pointBelow);
+            System.out.println("Char Above: " + charBelow);
           }
 
           steps++;
@@ -302,8 +302,8 @@ public class Day10 {
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Below: \{pointAbove}");
-            System.out.println(STR."Char Below: \{charAbove}");
+            System.out.println("Point Below: " + pointAbove);
+            System.out.println("Char Below: " + charAbove);
           }
 
           steps++;
@@ -321,8 +321,8 @@ public class Day10 {
 
         if (Objects.equals(pointLeft.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Right: \{pointRight}");
-            System.out.println(STR."Char Right: \{charRight}");
+            System.out.println("Point Right: " + pointRight);
+            System.out.println("Char Right: " + charRight);
           }
 
           steps++;
@@ -333,8 +333,8 @@ public class Day10 {
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Left: \{pointLeft}");
-            System.out.println(STR."Char Left: \{charLeft}");
+            System.out.println("Point Left: " + pointLeft);
+            System.out.println("Char Left: " + charLeft);
           }
 
           steps++;
@@ -352,8 +352,8 @@ public class Day10 {
 
         if (Objects.equals(pointLeft.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Below: \{pointBelow}");
-            System.out.println(STR."Char Below: \{charBelow}");
+            System.out.println("Point Below: " + pointBelow);
+            System.out.println("Char Below: " + charBelow);
           }
 
           steps++;
@@ -364,8 +364,8 @@ public class Day10 {
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Left: \{pointLeft}");
-            System.out.println(STR."Char Left: \{charLeft}");
+            System.out.println("Point Left: " + pointLeft);
+            System.out.println("Char Left: " + charLeft);
           }
 
           steps++;
@@ -383,8 +383,8 @@ public class Day10 {
 
         if (Objects.equals(pointLeft.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Above: \{pointAbove}");
-            System.out.println(STR."Char Above: \{charAbove}");
+            System.out.println("Point Above: " + pointAbove);
+            System.out.println("Char Above: " + charAbove);
           }
 
           steps++;
@@ -395,8 +395,8 @@ public class Day10 {
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Left: \{pointLeft}");
-            System.out.println(STR."Char Left: \{charLeft}");
+            System.out.println("Point Left: " + pointLeft);
+            System.out.println("Char Left: " + charLeft);
           }
 
           steps++;
@@ -414,8 +414,8 @@ public class Day10 {
 
         if (Objects.equals(pointRight.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Above: \{pointAbove}");
-            System.out.println(STR."Char Above: \{charAbove}");
+            System.out.println("Point Above: " + pointAbove);
+            System.out.println("Char Above: " + charAbove);
           }
 
           steps++;
@@ -426,8 +426,8 @@ public class Day10 {
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Right: \{pointRight}");
-            System.out.println(STR."Char Right: \{charRight}");
+            System.out.println("Point Right: " + pointRight);
+            System.out.println("Char Right: " + charRight);
           }
 
           steps++;
@@ -445,8 +445,8 @@ public class Day10 {
 
         if (Objects.equals(pointRight.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Below: \{pointBelow}");
-            System.out.println(STR."Char Below: \{charBelow}");
+            System.out.println("Point Below: " + pointBelow);
+            System.out.println("Char Below: " + charBelow);
           }
 
           steps++;
@@ -457,16 +457,14 @@ public class Day10 {
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Right: \{pointRight}");
-            System.out.println(STR."Char Right: \{charRight}");
+            System.out.println("Point Right: " + pointRight);
+            System.out.println("Char Right: " + charRight);
           }
 
           steps++;
           previousPoint = currentPoint;
           currentPoint = pointRight;
           addPipePointToArrayList(currentPoint);
-
-          continue;
         }
       }
     }
@@ -478,7 +476,7 @@ public class Day10 {
 
   private void addPipesToArrayList() {
     Point StartPoint = doubledGrid.keySet().stream().filter(p -> doubledGrid.get(p) == 'S').findFirst().get();
-    System.out.println(STR."Start Point: \{StartPoint}");
+    System.out.println("Start Point: " + StartPoint);
 
     boolean isSearching = true;
     Point currentPoint = StartPoint;
@@ -487,7 +485,7 @@ public class Day10 {
 
     if (doubledGrid.get(currentPoint) == 'S') {
       if (DEBUGGING) {
-        System.out.println(STR."Starting to traverse pipes.");
+        System.out.println("Starting to traverse pipes.");
       }
 
       Point pointAbove = new Point(currentPoint.x, currentPoint.y - 2);
@@ -501,8 +499,8 @@ public class Day10 {
 
       if ( charAbove == '|' || charAbove == '7' || charAbove == 'F') {
         if (DEBUGGING) {
-          System.out.println(STR."Point Above: \{pointAbove}");
-          System.out.println(STR."Char Above: \{charAbove}");
+          System.out.println("Point Above: " + pointAbove);
+          System.out.println("Char Above: " + charAbove);
         }
 
         steps++;
@@ -513,8 +511,8 @@ public class Day10 {
         addPipePointToArrayList2(pointAbove2);
       } else if (charRight == '-' || charRight == '7' || charRight == 'J') {
         if (DEBUGGING) {
-          System.out.println(STR."Point Right: \{pointRight}");
-          System.out.println(STR."Char Right: \{charRight}");
+          System.out.println("Point Right: " + pointRight);
+          System.out.println("Char Right: " + charRight);
         }
 
         steps++;
@@ -525,20 +523,20 @@ public class Day10 {
         addPipePointToArrayList2(pointRight2);
       } else if (charBelow == '|' || charBelow == 'J' || charBelow == 'L') {
         if (DEBUGGING) {
-          System.out.println(STR."Point Below: \{pointBelow}");
-          System.out.println(STR."Char Below: \{charBelow}");
+          System.out.println("Point Below: " + pointBelow);
+          System.out.println("Char Below: " + charBelow);
         }
 
         steps++;
         previousPoint = currentPoint;
         currentPoint = pointBelow;
-Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
+        Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
         addPipePointToArrayList2(currentPoint);
         addPipePointToArrayList2(pointBelow2);
       } else if (charLeft == '-' || charLeft == 'F' || charLeft == 'L') {
         if (DEBUGGING) {
-          System.out.println(STR."Point Left: \{pointLeft}");
-          System.out.println(STR."Char Left: \{charLeft}");
+          System.out.println("Point Left: " + pointLeft);
+          System.out.println("Char Left: " + charLeft);
         }
 
         steps++;
@@ -559,8 +557,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
       if (doubledGrid.get(currentPoint) == 'S' && !Objects.equals(previousPoint.toString(),
           StartPoint.toString())) {
         if (DEBUGGING) {
-          System.out.println(STR."Found Start Point");
-          System.out.println(STR."Steps: \{steps}");
+          System.out.println("Found Start Point");
+          System.out.println("Steps: " + steps);
         }
         isSearching = false;
         break;
@@ -583,8 +581,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
 
         if (Objects.equals(pointAbove.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Below: \{pointBelow}");
-            System.out.println(STR."Char Below: \{charBelow}");
+            System.out.println("Point Below: " + pointBelow);
+            System.out.println("Char Below: " + charBelow);
           }
 
           steps++;
@@ -596,8 +594,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Above: \{pointAbove}");
-            System.out.println(STR."Char Above: \{charAbove}");
+            System.out.println("Point Above: " + pointAbove);
+            System.out.println("Char Above: " + charAbove);
           }
 
           steps++;
@@ -616,8 +614,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
 
         if (Objects.equals(pointLeft.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Right: \{pointRight}");
-            System.out.println(STR."Char Right: \{charRight}");
+            System.out.println("Point Right: " + pointRight);
+            System.out.println("Char Right: " + charRight);
           }
 
           steps++;
@@ -629,8 +627,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Left: \{pointLeft}");
-            System.out.println(STR."Char Left: \{charLeft}");
+            System.out.println("Point Left: " + pointLeft);
+            System.out.println("Char Left: " + charLeft);
           }
 
           steps++;
@@ -649,8 +647,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
 
         if (Objects.equals(pointLeft.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Below: \{pointBelow}");
-            System.out.println(STR."Char Below: \{charBelow}");
+            System.out.println("Point Below: " + pointBelow);
+            System.out.println("Char Below: " + charBelow);
           }
 
           steps++;
@@ -662,8 +660,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Left: \{pointLeft}");
-            System.out.println(STR."Char Left: \{charLeft}");
+            System.out.println("Point Left: " + pointLeft);
+            System.out.println("Char Left: " + charLeft);
           }
 
           steps++;
@@ -682,8 +680,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
 
         if (Objects.equals(pointLeft.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Above: \{pointAbove}");
-            System.out.println(STR."Char Above: \{charAbove}");
+            System.out.println("Point Above: " + pointAbove);
+            System.out.println("Char Above: " + charAbove);
           }
 
           steps++;
@@ -695,8 +693,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Left: \{pointLeft}");
-            System.out.println(STR."Char Left: \{charLeft}");
+            System.out.println("Point Left: " + pointLeft);
+            System.out.println("Char Left: " + charLeft);
           }
 
           steps++;
@@ -715,8 +713,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
 
         if (Objects.equals(pointRight.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Above: \{pointAbove}");
-            System.out.println(STR."Char Above: \{charAbove}");
+            System.out.println("Point Above: " + pointAbove);
+            System.out.println("Char Above: " + charAbove);
           }
 
           steps++;
@@ -728,8 +726,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
           continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Right: \{pointRight}");
-            System.out.println(STR."Char Right: \{charRight}");
+            System.out.println("Point Right: " + pointRight);
+            System.out.println("Char Right: " + charRight);
           }
 
           steps++;
@@ -748,8 +746,8 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
 
         if (Objects.equals(pointRight.toString(), previousPoint.toString())) {
           if (DEBUGGING) {
-            System.out.println(STR."Point Below: \{pointBelow}");
-            System.out.println(STR."Char Below: \{charBelow}");
+            System.out.println("Point Below: " + pointBelow);
+            System.out.println("Char Below: " + charBelow);
           }
 
           steps++;
@@ -757,12 +755,10 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
           currentPoint = pointBelow;
           addPipePointToArrayList2(pointBelow2);
           addPipePointToArrayList2(currentPoint);
-
-          continue;
         } else {
           if (DEBUGGING) {
-            System.out.println(STR."Point Right: \{pointRight}");
-            System.out.println(STR."Char Right: \{charRight}");
+            System.out.println("Point Right: " + pointRight);
+            System.out.println("Char Right: " + charRight);
           }
 
           steps++;
@@ -778,7 +774,7 @@ Point pointBelow2 = new Point(currentPoint.x, currentPoint.y + 1);
   private void addPipePointToArrayList(Point point) {
 //    if (isPartTwo) {
       if (DEBUGGING) {
-        System.out.println(STR."Adding Point: \{point} to ArrayList");
+        System.out.println("Adding Point: " + point + " to ArrayList");
       }
 
       pipesPathPoints.add(point);
