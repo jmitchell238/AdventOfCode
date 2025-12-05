@@ -6,21 +6,21 @@ import lombok.Data;
 
 @Data
 public class GalaxyPairList {
-  private final List<GalaxyPair> galaxyPairs = new ArrayList<>();
+    private final List<GalaxyPair> galaxyPairs = new ArrayList<>();
 
-  public void addGalaxyPair(GalaxyPair galaxyPair) {
-    galaxyPairs.add(galaxyPair);
-  }
-
-  public void removeGalaxyPair(GalaxyPair galaxyPair) {
-    galaxyPairs.remove(galaxyPair);
-  }
-
-  public long getSumOfShortestDistances() {
-    long sum = 0;
-    for (GalaxyPair galaxyPair : galaxyPairs) {
-      sum += galaxyPair.distance();
+    public void addGalaxyPair(GalaxyPair galaxyPair) {
+        galaxyPairs.add(galaxyPair);
     }
-    return sum;
-  }
+
+    public void removeGalaxyPair(GalaxyPair galaxyPair) {
+        galaxyPairs.remove(galaxyPair);
+    }
+
+    public long getSumOfShortestDistances() {
+        long sum = 0;
+        for (GalaxyPair galaxyPair : galaxyPairs) {
+            sum += galaxyPair.distance();
+        }
+        return sum;
+    }
 }

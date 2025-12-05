@@ -171,21 +171,25 @@
           </excludes>
         </configuration>
       </plugin>
-      <!-- Remove Spotless to avoid conflicts -->
-      <!--
+
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
         <version>2.43.0</version>
         <configuration>
           <java>
-            <eclipse>
-              <version>4.31.0</version>
-            </eclipse>
+            <palantirJavaFormat>
+              <version>2.44.0</version>
+              <style>PALANTIR</style>
+            </palantirJavaFormat>
             <includes>
               <include>src/main/java/**/*.java</include>
               <include>src/test/java/**/*.java</include>
             </includes>
+            <excludes>
+              <!-- Exclude the file that crashes the formatter for now -->
+<!--              <exclude>src/main/java/org/jmitchell238/aoc/aoc2023/day12/SpringConditionRecord.java</exclude>-->
+            </excludes>
           </java>
         </configuration>
         <executions>
@@ -196,32 +200,7 @@
           </execution>
         </executions>
       </plugin>
-      -->
 
-      <!-- Add Maven Formatter Plugin (Eclipse JDT-based) -->
-      <plugin>
-        <groupId>net.revelc.code.formatter</groupId>
-        <artifactId>formatter-maven-plugin</artifactId>
-        <version>2.23.0</version>
-        <configuration>
-          <includes>
-            <include>src/main/java/**/*.java</include>
-            <include>src/test/java/**/*.java</include>
-          </includes>
-          <lineEnding>LF</lineEnding>
-          <skipJs>true</skipJs>
-          <skipCss>true</skipCss>
-          <skipXml>true</skipXml>
-          <configFile>${basedir}/.eclipse-java-formatter.xml</configFile>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>format</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <!-- Add Maven Versions Plugin to update dependencies/properties to latest releases -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
