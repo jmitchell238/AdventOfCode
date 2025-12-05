@@ -28,10 +28,10 @@ public class Day03 {
 //    String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input_test.txt";
 
     Long partOneAnswer = part1(input);
-    System.out.println(STR."Part 1: Answer: Part Number Sum = \{partOneAnswer}");
+    System.out.println("Part 1: Answer: Part Number Sum = " + partOneAnswer);
 
     Long partTwoAnswer = part2(input);
-    System.out.println(STR."Part 2: Answer: Gear Ratio Sum = \{partTwoAnswer}");
+    System.out.println("Part 2: Answer: Gear Ratio Sum = " + partTwoAnswer);
   }
 
   public static Long part1(String inputString) throws FileNotFoundException {
@@ -47,7 +47,7 @@ public class Day03 {
       partNumberSum = getPartNumberSum(char2dArray, partNumberSum);
 
       if (DEBUGGING) {
-        System.out.println(STR."Part Number Sum: \{partNumberSum}");
+        System.out.println("Part Number Sum: " + partNumberSum);
       }
 
       return partNumberSum;
@@ -98,7 +98,7 @@ public class Day03 {
         ArrayList<Long> partNumbers = asteriskPartNumberMap.get(asterisk);
         Long partNumberProduct = 1L;
         if (DEBUGGING) {
-          System.out.println(STR."Asterisk: \{asterisk} | Part Numbers: \{partNumbers}");
+          System.out.println("Asterisk: " + asterisk + " | Part Numbers: " + partNumbers);
         }
 
         if (partNumbers.size() < 2) {
@@ -113,7 +113,7 @@ public class Day03 {
       }
 
       if (DEBUGGING) {
-        System.out.println(STR."Gear Ratio Sum: \{gearRatioSum}");
+        System.out.println("Gear Ratio Sum: " + gearRatioSum);
       }
 
       return gearRatioSum;
@@ -145,7 +145,7 @@ public class Day03 {
           }
 
           if (Boolean.TRUE.equals(DEBUGGING)) {
-            System.out.println(STR."Part Number: \{partNumber}");
+            System.out.println("Part Number: " + partNumber);
           }
 
           String partNumberString = partNumber.toString();
@@ -245,9 +245,9 @@ public class Day03 {
 
     } catch (IndexOutOfBoundsException e) {
       System.out.println("Part Number is at the end of the line.");
-      System.out.println(STR."Current Point: \{currentPoint}");
-      System.out.println(STR."Part Number Length: \{partNumberLength}");
-      System.out.println(STR."Char2dArrayLineLength: \{char2dArrayLineLength}");
+      System.out.println("Current Point: " + currentPoint);
+      System.out.println("Part Number Length: " + partNumberLength);
+      System.out.println("Char2dArrayLineLength: " + char2dArrayLineLength);
       return false;
     }
   }
@@ -319,7 +319,7 @@ public class Day03 {
           asteriskList.add(new Point(x, y));
 
           if (DEBUGGING) {
-            System.out.println(STR."Asterisk at: \{x},\{y}");
+            System.out.println("Asterisk at: " + x + ", " + y);
           }
         }
       }
@@ -375,7 +375,7 @@ public class Day03 {
           }
 
           if (DEBUGGING) {
-            System.out.println(STR."Part Number: \{partNumber}");
+            System.out.println("Part Number: " + partNumber);
           }
 
           x += partnumberLength - 1;
