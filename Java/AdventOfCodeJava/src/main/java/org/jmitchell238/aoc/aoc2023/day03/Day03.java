@@ -1,6 +1,8 @@
 package org.jmitchell238.aoc.aoc2023.day03;
 
 import static java.lang.Character.isDigit;
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.logError;
 
 import java.awt.Point;
 import java.io.File;
@@ -9,408 +11,484 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
+/**
+ * Advent of Code 2023 - Day 3: Gear Ratios
+ * <p>
+ * This class contains the solution logic for Day 3 of Advent of Code 2023.
+ * Part 1 finds part numbers adjacent to symbols and sums them.
+ * Part 2 finds gears (asterisks adjacent to exactly two part numbers) and calculates gear ratios.
+ * </p>
+ */
+@SuppressWarnings({
+    "java:S106",
+    "java:S1118",
+    "java:S1940",
+    "java:S2589",
+    "java:S100",
+    "java:S3776",
+    "java:S127",
+    "java:S1143"
+})
 public class Day03 {
-    private static final Boolean DEBUGGING = false;
-    private static final Boolean VERBOSE = false;
-    private static Map<Point, Character> coordinateMap;
-    private static Map<Long, ArrayList<ArrayList<Point>>> partNumberMap;
-    private static ArrayList<Point> asteriskList;
 
+    // Configuration flags
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
+
+    // Constants
+    private static final char EMPTY_SYMBOL = '.';
+    private static final char GEAR_SYMBOL = '*';
+    private static final int MAX_PART_NUMBER_LENGTH = 5;
+
+    // State variables
+    private static Map<Point, Character> gridCoordinateMap;
+    private static Map<Long, ArrayList<ArrayList<Point>>> partNumberLocationMap;
+    private static ArrayList<Point> gearCandidatePositions;
+
+    @SuppressWarnings("unused")
     public static void main(String[] args) throws FileNotFoundException {
-        Day03Run();
+        runDay03();
     }
 
-    public static void Day03Run() throws FileNotFoundException {
+    /**
+     * Entry point for Day 3 solution.
+     */
+    public static void runDay03() throws FileNotFoundException {
         System.out.println("\n--- Day 03: Gear Ratios ---\n");
 
-        String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input.txt";
-        //    String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input_test.txt";
+        String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input.txt";
 
-        Long partOneAnswer = part1(input);
-        System.out.println("Part 1: Answer: Part Number Sum = " + partOneAnswer);
+        Long partOneAnswer = solvePart1(actualInputFilePath);
+        log(LogLevel.INFO, true, "Part 1: Answer: Part Number Sum = " + partOneAnswer);
 
-        Long partTwoAnswer = part2(input);
-        System.out.println("Part 2: Answer: Gear Ratio Sum = " + partTwoAnswer);
+        Long partTwoAnswer = solvePart2(actualInputFilePath);
+        log(LogLevel.INFO, true, "Part 2: Answer: Gear Ratio Sum = " + partTwoAnswer);
     }
 
-    public static Long part1(String inputString) throws FileNotFoundException {
+    /**
+     * Solves Part 1 by finding all part numbers adjacent to symbols.
+     */
+    public static Long solvePart1(String inputFilePath) throws FileNotFoundException {
         Long partNumberSum = 0L;
 
         try {
-            File input = new File(inputString);
-            Scanner scanner = new Scanner(input);
+            File inputFile = new File(inputFilePath);
+            Scanner fileScanner = new Scanner(inputFile);
 
-            ArrayList<char[]> char2dArray = new ArrayList<>();
-            coordinateMap = createCoordinateMap(scanner, char2dArray);
+            ArrayList<char[]> engineSchematic = new ArrayList<>();
+            gridCoordinateMap = createGridCoordinateMap(fileScanner, engineSchematic);
 
-            partNumberSum = getPartNumberSum(char2dArray, partNumberSum);
+            partNumberSum = calculatePartNumberSum(engineSchematic, partNumberSum);
 
-            if (DEBUGGING) {
-                System.out.println("Part Number Sum: " + partNumberSum);
-            }
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part Number Sum: " + partNumberSum);
 
             return partNumberSum;
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException fileNotFound) {
+            String errorMessage = "Input file not found: " + inputFilePath;
+            logError(errorMessage);
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
             return -1L;
         }
     }
 
-    public static Long part2(String inputString) {
+    /**
+     * Solves Part 2 by finding gear ratios for asterisks adjacent to exactly two part numbers.
+     */
+    public static Long solvePart2(String inputFilePath) {
         try {
-            File input = new File(inputString);
-            Scanner scanner = new Scanner(input);
-            ArrayList<char[]> char2dArray = new ArrayList<>();
-            coordinateMap = createCoordinateMap(scanner, char2dArray);
-            partNumberMap = createPartNumberMap(char2dArray, coordinateMap);
+            File inputFile = new File(inputFilePath);
+            Scanner fileScanner = new Scanner(inputFile);
+            ArrayList<char[]> engineSchematic = new ArrayList<>();
+            gridCoordinateMap = createGridCoordinateMap(fileScanner, engineSchematic);
+            partNumberLocationMap = buildPartNumberLocationMap(engineSchematic, gridCoordinateMap);
 
-            long gearRatioSum = 0L;
+            long totalGearRatioSum = 0L;
 
-            Map<Point, ArrayList<Long>> asteriskPartNumberMap = new HashMap<>();
+            Map<Point, ArrayList<Long>> gearToPartNumbersMap = new HashMap<>();
 
-            for (Point asterisk : asteriskList) {
-                asteriskPartNumberMap.put(asterisk, new ArrayList<>());
+            for (Point gearPosition : gearCandidatePositions) {
+                gearToPartNumbersMap.put(gearPosition, new ArrayList<>());
             }
 
-            for (Long partNumber : partNumberMap.keySet()) {
-                ArrayList<ArrayList<Point>> partNumberPoints = partNumberMap.get(partNumber);
+            for (Long partNumber : partNumberLocationMap.keySet()) {
+                ArrayList<ArrayList<Point>> partNumberInstances = partNumberLocationMap.get(partNumber);
 
-                for (ArrayList<Point> partNumberPointList : partNumberPoints) {
-                    boolean partNumberAdded = false;
+                for (ArrayList<Point> partNumberPointsList : partNumberInstances) {
+                    boolean partNumberProcessed = false;
 
-                    for (Point partNumberPoint : partNumberPointList) {
-                        Point asteriskPoint =
-                                checkAroundPartNumberForAsteriskSinglePoint(partNumberPoint, coordinateMap);
+                    for (Point partNumberPoint : partNumberPointsList) {
+                        Point adjacentGearPosition = findAdjacentGearPosition(partNumberPoint, gridCoordinateMap);
 
-                        if (asteriskPoint != null) {
-                            asteriskPartNumberMap.get(asteriskPoint).add(partNumber);
-                            partNumberAdded = true;
+                        if (adjacentGearPosition != null) {
+                            gearToPartNumbersMap.get(adjacentGearPosition).add(partNumber);
+                            partNumberProcessed = true;
                         }
 
-                        if (partNumberAdded) {
+                        if (partNumberProcessed) {
                             break;
                         }
                     }
                 }
             }
 
-            for (Point asterisk : asteriskPartNumberMap.keySet()) {
-                ArrayList<Long> partNumbers = asteriskPartNumberMap.get(asterisk);
-                Long partNumberProduct = 1L;
-                if (DEBUGGING) {
-                    System.out.println("Asterisk: " + asterisk + " | Part Numbers: " + partNumbers);
-                }
+            for (Point gearPosition : gearToPartNumbersMap.keySet()) {
+                ArrayList<Long> adjacentPartNumbers = gearToPartNumbersMap.get(gearPosition);
 
-                if (partNumbers.size() < 2) {
-                    continue;
-                }
+                log(
+                        LogLevel.DEBUG,
+                        ENABLE_DEBUG_LOGGING,
+                        "Gear at " + gearPosition + " has adjacent part numbers: " + adjacentPartNumbers);
 
-                for (Long partNumber : partNumbers) {
-                    partNumberProduct *= partNumber;
-                }
+                if (adjacentPartNumbers.size() == 2) {
+                    long gearRatio = adjacentPartNumbers.get(0) * adjacentPartNumbers.get(1);
+                    totalGearRatioSum += gearRatio;
 
-                gearRatioSum += partNumberProduct;
+                    log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Valid gear found! Ratio: " + gearRatio);
+                }
             }
 
-            if (DEBUGGING) {
-                System.out.println("Gear Ratio Sum: " + gearRatioSum);
-            }
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total Gear Ratio Sum: " + totalGearRatioSum);
 
-            return gearRatioSum;
-        } catch (FileNotFoundException e) {
+            return totalGearRatioSum;
+        } catch (FileNotFoundException fileNotFound) {
+            String errorMessage = "Input file not found: " + inputFilePath;
+            System.err.println(errorMessage);
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
             return -1L;
         }
     }
 
-    private static Long getPartNumberSum(ArrayList<char[]> char2dArray, Long partNumberSum) {
-        for (int y = 0; y < char2dArray.size(); y++) {
-            for (int x = 0; x < char2dArray.getFirst().length - 1; x++) {
-                Point currentPoint = new Point(x, y);
-                char currentChar = coordinateMap.get(currentPoint);
-                boolean isDigit = isDigit(currentChar);
+    /**
+     * Calculates the sum of all valid part numbers in the engine schematic.
+     */
+    private static Long calculatePartNumberSum(ArrayList<char[]> engineSchematic, Long currentPartNumberSum) {
+        for (int rowIndex = 0; rowIndex < engineSchematic.size(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < engineSchematic.getFirst().length - 1; columnIndex++) {
+                Point currentPosition = new Point(columnIndex, rowIndex);
+                char currentCharacter = gridCoordinateMap.get(currentPosition);
+                boolean isCurrentCharacterDigit = isDigit(currentCharacter);
 
-                StringBuilder partNumber = new StringBuilder();
-                int partnumberLength = 0;
-                long partNumberLong;
+                StringBuilder partNumberBuilder = new StringBuilder();
+                int partNumberLength = 0;
+                long partNumberValue;
 
-                if (isDigit) {
-                    for (int i = 0; i < 5; i++) {
-                        partNumber.append(currentChar);
-                        partnumberLength++;
-                        currentChar = coordinateMap.get(new Point(currentPoint.x + partnumberLength, currentPoint.y));
-                        if (currentChar == '.' || !isDigit(currentChar)) {
+                if (isCurrentCharacterDigit) {
+                    for (int digitIndex = 0; digitIndex < MAX_PART_NUMBER_LENGTH; digitIndex++) {
+                        partNumberBuilder.append(currentCharacter);
+                        partNumberLength++;
+                        currentCharacter = gridCoordinateMap.get(
+                                new Point(currentPosition.x + partNumberLength, currentPosition.y));
+                        if (currentCharacter == EMPTY_SYMBOL || !isDigit(currentCharacter)) {
                             break;
                         }
                     }
 
-                    if (Boolean.TRUE.equals(DEBUGGING)) {
-                        System.out.println("Part Number: " + partNumber);
-                    }
+                    log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Found potential part number: " + partNumberBuilder);
 
-                    String partNumberString = partNumber.toString();
-                    partNumberLong = Long.parseLong(partNumberString);
-                    x += partnumberLength - 1;
+                    String partNumberString = partNumberBuilder.toString();
+                    partNumberValue = Long.parseLong(partNumberString);
+                    columnIndex += partNumberLength - 1;
 
-                    // Check the symbol to the left of part number.
-                    if (checkCharToLeftOfPartNumber(currentPoint, coordinateMap)) {
-                        partNumberSum += partNumberLong;
-                        continue;
-                    }
-
-                    // Check the symbol to the right of part number.
-                    if (checkCharToRightOfPartNumber(
-                            currentPoint, partnumberLength, coordinateMap, char2dArray.get(x).length)) {
-                        partNumberSum += partNumberLong;
-                        continue;
-                    }
-
-                    // Check the row above the part number.
-                    if (checkRowAbovePartNumber(currentPoint, partnumberLength, coordinateMap)) {
-                        partNumberSum += partNumberLong;
-                        continue;
-                    }
-
-                    // Check the row below the part number.
-                    if (checkRowBelowPartNumber(currentPoint, partnumberLength, coordinateMap)) {
-                        partNumberSum += partNumberLong;
+                    if (isPartNumberValid(currentPosition, partNumberLength)) {
+                        currentPartNumberSum += partNumberValue;
+                        log(
+                                LogLevel.DEBUG,
+                                ENABLE_DEBUG_LOGGING,
+                                "Valid part number: " + partNumberValue + " (sum now: " + currentPartNumberSum + ")");
                     }
                 }
             }
         }
 
-        return partNumberSum;
+        return currentPartNumberSum;
     }
 
-    private static Point checkAroundPartNumberForAsteriskSinglePoint(
-            Point currentPoint, Map<Point, Character> coordinateMap) {
-        Point asteriskPoint = new Point(currentPoint.x - 2, currentPoint.y - 2);
-        ArrayList<Point> pointsAroundPartNumber = createPointsAroundPartNumberList(currentPoint);
-
-        boolean bordersAsterisk = false;
-
-        for (Point point : pointsAroundPartNumber) {
-            char pointChar = coordinateMap.get(point);
-            if (pointChar == '*') {
-                bordersAsterisk = true;
-                asteriskPoint = point;
-                break;
-            }
-        }
-
-        if (bordersAsterisk) {
-            return asteriskPoint;
-        } else {
-            return null;
-        }
+    /**
+     * Determines if a part number is valid by checking if it's adjacent to any symbol.
+     */
+    private static boolean isPartNumberValid(Point startPosition, int partNumberLength) {
+        return isSymbolToLeft(startPosition)
+                || isSymbolToRight(startPosition, partNumberLength)
+                || hasSymbolInRowAbove(startPosition, partNumberLength)
+                || hasSymbolInRowBelow(startPosition, partNumberLength);
     }
 
-    private static ArrayList<Point> createPointsAroundPartNumberList(Point currentPoint) {
-        ArrayList<Point> pointsAroundPartNumber = new ArrayList<>();
-        Point topLeftPoint = new Point(currentPoint.x - 1, currentPoint.y - 1);
-        Point leftPoint = new Point(currentPoint.x - 1, currentPoint.y);
-        Point bottomLeftPoint = new Point(currentPoint.x - 1, currentPoint.y + 1);
-        Point topRightPoint = new Point(currentPoint.x + 1, currentPoint.y - 1);
-        Point rightPoint = new Point(currentPoint.x + 1, currentPoint.y);
-        Point bottomRightPoint = new Point(currentPoint.x + 1, currentPoint.y + 1);
-        Point topPoint = new Point(currentPoint.x, currentPoint.y - 1);
-        Point bottomPoint = new Point(currentPoint.x, currentPoint.y + 1);
-
-        pointsAroundPartNumber.add(topLeftPoint);
-        pointsAroundPartNumber.add(leftPoint);
-        pointsAroundPartNumber.add(bottomLeftPoint);
-        pointsAroundPartNumber.add(topRightPoint);
-        pointsAroundPartNumber.add(rightPoint);
-        pointsAroundPartNumber.add(bottomRightPoint);
-        pointsAroundPartNumber.add(topPoint);
-        pointsAroundPartNumber.add(bottomPoint);
-
-        return pointsAroundPartNumber;
+    /**
+     * Checks if there's a symbol to the left of the part number.
+     */
+    private static boolean isSymbolToLeft(Point startPosition) {
+        Point leftPosition = new Point(startPosition.x - 1, startPosition.y);
+        char leftCharacter = gridCoordinateMap.get(leftPosition);
+        return leftCharacter != EMPTY_SYMBOL && !isDigit(leftCharacter);
     }
 
-    private static boolean checkCharToLeftOfPartNumber(Point currentPoint, Map<Point, Character> coordinateMap) {
-        Point leftPoint = new Point(currentPoint.x - 1, currentPoint.y);
-        char leftChar = coordinateMap.get(leftPoint);
-        return leftChar != '.' && !isDigit(leftChar);
-    }
-
-    private static boolean checkCharToRightOfPartNumber(
-            Point currentPoint, int partNumberLength, Map<Point, Character> coordinateMap, int char2dArrayLineLength) {
+    /**
+     * Checks if there's a symbol to the right of the part number.
+     */
+    private static boolean isSymbolToRight(Point startPosition, int partNumberLength) {
         try {
-            Point rightPoint = new Point(currentPoint.x + partNumberLength, currentPoint.y);
-            char rightChar = coordinateMap.get(rightPoint);
-            return rightChar != '.' && !isDigit(rightChar);
-
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Part Number is at the end of the line.");
-            System.out.println("Current Point: " + currentPoint);
-            System.out.println("Part Number Length: " + partNumberLength);
-            System.out.println("Char2dArrayLineLength: " + char2dArrayLineLength);
+            Point rightPosition = new Point(startPosition.x + partNumberLength, startPosition.y);
+            char rightCharacter = gridCoordinateMap.get(rightPosition);
+            return rightCharacter != EMPTY_SYMBOL && !isDigit(rightCharacter);
+        } catch (Exception _) {
+            log(
+                    LogLevel.VERBOSE,
+                    ENABLE_VERBOSE_LOGGING,
+                    "Part number is at the end of the line at position: " + startPosition);
             return false;
         }
     }
 
-    private static boolean checkRowAbovePartNumber(
-            Point currentPoint, int partNumberLength, Map<Point, Character> coordinateMap) {
-        for (int i = currentPoint.x - 1; i <= currentPoint.x + partNumberLength; i++) {
-            Point abovePoint = new Point(i, currentPoint.y - 1);
-            char aboveChar = coordinateMap.get(abovePoint);
-            boolean isAboveCharSymbol = aboveChar != '.' && !isDigit(aboveChar);
-            if (isAboveCharSymbol) {
+    /**
+     * Checks if there's a symbol in the row above the part number.
+     */
+    private static boolean hasSymbolInRowAbove(Point startPosition, int partNumberLength) {
+        for (int columnOffset = startPosition.x - 1;
+                columnOffset <= startPosition.x + partNumberLength;
+                columnOffset++) {
+            Point abovePosition = new Point(columnOffset, startPosition.y - 1);
+            char aboveCharacter = gridCoordinateMap.get(abovePosition);
+            boolean isSymbolAbove = aboveCharacter != EMPTY_SYMBOL && !isDigit(aboveCharacter);
+            if (isSymbolAbove) {
                 return true;
             }
         }
-
         return false;
     }
 
-    private static boolean checkRowBelowPartNumber(
-            Point currentPoint, int partNumberLength, Map<Point, Character> coordinateMap) {
-        for (int i = currentPoint.x - 1; i <= currentPoint.x + partNumberLength; i++) {
-            Point belowPoint = new Point(i, currentPoint.y + 1);
-            char belowChar = coordinateMap.get(belowPoint);
-            boolean isBelowCharSymbol = belowChar != '.' && !isDigit(belowChar);
-            if (isBelowCharSymbol) {
+    /**
+     * Checks if there's a symbol in the row below the part number.
+     */
+    private static boolean hasSymbolInRowBelow(Point startPosition, int partNumberLength) {
+        for (int columnOffset = startPosition.x - 1;
+                columnOffset <= startPosition.x + partNumberLength;
+                columnOffset++) {
+            Point belowPosition = new Point(columnOffset, startPosition.y + 1);
+            char belowCharacter = gridCoordinateMap.get(belowPosition);
+            boolean isSymbolBelow = belowCharacter != EMPTY_SYMBOL && !isDigit(belowCharacter);
+            if (isSymbolBelow) {
                 return true;
             }
         }
-
         return false;
     }
 
-    private static Map<Point, Character> createCoordinateMap(Scanner scanner, ArrayList<char[]> char2dArray) {
-        coordinateMap = new HashMap<>();
-        asteriskList = new ArrayList<>();
+    /**
+     * Finds an adjacent gear (asterisk) position for a given part number point.
+     */
+    private static Point findAdjacentGearPosition(Point currentPosition, Map<Point, Character> coordinateMap) {
+        ArrayList<Point> adjacentPositions = getAdjacentPositions(currentPosition);
 
-        while (scanner.hasNextLine()) {
-            char2dArray.add(scanner.nextLine().toCharArray());
+        for (Point adjacentPosition : adjacentPositions) {
+            char adjacentCharacter = coordinateMap.get(adjacentPosition);
+            if (adjacentCharacter == GEAR_SYMBOL) {
+                return adjacentPosition;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets all 8 adjacent positions around a given point.
+     */
+    private static ArrayList<Point> getAdjacentPositions(Point centerPosition) {
+        ArrayList<Point> adjacentPositions = new ArrayList<>();
+
+        // Add all 8 surrounding positions
+        adjacentPositions.add(new Point(centerPosition.x - 1, centerPosition.y - 1)); // top-left
+        adjacentPositions.add(new Point(centerPosition.x - 1, centerPosition.y)); // left
+        adjacentPositions.add(new Point(centerPosition.x - 1, centerPosition.y + 1)); // bottom-left
+        adjacentPositions.add(new Point(centerPosition.x + 1, centerPosition.y - 1)); // top-right
+        adjacentPositions.add(new Point(centerPosition.x + 1, centerPosition.y)); // right
+        adjacentPositions.add(new Point(centerPosition.x + 1, centerPosition.y + 1)); // bottom-right
+        adjacentPositions.add(new Point(centerPosition.x, centerPosition.y - 1)); // top
+        adjacentPositions.add(new Point(centerPosition.x, centerPosition.y + 1)); // bottom
+
+        return adjacentPositions;
+    }
+
+    /**
+     * Creates a coordinate map from the input file, adding padding around the grid.
+     */
+    private static Map<Point, Character> createGridCoordinateMap(
+            Scanner fileScanner, ArrayList<char[]> engineSchematic) {
+        gridCoordinateMap = new HashMap<>();
+        gearCandidatePositions = new ArrayList<>();
+
+        while (fileScanner.hasNextLine()) {
+            engineSchematic.add(fileScanner.nextLine().toCharArray());
         }
 
-        // Add row of '.'s to the top and bottom of the grid
-        int char2dArraySize = char2dArray.size();
-        for (int i = -1; i <= char2dArraySize; i++) {
-            Point topRowPoint = new Point(i, -1);
-            Point bottomRowPoint = new Point(i, char2dArraySize);
+        int gridHeight = engineSchematic.size();
+        int gridWidth = engineSchematic.getFirst().length;
 
-            coordinateMap.put(topRowPoint, '.');
-            coordinateMap.put(bottomRowPoint, '.');
+        // Add padding rows (top and bottom)
+        addHorizontalPadding(gridHeight, gridWidth);
+
+        // Add padding columns (left and right)
+        addVerticalPadding(gridHeight, gridWidth);
+
+        // Process the actual grid data
+        populateGridFromSchematic(engineSchematic);
+
+        logGridIfDebuggingEnabled(gridHeight, gridWidth);
+
+        return gridCoordinateMap;
+    }
+
+    /**
+     * Adds horizontal padding (top and bottom rows) to the coordinate map.
+     */
+    private static void addHorizontalPadding(int gridHeight, int gridWidth) {
+        for (int columnIndex = -1; columnIndex <= gridWidth; columnIndex++) {
+            Point topPaddingPoint = new Point(columnIndex, -1);
+            Point bottomPaddingPoint = new Point(columnIndex, gridHeight);
+
+            gridCoordinateMap.put(topPaddingPoint, EMPTY_SYMBOL);
+            gridCoordinateMap.put(bottomPaddingPoint, EMPTY_SYMBOL);
         }
+    }
 
-        // Add column of '.'s to the left and right of the grid
-        int char2dArrayLineLength = char2dArray.getFirst().length;
-        for (int i = -1; i <= char2dArrayLineLength + 1; i++) {
-            Point leftColumnPoint = new Point(-1, i);
-            Point rightColumnPoint = new Point(char2dArrayLineLength, i);
-            Point rightColumnPoint2 = new Point(char2dArrayLineLength + 1, i);
+    /**
+     * Adds vertical padding (left and right columns) to the coordinate map.
+     */
+    private static void addVerticalPadding(int gridHeight, int gridWidth) {
+        for (int rowIndex = -1; rowIndex <= gridHeight + 1; rowIndex++) {
+            Point leftPaddingPoint = new Point(-1, rowIndex);
+            Point rightPaddingPoint = new Point(gridWidth, rowIndex);
+            Point extraRightPaddingPoint = new Point(gridWidth + 1, rowIndex);
 
-            coordinateMap.put(leftColumnPoint, '.');
-            coordinateMap.put(rightColumnPoint, '.');
-            coordinateMap.put(rightColumnPoint2, '.');
+            gridCoordinateMap.put(leftPaddingPoint, EMPTY_SYMBOL);
+            gridCoordinateMap.put(rightPaddingPoint, EMPTY_SYMBOL);
+            gridCoordinateMap.put(extraRightPaddingPoint, EMPTY_SYMBOL);
         }
+    }
 
-        for (int y = 0; y < char2dArray.size(); y++) {
-            char[] currentCharArray = char2dArray.get(y);
+    /**
+     * Populates the coordinate map with actual data from the engine schematic.
+     */
+    private static void populateGridFromSchematic(ArrayList<char[]> engineSchematic) {
+        for (int rowIndex = 0; rowIndex < engineSchematic.size(); rowIndex++) {
+            char[] currentRow = engineSchematic.get(rowIndex);
 
-            for (int x = 0; x < currentCharArray.length; x++) {
-                coordinateMap.put(new Point(x, y), currentCharArray[x]);
+            for (int columnIndex = 0; columnIndex < currentRow.length; columnIndex++) {
+                char currentCharacter = currentRow[columnIndex];
+                Point currentPosition = new Point(columnIndex, rowIndex);
 
-                if (currentCharArray[x] == '*') {
-                    asteriskList.add(new Point(x, y));
+                gridCoordinateMap.put(currentPosition, currentCharacter);
 
-                    if (DEBUGGING) {
-                        System.out.println("Asterisk at: " + x + ", " + y);
-                    }
+                if (currentCharacter == GEAR_SYMBOL) {
+                    gearCandidatePositions.add(currentPosition);
+                    log(
+                            LogLevel.DEBUG,
+                            ENABLE_DEBUG_LOGGING,
+                            "Found gear candidate at: " + columnIndex + ", " + rowIndex);
                 }
             }
         }
-
-        if (DEBUGGING) {
-            printCoordinateMapToConsole(coordinateMap, char2dArraySize, char2dArrayLineLength);
-        } else if (VERBOSE) {
-            printCoordinateMapToConsoleVerbose(coordinateMap, char2dArraySize, char2dArrayLineLength);
-        }
-
-        return coordinateMap;
     }
 
-    private static Map<Long, ArrayList<ArrayList<Point>>> createPartNumberMap(
-            ArrayList<char[]> char2dArray, Map<Point, Character> coordinateMap) {
-        partNumberMap = new HashMap<>();
+    /**
+     * Logs the grid if debugging is enabled.
+     */
+    private static void logGridIfDebuggingEnabled(int gridHeight, int gridWidth) {
+        if (ENABLE_DEBUG_LOGGING) {
+            logGridToConsole(gridCoordinateMap, gridHeight, gridWidth);
+        } else if (ENABLE_VERBOSE_LOGGING) {
+            logGridToConsoleVerbose(gridCoordinateMap, gridHeight, gridWidth);
+        }
+    }
 
-        for (int y = 0; y < char2dArray.size(); y++) {
-            for (int x = 0; x < char2dArray.getFirst().length - 1; x++) {
-                Point currentPoint = new Point(x, y);
-                char currentChar = coordinateMap.get(currentPoint);
-                StringBuilder partNumber = new StringBuilder();
-                int partnumberLength = 0;
-                Long partNumberLong;
+    /**
+     * Builds a map of part numbers to their coordinate locations.
+     */
+    private static Map<Long, ArrayList<ArrayList<Point>>> buildPartNumberLocationMap(
+            ArrayList<char[]> engineSchematic, Map<Point, Character> coordinateMap) {
+        partNumberLocationMap = new HashMap<>();
+
+        for (int rowIndex = 0; rowIndex < engineSchematic.size(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < engineSchematic.getFirst().length - 1; columnIndex++) {
+                Point currentPosition = new Point(columnIndex, rowIndex);
+                char currentCharacter = coordinateMap.get(currentPosition);
+                StringBuilder partNumberBuilder = new StringBuilder();
+                int partNumberLength = 0;
+                Long partNumberValue;
                 ArrayList<Point> partNumberCoordinates = new ArrayList<>();
 
-                boolean isDigit = isDigit(currentChar);
+                boolean isCurrentCharacterDigit = isDigit(currentCharacter);
 
-                if (isDigit) {
+                if (isCurrentCharacterDigit) {
+                    for (int digitIndex = 0; digitIndex < MAX_PART_NUMBER_LENGTH; digitIndex++) {
+                        partNumberBuilder.append(currentCharacter);
+                        partNumberLength++;
+                        currentCharacter =
+                                coordinateMap.get(new Point(currentPosition.x + partNumberLength, currentPosition.y));
 
-                    for (int i = 0; i < 5; i++) {
-                        partNumber.append(currentChar);
-                        partnumberLength++;
-                        currentChar = coordinateMap.get(new Point(currentPoint.x + partnumberLength, currentPoint.y));
-                        if (currentChar == '.' || !isDigit(currentChar)) {
-                            partNumberCoordinates.add(new Point(currentPoint.x + i, currentPoint.y));
+                        Point digitPosition = new Point(currentPosition.x + digitIndex, currentPosition.y);
+                        partNumberCoordinates.add(digitPosition);
+
+                        if (currentCharacter == EMPTY_SYMBOL || !isDigit(currentCharacter)) {
                             break;
-                        } else {
-                            partNumberCoordinates.add(new Point(currentPoint.x + i, currentPoint.y));
                         }
                     }
 
-                    partNumberLong = Long.parseLong(partNumber.toString());
+                    partNumberValue = Long.parseLong(partNumberBuilder.toString());
 
-                    if (partNumberMap.containsKey(partNumberLong)) {
-                        partNumberMap.get(partNumberLong).add(partNumberCoordinates);
+                    if (partNumberLocationMap.containsKey(partNumberValue)) {
+                        partNumberLocationMap.get(partNumberValue).add(partNumberCoordinates);
                     } else {
                         ArrayList<ArrayList<Point>> partNumberCoordinatesList = new ArrayList<>();
                         partNumberCoordinatesList.add(partNumberCoordinates);
-                        partNumberMap.put(partNumberLong, partNumberCoordinatesList);
+                        partNumberLocationMap.put(partNumberValue, partNumberCoordinatesList);
                     }
 
-                    if (DEBUGGING) {
-                        System.out.println("Part Number: " + partNumber);
-                    }
+                    log(
+                            LogLevel.VERBOSE,
+                            ENABLE_VERBOSE_LOGGING,
+                            "Mapped part number: " + partNumberBuilder + " at coordinates: " + partNumberCoordinates);
 
-                    x += partnumberLength - 1;
+                    columnIndex += partNumberLength - 1;
                 }
             }
         }
 
-        return partNumberMap;
+        return partNumberLocationMap;
     }
 
-    private static void printCoordinateMapToConsole(
-            Map<Point, Character> coordinateMap, int char2dArraySize, int char2dArrayLineLength) {
-        if (Boolean.FALSE.equals(DEBUGGING)) {
-            return;
-        }
+    /**
+     * Logs the coordinate map to console for debugging.
+     */
+    private static void logGridToConsole(Map<Point, Character> coordinateMap, int gridHeight, int gridWidth) {
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Grid layout:");
 
-        for (int y = -1; y <= char2dArraySize; y++) {
-            for (int x = -1; x <= char2dArrayLineLength; x++) {
-                Point currentPoint = new Point(x, y);
-                Character currentCharacter = coordinateMap.get(currentPoint);
-                System.out.print(currentCharacter);
+        for (int rowIndex = -1; rowIndex <= gridHeight; rowIndex++) {
+            StringBuilder rowBuilder = new StringBuilder();
+            for (int columnIndex = -1; columnIndex <= gridWidth; columnIndex++) {
+                Point currentPosition = new Point(columnIndex, rowIndex);
+                Character currentCharacter = coordinateMap.get(currentPosition);
+                rowBuilder.append(currentCharacter);
             }
-
-            System.out.println();
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, rowBuilder.toString());
         }
     }
 
-    private static void printCoordinateMapToConsoleVerbose(
-            Map<Point, Character> coordinateMap, int char2dArraySize, int char2dArrayLineLength) {
-        if (Boolean.FALSE.equals(VERBOSE)) {
-            return;
-        }
-
-        for (int y = -1; y <= char2dArraySize; y++) {
-            for (int x = -1; x <= char2dArrayLineLength; x++) {
-                Point currentPoint = new Point(x, y);
-                Character currentCharacter = coordinateMap.get(currentPoint);
-                System.out.printf("Coordinate (%s,%s) = %s%n", x, y, currentCharacter);
+    /**
+     * Logs the coordinate map to console with verbose coordinate information.
+     */
+    private static void logGridToConsoleVerbose(Map<Point, Character> coordinateMap, int gridHeight, int gridWidth) {
+        for (int rowIndex = -1; rowIndex <= gridHeight; rowIndex++) {
+            for (int columnIndex = -1; columnIndex <= gridWidth; columnIndex++) {
+                Point currentPosition = new Point(columnIndex, rowIndex);
+                Character currentCharacter = coordinateMap.get(currentPosition);
+                log(
+                        LogLevel.VERBOSE,
+                        ENABLE_VERBOSE_LOGGING,
+                        String.format("Coordinate (%d,%d) = %c", columnIndex, rowIndex, currentCharacter));
             }
         }
     }

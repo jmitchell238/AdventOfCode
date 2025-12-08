@@ -1,126 +1,275 @@
 package org.jmitchell238.aoc.aoc2023.day06;
 
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
+/**
+ * Advent of Code 2023 - Day 6: Wait For It
+ * <p>
+ * This class contains the solution logic for Day 6 of Advent of Code 2023.
+ * Part 1 calculates ways to win multiple boat races with separate time/distance pairs.
+ * Part 2 treats the input as a single race with concatenated time and distance values.
+ * </p>
+ */
+@SuppressWarnings({"java:S106", "java:S1118", "java:S1940", "java:S2589", "java:S100", "java:S3776", "java:S127"})
 public class Day06 {
-    private static final Boolean DEBUGGING = false;
-    private static final Boolean VERBOSE = false;
-    private static final ArrayList<Long> times = new ArrayList<>();
-    private static final ArrayList<Long> distances = new ArrayList<>();
-    private static final Map<Long, Long> raceTimeDistanceRecords = new HashMap<>();
-    private static Long p2Time = 0L;
-    private static Long p2Distance = 0L;
 
+    // Configuration flags
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
+
+    // Constants
+    private static final String TIME_LINE_PREFIX = "Time:";
+    private static final String DISTANCE_LINE_PREFIX = "Distance:";
+
+    // State variables for Part 1 (multiple races)
+    private static final ArrayList<Long> individualRaceTimes = new ArrayList<>();
+    private static final ArrayList<Long> individualRaceDistances = new ArrayList<>();
+    private static final Map<Long, Long> raceTimeToDistanceRecordMap = new HashMap<>();
+
+    // State variables for Part 2 (single race)
+    private static long singleRaceTime = 0L;
+    private static long singleRaceDistance = 0L;
+
+    @SuppressWarnings("unused")
     public void main(String[] args) throws FileNotFoundException {
-        Day06Run();
+        runDay06();
     }
 
-    public void Day06Run() throws FileNotFoundException {
+    /**
+     * Entry point for Day 6 solution.
+     */
+    public void runDay06() throws FileNotFoundException {
         System.out.println("\n--- Day 6: Wait For It ---\n");
 
-        String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day06/input.txt";
-        String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day06/input_test.txt";
+        String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day06/input.txt";
 
-        long partOneAnswer = part1(inputTest);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        long partOneAnswer = solvePart1(actualInputFilePath);
+        log(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
-        long partTwoAnswer = part2(inputTest);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        long partTwoAnswer = solvePart2(actualInputFilePath);
+        log(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
-    public long part1(String filePath) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(filePath));
+    /**
+     * Solves Part 1 by parsing multiple race time/distance pairs and calculating winning strategies.
+     */
+    public long solvePart1(String inputFilePath) throws FileNotFoundException {
+        parseInputForMultipleRaces(inputFilePath);
+        buildRaceTimeToDistanceMap();
 
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if (DEBUGGING) System.out.println(line);
+        long waysToWinAllRacesMultiplied = calculateWaysToWinAllRacesMultiplied();
 
-            if (line.startsWith("Time:")) {
-                String[] timesArray = line.split(" ");
+        log(
+                LogLevel.DEBUG,
+                ENABLE_DEBUG_LOGGING,
+                "Part 1 - Ways to win all races multiplied: " + waysToWinAllRacesMultiplied);
+        return waysToWinAllRacesMultiplied;
+    }
 
-                for (int i = 1; i < timesArray.length; i++) {
-                    long time = Long.parseLong(timesArray[i]);
-                    times.add(time);
-                    if (DEBUGGING) System.out.println(timesArray[i]);
+    /**
+     * Solves Part 2 by treating the input as a single race with concatenated values.
+     */
+    public long solvePart2(String inputFilePath) throws FileNotFoundException {
+        parseInputForSingleRace(inputFilePath);
+        clearAndSetupSingleRaceMap();
+
+        long waysToWinSingleRace = calculateWaysToWinAllRacesMultiplied();
+
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 2 - Ways to win single race: " + waysToWinSingleRace);
+        return waysToWinSingleRace;
+    }
+
+    /**
+     * Parses input file for Part 1 to extract individual race times and distances.
+     */
+    private void parseInputForMultipleRaces(String inputFilePath) throws FileNotFoundException {
+        try (Scanner fileScanner = new Scanner(new File(inputFilePath))) {
+            while (fileScanner.hasNextLine()) {
+                String currentLine = fileScanner.nextLine();
+                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+
+                if (currentLine.startsWith(TIME_LINE_PREFIX)) {
+                    parseIndividualTimesFromLine(currentLine);
+                } else if (currentLine.startsWith(DISTANCE_LINE_PREFIX)) {
+                    parseIndividualDistancesFromLine(currentLine);
                 }
             }
+        } catch (FileNotFoundException fileNotFoundException) {
+            String errorMessage = "Input file not found: " + inputFilePath;
+            System.err.println(errorMessage);
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFoundException.getMessage());
+            throw fileNotFoundException;
+        }
+    }
 
-            if (line.startsWith("Distance:")) {
-                String[] distancesArray = line.split(" ");
+    /**
+     * Parses input file for Part 2 to extract single concatenated race time and distance.
+     */
+    private void parseInputForSingleRace(String inputFilePath) throws FileNotFoundException {
+        try (Scanner fileScanner = new Scanner(new File(inputFilePath))) {
+            while (fileScanner.hasNextLine()) {
+                String currentLine = fileScanner.nextLine();
+                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
-                for (int i = 1; i < distancesArray.length; i++) {
-                    long distance = Long.parseLong(distancesArray[i]);
-                    distances.add(distance);
-                    if (DEBUGGING) System.out.println(distancesArray[i]);
+                if (currentLine.startsWith(TIME_LINE_PREFIX)) {
+                    parseConcatenatedTimeFromLine(currentLine);
+                } else if (currentLine.startsWith(DISTANCE_LINE_PREFIX)) {
+                    parseConcatenatedDistanceFromLine(currentLine);
                 }
             }
+        } catch (FileNotFoundException fileNotFoundException) {
+            String errorMessage = "Input file not found: " + inputFilePath;
+            System.err.println(errorMessage);
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFoundException.getMessage());
+            throw fileNotFoundException;
         }
-
-        for (int i = 0; i < times.size(); i++) {
-            raceTimeDistanceRecords.put(times.get(i), distances.get(i));
-        }
-
-        if (DEBUGGING) System.out.println(raceTimeDistanceRecords);
-
-        return numberOfWaysToWinMultiplied();
     }
 
-    public long part2(String filePath) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(filePath));
+    /**
+     * Parses individual race times from a time line.
+     */
+    private void parseIndividualTimesFromLine(String timeLine) {
+        String[] timeComponents = timeLine.split(" ");
 
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if (DEBUGGING) System.out.println(line);
-
-            if (line.startsWith("Time:")) {
-                String[] timesArray = line.split(":");
-                p2Time = Long.parseLong(timesArray[1].trim().replaceAll("\\s", ""));
+        for (int componentIndex = 1; componentIndex < timeComponents.length; componentIndex++) {
+            if (!timeComponents[componentIndex].trim().isEmpty()) {
+                long raceTime = Long.parseLong(timeComponents[componentIndex]);
+                individualRaceTimes.add(raceTime);
+                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Added race time: " + raceTime);
             }
+        }
+    }
 
-            if (line.startsWith("Distance:")) {
-                String[] distancesArray = line.split(":");
-                p2Distance = Long.parseLong(distancesArray[1].trim().replaceAll("\\s", ""));
+    /**
+     * Parses individual race distances from a distance line.
+     */
+    private void parseIndividualDistancesFromLine(String distanceLine) {
+        String[] distanceComponents = distanceLine.split(" ");
+
+        for (int componentIndex = 1; componentIndex < distanceComponents.length; componentIndex++) {
+            if (!distanceComponents[componentIndex].trim().isEmpty()) {
+                long raceDistance = Long.parseLong(distanceComponents[componentIndex]);
+                individualRaceDistances.add(raceDistance);
+                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Added race distance: " + raceDistance);
+            }
+        }
+    }
+
+    /**
+     * Parses concatenated time from a time line for Part 2.
+     */
+    private void parseConcatenatedTimeFromLine(String timeLine) {
+        String[] timeComponents = timeLine.split(":");
+        singleRaceTime = Long.parseLong(timeComponents[1].trim().replaceAll("\\s", ""));
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Concatenated race time: " + singleRaceTime);
+    }
+
+    /**
+     * Parses concatenated distance from a distance line for Part 2.
+     */
+    private void parseConcatenatedDistanceFromLine(String distanceLine) {
+        String[] distanceComponents = distanceLine.split(":");
+        singleRaceDistance = Long.parseLong(distanceComponents[1].trim().replaceAll("\\s", ""));
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Concatenated race distance: " + singleRaceDistance);
+    }
+
+    /**
+     * Builds the race time to distance record map for Part 1.
+     */
+    private void buildRaceTimeToDistanceMap() {
+        for (int raceIndex = 0; raceIndex < individualRaceTimes.size(); raceIndex++) {
+            Long raceTime = individualRaceTimes.get(raceIndex);
+            Long raceDistance = individualRaceDistances.get(raceIndex);
+            raceTimeToDistanceRecordMap.put(raceTime, raceDistance);
+        }
+
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Built race map: " + raceTimeToDistanceRecordMap);
+    }
+
+    /**
+     * Clears the race map and sets up for Part 2 single race.
+     */
+    private void clearAndSetupSingleRaceMap() {
+        raceTimeToDistanceRecordMap.clear();
+        raceTimeToDistanceRecordMap.put(singleRaceTime, singleRaceDistance);
+
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Single race map: " + raceTimeToDistanceRecordMap);
+    }
+
+    /**
+     * Calculates the number of ways to win all races, multiplied together.
+     */
+    private long calculateWaysToWinAllRacesMultiplied() {
+        long totalWaysToWinMultiplied = 1;
+
+        for (Map.Entry<Long, Long> raceEntry : raceTimeToDistanceRecordMap.entrySet()) {
+            long raceTime = raceEntry.getKey();
+            long recordDistance = raceEntry.getValue();
+
+            long waysToWinCurrentRace = calculateWaysToWinSingleRace(raceTime, recordDistance);
+            totalWaysToWinMultiplied *= waysToWinCurrentRace;
+
+            log(
+                    LogLevel.DEBUG,
+                    ENABLE_DEBUG_LOGGING,
+                    "Race (time=" + raceTime + ", record=" + recordDistance + ") has " + waysToWinCurrentRace
+                            + " ways to win");
+        }
+
+        return totalWaysToWinMultiplied;
+    }
+
+    /**
+     * Calculates the number of ways to win a single race given time and record distance.
+     */
+    private long calculateWaysToWinSingleRace(long totalRaceTime, long recordDistance) {
+        long waysToWinThisRace = 0;
+
+        for (long buttonHoldTime = 0; buttonHoldTime <= totalRaceTime; buttonHoldTime++) {
+            long remainingTravelTime = totalRaceTime - buttonHoldTime;
+            long totalDistanceTraveled = buttonHoldTime * remainingTravelTime;
+
+            if (totalDistanceTraveled > recordDistance) {
+                waysToWinThisRace++;
+
+                log(
+                        LogLevel.VERBOSE,
+                        ENABLE_VERBOSE_LOGGING,
+                        "Hold=" + buttonHoldTime + "ms, Speed=" + buttonHoldTime + "mm/ms, " + "Travel="
+                                + remainingTravelTime + "ms, Distance=" + totalDistanceTraveled + "mm (WINS!)");
+            } else {
+                log(
+                        LogLevel.VERBOSE,
+                        ENABLE_VERBOSE_LOGGING,
+                        "Hold=" + buttonHoldTime + "ms, Speed=" + buttonHoldTime + "mm/ms, " + "Travel="
+                                + remainingTravelTime + "ms, Distance=" + totalDistanceTraveled + "mm");
             }
         }
 
-        raceTimeDistanceRecords.put(p2Time, p2Distance);
-
-        if (DEBUGGING) System.out.println(raceTimeDistanceRecords);
-
-        return numberOfWaysToWinMultiplied();
+        return waysToWinThisRace;
     }
 
-    private long numberOfWaysToWinMultiplied() {
-        long numberOfWaysToWinMultiplied = 1;
+    /**
+     * Resets all state for fresh execution (used in testing).
+     */
+    public static void resetAllRaceData() {
+        individualRaceTimes.clear();
+        individualRaceDistances.clear();
+        raceTimeToDistanceRecordMap.clear();
+        singleRaceTime = 0L;
+        singleRaceDistance = 0L;
 
-        for (Map.Entry<Long, Long> entry : raceTimeDistanceRecords.entrySet()) {
-            long numberOfWaysToWin = 0;
-            long time = entry.getKey();
-            long distance = entry.getValue();
-
-            for (int i = 0; i <= time; i++) {
-                long buttonPushedTime = i;
-                long distanceTraveledPerMillisecond = buttonPushedTime;
-                long distanceTraveled = distanceTraveledPerMillisecond * (time - buttonPushedTime);
-                if (distanceTraveled > distance) {
-                    numberOfWaysToWin++;
-                }
-            }
-
-            numberOfWaysToWinMultiplied *= numberOfWaysToWin;
-        }
-
-        return numberOfWaysToWinMultiplied;
-    }
-
-    public static void reset() {
-        times.clear();
-        distances.clear();
-        raceTimeDistanceRecords.clear();
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All race data has been reset");
     }
 }

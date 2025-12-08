@@ -10,7 +10,7 @@ class Day06Tests {
 
     @AfterEach
     void tearDown() {
-        Day06.reset();
+        Day06.resetAllRaceData();
     }
 
     @Test
@@ -18,12 +18,12 @@ class Day06Tests {
         // Arrange
         String day06Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day06/input_test.txt";
         Day06 day06 = new Day06();
-
-        // Assert
         long expected = 288L;
-        long actual = day06.part1(day06Part1Input);
 
         // Act
+        long actual = day06.solvePart1(day06Part1Input);
+
+        // Assert
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -32,12 +32,12 @@ class Day06Tests {
         // Arrange
         String day06Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day06/input.txt";
         Day06 day06 = new Day06();
-
-        // Assert
         long expected = 6209190L;
-        long actual = day06.part1(day06Part1Input);
 
         // Act
+        long actual = day06.solvePart1(day06Part1Input);
+
+        // Assert
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -46,10 +46,10 @@ class Day06Tests {
         // Arrange
         String day06Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day06/input_test.txt";
         Day06 day06 = new Day06();
+        long expected = 71503L;
 
         // Act
-        long expected = 71503L;
-        long actual = day06.part2(day06Part2Input);
+        long actual = day06.solvePart2(day06Part2Input);
 
         // Assert
         assertThat(actual).isEqualTo(expected);
@@ -60,10 +60,10 @@ class Day06Tests {
         // Arrange
         String day06Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2023/day06/input.txt";
         Day06 day06 = new Day06();
+        long expected = 28545089L;
 
         // Act
-        long expected = 28545089L;
-        long actual = day06.part2(day06Part2Input);
+        long actual = day06.solvePart2(day06Part2Input);
 
         // Assert
         assertThat(actual).isEqualTo(expected);

@@ -1,5 +1,7 @@
 package org.jmitchell238.aoc.aoc2023.day02;
 
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -7,147 +9,214 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
+/**
+ * Advent of Code 2023 - Day 2: Cube Conundrum
+ * <p>
+ * This class contains the solution logic for Day 2 of Advent of Code 2023.
+ * Part 1 determines which games are possible given cube constraints.
+ * Part 2 calculates the power of minimum cubes needed for each game.
+ * </p>
+ */
+@SuppressWarnings({"java:S106", "java:S1118", "java:S1940", "java:S2589", "java:S100"})
 public class Day02 {
 
-    public static void Day02() {
+    // Configuration flags
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
+
+    // Constants for repeated strings
+    private static final String GAME_PREFIX = "Game ";
+    private static final String COLOR_GREEN = "green";
+    private static final String COLOR_RED = "red";
+    private static final String COLOR_BLUE = "blue";
+
+    public static void runDay02() {
         System.out.println("\n--- Day 2: Cube Conundrum ---\n");
 
-        String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day02/input.txt";
-        String input_test = "src/main/java/org/jmitchell238/aoc/aoc2023/day02/input_test.txt";
+        String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day02/input.txt";
+        String testInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day02/input_test.txt";
 
-        int partOneAnswer = Part1(input);
-        System.out.println("Part 1: Answer: Possible set ID's sum = " + partOneAnswer);
+        int partOneAnswer = solvePart1(actualInputFilePath);
+        log(LogLevel.INFO, true, "Part 1: Answer: Possible set ID's sum = " + partOneAnswer);
 
-        int partTwoAnswer = Part2(input_test);
-        System.out.println("Part 2: Answer: Power of each set minimum cubes sum = " + partTwoAnswer);
+        int partTwoAnswer = solvePart2(testInputFilePath);
+        log(LogLevel.INFO, true, "Part 2: Answer: Power of each set minimum cubes sum = " + partTwoAnswer);
     }
 
-    public static int Part1(String inputString) {
-        File input = new File(inputString);
-        Map<String, Integer> totalNumberOfCubesPossibleByColorForSet = getPossibleCubesByColor();
+    /**
+     * Solves Part 1 by finding games that are possible with the given cube constraints.
+     */
+    public static int solvePart1(String inputFilePath) {
+        File inputFile = new File(inputFilePath);
+        Map<String, Integer> maximumCubesByColor = createMaximumCubeConstraints();
 
-        List<Integer> possibleGames = new ArrayList<>();
-        possibleGames.add(0);
+        List<Integer> possibleGameIds = new ArrayList<>();
+        possibleGameIds.add(0); // Start with 0 for sum calculation
 
-        try (Scanner scanner = new Scanner(input)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
+        try (Scanner fileScanner = new Scanner(inputFile)) {
+            while (fileScanner.hasNextLine()) {
+                String currentLine = fileScanner.nextLine();
+                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
-                String[] lineSplit = line.split(":");
-                Integer gameId = Integer.parseInt(lineSplit[0].split(" ")[1]);
+                String[] lineParts = currentLine.split(":");
+                Integer gameId = Integer.parseInt(lineParts[0].split(" ")[1]);
+                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Checking game ID: " + gameId);
 
-                String[] sets = lineSplit[1].split(";");
-                boolean notPossible = false;
+                String[] cubeSets = lineParts[1].split(";");
+                boolean isGamePossible = true;
 
-                for (String set : sets) {
-                    String[] cubesByColorWithAmount = set.split(",");
-                    Map<String, Integer> cubesInSet = new HashMap<>();
-
-                    for (String cubeColorWithAmount : cubesByColorWithAmount) {
-                        cubeColorWithAmount = cubeColorWithAmount.trim();
-                        String currentCubeColor = cubeColorWithAmount.split(" ")[1];
-                        Integer cubeAmount =
-                                Integer.parseInt(cubeColorWithAmount.split(" ")[0]);
-                        cubesInSet.put(currentCubeColor, cubeAmount);
-
-                        int currentColorAmountInSet = cubesInSet.get(currentCubeColor);
-                        int possibleCubesByCurrentColor = totalNumberOfCubesPossibleByColorForSet.get(currentCubeColor);
-                        if (currentColorAmountInSet > possibleCubesByCurrentColor) {
-                            notPossible = true;
-                            break;
-                        }
-                    }
-
-                    if (notPossible) {
+                for (String cubeSet : cubeSets) {
+                    if (!isCubeSetPossible(cubeSet, maximumCubesByColor)) {
+                        isGamePossible = false;
+                        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameId + " is not possible");
                         break;
                     }
                 }
 
-                if (notPossible) {
-                    continue;
+                if (isGamePossible) {
+                    possibleGameIds.add(gameId);
+                    log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameId + " is possible");
                 }
-
-                possibleGames.add(gameId);
             }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException fileNotFound) {
+            String errorMessage = "Input file not found: " + inputFile.getPath();
+            System.err.println(errorMessage);
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
         }
 
-        return possibleGames.stream().mapToInt(Integer::intValue).sum();
+        int totalSum = possibleGameIds.stream().mapToInt(Integer::intValue).sum();
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total sum of possible games: " + totalSum);
+        return totalSum;
     }
 
-    public static int Part2(String inputString) {
-        File input = new File(inputString);
-        List<Integer> powersOfNecessaryCubeAmounts = new ArrayList<>();
+    /**
+     * Solves Part 2 by calculating the power of minimum cubes needed for each game.
+     */
+    public static int solvePart2(String inputFilePath) {
+        File inputFile = new File(inputFilePath);
+        List<Integer> gamePowers = new ArrayList<>();
 
-        try (Scanner scanner = new Scanner(input); ) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
+        try (Scanner fileScanner = new Scanner(inputFile)) {
+            while (fileScanner.hasNextLine()) {
+                String currentLine = fileScanner.nextLine();
+                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
-                String[] sets = line.split(":")[1].split(";");
-                int round = Integer.parseInt(line.split(":")[0].split(" ")[1]);
+                String[] cubeSets = currentLine.split(":")[1].split(";");
+                int gameRound = Integer.parseInt(currentLine.split(":")[0].split(" ")[1]);
 
-                // DEBUGGING - Printing each round to console
-                // System.out.println("\nRound " + round + ": ");
+                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Processing round: " + gameRound);
 
-                Map<String, Integer> highestAmountByColorInRound = new HashMap<>();
-                highestAmountByColorInRound.put("green", 0);
-                highestAmountByColorInRound.put("red", 0);
-                highestAmountByColorInRound.put("blue", 0);
+                Map<String, Integer> minimumCubesRequired = calculateMinimumCubesForGame(cubeSets);
+                int gamePower = calculateGamePower(minimumCubesRequired);
 
-                for (String set : sets) {
-                    String[] cubesByColorWithAmount = set.split(",");
-                    Map<String, Integer> cubesInSet = new HashMap<>();
-                    cubesInSet.put("green", 0);
-                    cubesInSet.put("red", 0);
-                    cubesInSet.put("blue", 0);
-
-                    for (String cubeColorWithAmount : cubesByColorWithAmount) {
-                        cubeColorWithAmount = cubeColorWithAmount.trim();
-                        String currentCubeColor = cubeColorWithAmount.split(" ")[1];
-                        Integer currentCubeAmount =
-                                Integer.parseInt(cubeColorWithAmount.split(" ")[0]);
-
-                        int totalCubeColorAmount = cubesInSet.get(currentCubeColor) + currentCubeAmount;
-                        cubesInSet.put(currentCubeColor, totalCubeColorAmount);
-                    }
-
-                    // Update cubeAmount in the original map if the new value is higher
-                    highestAmountByColorInRound.replaceAll(
-                            (key, oldValue) -> Math.max(oldValue, cubesInSet.getOrDefault(key, oldValue)));
-                }
-
-                // DEBUGGING - print the highest number of cubes by color in the found
-                // System.out.println("Highest amount of cubes by color in this round:");
-                // highestAmountByColorInRound.forEach((key, value) -> System.out.println(key + ": " +
-                // value));
-
-                // Multiply all values together
-                int power = highestAmountByColorInRound.values().stream().reduce(1, (a, b) -> a * b);
-
-                // Add this power to the powersOfNecessaryCubeAmounts List
-                powersOfNecessaryCubeAmounts.add(power);
-
-                // DEBUGGING - Print the Power of the total cubes needed. DEBUGGING
-                // System.out.println("Power of needed cubes: " + power);
+                gamePowers.add(gamePower);
+                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameRound + " power: " + gamePower);
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException fileNotFound) {
+            String errorMessage = "Input file not found: " + inputFile.getPath();
+            System.err.println(errorMessage);
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
         }
 
-        //        return -1;
-        return powersOfNecessaryCubeAmounts.stream().mapToInt(Integer::intValue).sum();
+        int totalPowerSum = gamePowers.stream().mapToInt(Integer::intValue).sum();
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total power sum: " + totalPowerSum);
+        return totalPowerSum;
     }
 
-    private static Map<String, Integer> getPossibleCubesByColor() {
-        Map<String, Integer> totalNumberOfCubesPossibleByColor = new HashMap<>();
-        totalNumberOfCubesPossibleByColor.put("red", 12);
-        totalNumberOfCubesPossibleByColor.put("green", 13);
-        totalNumberOfCubesPossibleByColor.put("blue", 14);
+    /**
+     * Checks if a cube set is possible given the maximum cube constraints.
+     */
+    private static boolean isCubeSetPossible(String cubeSet, Map<String, Integer> maximumCubesByColor) {
+        String[] cubesWithAmounts = cubeSet.split(",");
+        Map<String, Integer> cubesInCurrentSet = new HashMap<>();
 
-        return totalNumberOfCubesPossibleByColor;
+        for (String cubeWithAmount : cubesWithAmounts) {
+            String trimmedCubeInfo = cubeWithAmount.trim();
+            String cubeColor = trimmedCubeInfo.split(" ")[1];
+            Integer cubeAmount = Integer.parseInt(trimmedCubeInfo.split(" ")[0]);
+
+            cubesInCurrentSet.put(cubeColor, cubeAmount);
+
+            int currentColorAmount = cubesInCurrentSet.get(cubeColor);
+            int maximumAllowedForColor = maximumCubesByColor.get(cubeColor);
+
+            if (currentColorAmount > maximumAllowedForColor) {
+                log(
+                        LogLevel.VERBOSE,
+                        ENABLE_VERBOSE_LOGGING,
+                        "Cube set impossible: " + cubeColor + " has " + currentColorAmount + " but max allowed is "
+                                + maximumAllowedForColor);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Calculates the minimum cubes required for a game across all sets.
+     */
+    private static Map<String, Integer> calculateMinimumCubesForGame(String[] cubeSets) {
+        Map<String, Integer> minimumCubesRequired = new HashMap<>();
+        minimumCubesRequired.put(COLOR_GREEN, 0);
+        minimumCubesRequired.put(COLOR_RED, 0);
+        minimumCubesRequired.put(COLOR_BLUE, 0);
+
+        for (String cubeSet : cubeSets) {
+            String[] cubesWithAmounts = cubeSet.split(",");
+            Map<String, Integer> cubesInCurrentSet = initializeCubeMap();
+
+            for (String cubeWithAmount : cubesWithAmounts) {
+                String trimmedCubeInfo = cubeWithAmount.trim();
+                String cubeColor = trimmedCubeInfo.split(" ")[1];
+                Integer cubeAmount = Integer.parseInt(trimmedCubeInfo.split(" ")[0]);
+
+                int totalColorAmount = cubesInCurrentSet.get(cubeColor) + cubeAmount;
+                cubesInCurrentSet.put(cubeColor, totalColorAmount);
+            }
+
+            // Update minimum required cubes if current set has higher amounts
+            minimumCubesRequired.replaceAll((colorKey, currentMinimum) ->
+                    Math.max(currentMinimum, cubesInCurrentSet.getOrDefault(colorKey, currentMinimum)));
+        }
+
+        log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Minimum cubes required: " + minimumCubesRequired);
+        return minimumCubesRequired;
+    }
+
+    /**
+     * Calculates the power of a game by multiplying all minimum cube amounts.
+     */
+    private static int calculateGamePower(Map<String, Integer> minimumCubesRequired) {
+        int gamePower =
+                minimumCubesRequired.values().stream().reduce(1, (accumulator, cubeAmount) -> accumulator * cubeAmount);
+        log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Calculated game power: " + gamePower);
+        return gamePower;
+    }
+
+    /**
+     * Creates the maximum cube constraints for Part 1.
+     */
+    private static Map<String, Integer> createMaximumCubeConstraints() {
+        Map<String, Integer> maximumCubesByColor = new HashMap<>();
+        maximumCubesByColor.put(COLOR_RED, 12);
+        maximumCubesByColor.put(COLOR_GREEN, 13);
+        maximumCubesByColor.put(COLOR_BLUE, 14);
+        return maximumCubesByColor;
+    }
+
+    /**
+     * Initializes a cube map with all colors set to zero.
+     */
+    private static Map<String, Integer> initializeCubeMap() {
+        Map<String, Integer> cubeMap = new HashMap<>();
+        cubeMap.put(COLOR_GREEN, 0);
+        cubeMap.put(COLOR_RED, 0);
+        cubeMap.put(COLOR_BLUE, 0);
+        return cubeMap;
     }
 }
