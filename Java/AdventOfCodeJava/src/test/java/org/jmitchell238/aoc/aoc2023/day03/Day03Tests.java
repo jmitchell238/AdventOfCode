@@ -15,7 +15,7 @@ class Day03Tests {
         Long expected = 4361L;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day03.part1(day03Part1Input)).isEqualTo(expected);
+        AssertionsForClassTypes.assertThat(Day03.solvePart1(day03Part1Input)).isEqualTo(expected);
     }
 
     @Test
@@ -27,7 +27,7 @@ class Day03Tests {
         Long expected = 540212L;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day03.part1(day03Part1Input)).isEqualTo(expected);
+        AssertionsForClassTypes.assertThat(Day03.solvePart1(day03Part1Input)).isEqualTo(expected);
     }
 
     @Test
@@ -39,7 +39,7 @@ class Day03Tests {
         Long expected = 467835L;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day03.part2(day03Part2Input)).isEqualTo(expected);
+        AssertionsForClassTypes.assertThat(Day03.solvePart2(day03Part2Input)).isEqualTo(expected);
     }
 
     @Test
@@ -51,6 +51,6 @@ class Day03Tests {
         Long expected = 87605697L;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day03.part2(day03Part2Input)).isEqualTo(expected);
+        AssertionsForClassTypes.assertThat(Day03.solvePart2(day03Part2Input)).isEqualTo(expected);
     }
 }

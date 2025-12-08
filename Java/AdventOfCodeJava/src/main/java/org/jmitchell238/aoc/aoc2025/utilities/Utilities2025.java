@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
 public class Utilities2025 {
 
@@ -31,5 +32,12 @@ public class Utilities2025 {
         if (shouldOutput) {
             System.out.println(level.toString() + " " + message);
         }
+    }
+
+    /**
+     * Print a error message to standard error output.
+     */
+    public static void logError(String message) {
+        System.err.println("ERROR: " + message);
     }
 }

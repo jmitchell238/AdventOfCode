@@ -1,6 +1,7 @@
 package org.jmitchell238.aoc.generalutilities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.awt.Point;
 import java.util.AbstractMap;
@@ -20,6 +21,8 @@ import org.jmitchell238.aoc.generalutilities.Utilities.Tuple;
 import org.jmitchell238.aoc.generalutilities.Utilities.Tuple3;
 import org.jmitchell238.aoc.generalutilities.Utilities.Tuple4;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class UtilitiesTests {
 
@@ -28,7 +31,7 @@ class UtilitiesTests {
         // Arrange
         String input = "one, two, , three";
         String delimiter = ",";
-        Boolean removeEmptyStrings = false;
+        boolean removeEmptyStrings = false;
         String[] expected = {"one", "two", "", "three"};
 
         // Assert
@@ -43,7 +46,7 @@ class UtilitiesTests {
         // Arrange
         String input = "one, two, , three";
         String delimiter = ",";
-        Boolean removeEmptyStrings = true;
+        boolean removeEmptyStrings = true;
         String[] expected = {"one", "two", "three"};
 
         // Assert
@@ -58,7 +61,7 @@ class UtilitiesTests {
         // Arrange
         String input = "one, two, , three";
         char[] delimiter = {','};
-        Boolean removeEmptyStrings = false;
+        boolean removeEmptyStrings = false;
         String[] expected = {"one", "two", "", "three"};
 
         // Assert
@@ -73,7 +76,7 @@ class UtilitiesTests {
         // Arrange
         String input = "one, two, , three";
         char[] delimiter = {','};
-        Boolean removeEmptyStrings = true;
+        boolean removeEmptyStrings = true;
         String[] expected = {"one", "two", "three"};
 
         // Assert
@@ -616,7 +619,7 @@ class UtilitiesTests {
         List<String> result = Utilities.with(inputList, valueToAdd);
 
         // Assert
-        assertThat(result.get(0)).isEqualTo(valueToAdd);
+        assertThat(result.getFirst()).isEqualTo(valueToAdd);
         assertThat(result).hasSize(1);
     }
 
@@ -779,5 +782,115 @@ class UtilitiesTests {
 
         // Assert
         assertThat(result).isEqualTo(7);
+    }
+
+    @Test
+    void splitToCharArray_CalledWithString_ReturnsCorrectCharArray() {
+        // Arrange
+        String input = "hello";
+        char[] expected = {'h', 'e', 'l', 'l', 'o'};
+
+        // Act
+        char[] actual = Utilities.splitToCharArray(input);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void splitToCharArray_CalledWithEmptyString_ReturnsEmptyArray() {
+        // Arrange
+        String input = "";
+        char[] expected = {};
+
+        // Act
+        char[] actual = Utilities.splitToCharArray(input);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"11, true", "12341234, true", "101, false", "5, false"})
+    void isExactlyTwoRepeats_WithLongInputs_ReturnsExpectedResult(Long input, boolean expected) {
+        // Act
+        boolean actual = Utilities.isExactlyTwoRepeats(input);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1010, true", "202, false", "0101, false"})
+    void isExactlyTwoRepeats_WithStringInputs_ReturnsExpectedResult(String input, boolean expected) {
+        // Act
+        boolean actual = Utilities.isExactlyTwoRepeats(input);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @SuppressWarnings("ConstantConditions")
+    void isExactlyTwoRepeats_WithNullString_ReturnsFalse() {
+        // Act
+        boolean actual = Utilities.isExactlyTwoRepeats((String) null);
+
+        // Assert
+        assertThat(actual).isFalse();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"22, true", "111, true", "121212, true", "101, false", "5, false"})
+    void isRepeatedMultipleTimes_WithLongInputs_ReturnsExpectedResult(Long input, boolean expected) {
+        // Act
+        boolean actual = Utilities.isRepeatedMultipleTimes(input);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"333, true", "1231231234, false", "0303, false"})
+    void isRepeatedMultipleTimes_WithStringInputs_ReturnsExpectedResult(String input, boolean expected) {
+        // Act
+        boolean actual = Utilities.isRepeatedMultipleTimes(input);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @SuppressWarnings("ConstantConditions")
+    void isRepeatedMultipleTimes_WithNullString_ReturnsFalse() {
+        // Act
+        boolean actual = Utilities.isRepeatedMultipleTimes((String) null);
+
+        // Assert
+        assertThat(actual).isFalse();
+    }
+
+    @Test
+    void printExactlyTwoRepeatsInRange_WithValidRange_PrintsCorrectNumbers() {
+        // Arrange
+        Long rangeStart = 10L;
+        Long rangeEnd = 15L;
+
+        // Act & Assert
+        // This should not throw an exception
+        assertThatCode(() -> Utilities.printExactlyTwoRepeatsInRange(rangeStart, rangeEnd))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    void printExactlyTwoRepeatsInRange_WithReversedRange_PrintsCorrectNumbers() {
+        // Arrange
+        Long rangeStart = 15L;
+        Long rangeEnd = 10L;
+
+        // Act & Assert
+        // This should not throw an exception and should handle reversed range
+        assertThatCode(() -> Utilities.printExactlyTwoRepeatsInRange(rangeStart, rangeEnd))
+                .doesNotThrowAnyException();
     }
 }

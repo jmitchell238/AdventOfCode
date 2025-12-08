@@ -1,5 +1,7 @@
 package org.jmitchell238.aoc.aoc2023.day05;
 
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -14,17 +16,41 @@ import org.jmitchell238.aoc.aoc2023.day05.maps.SoilToFertilizerMap;
 import org.jmitchell238.aoc.aoc2023.day05.maps.SourceToDestinationMap;
 import org.jmitchell238.aoc.aoc2023.day05.maps.TemperatureToHumidityMap;
 import org.jmitchell238.aoc.aoc2023.day05.maps.WaterToLightMap;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
+/**
+ * Advent of Code 2023 - Day 5: If You Give A Seed A Fertilizer
+ * <p>
+ * This class contains the solution logic for Day 5 of Advent of Code 2023.
+ * Part 1 maps individual seeds through transformation maps to find locations.
+ * Part 2 handles seed ranges and processes them in batches for efficiency.
+ * </p>
+ */
+@SuppressWarnings({"java:S106", "java:S1118", "java:S1940", "java:S2589", "java:S100", "java:S3776", "java:S127"})
 public class Day05 {
-    private static final Boolean DEBUGGING = false;
-    private static final Boolean VERBOSE = false;
-    private static final String seedToSoilString = "seed-to-soil map:";
-    private static final String soilToFertilizerString = "soil-to-fertilizer map:";
-    private static final String fertilizerToWaterString = "fertilizer-to-water map:";
-    private static final String waterToLightString = "water-to-light map:";
-    private static final String lightToTemperatureString = "light-to-temperature map:";
-    private static final String temperatureToHumidityString = "temperature-to-humidity map:";
-    private static final String humidityToLocationString = "humidity-to-location map:";
+
+    // Configuration flags
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
+
+    // Constants for map headers
+    private static final String SEED_TO_SOIL_MAP_HEADER = "seed-to-soil map:";
+    private static final String SOIL_TO_FERTILIZER_MAP_HEADER = "soil-to-fertilizer map:";
+    private static final String FERTILIZER_TO_WATER_MAP_HEADER = "fertilizer-to-water map:";
+    private static final String WATER_TO_LIGHT_MAP_HEADER = "water-to-light map:";
+    private static final String LIGHT_TO_TEMPERATURE_MAP_HEADER = "light-to-temperature map:";
+    private static final String TEMPERATURE_TO_HUMIDITY_MAP_HEADER = "temperature-to-humidity map:";
+    private static final String HUMIDITY_TO_LOCATION_MAP_HEADER = "humidity-to-location map:";
+    private static final String SEEDS_HEADER = "seeds";
+    private static final String SEEDS_PREFIX = "seeds:";
+
+    // Processing constants
+    private static final int SEED_PROCESSING_BATCH_SIZE = 1000;
+
+    // Map instances
     private static final SourceToDestinationMap seedToSoilMap = new SeedToSoilMap();
     private static final SourceToDestinationMap soilToFertilizerMap = new SoilToFertilizerMap();
     private static final SourceToDestinationMap fertilizerToWaterMap = new FertilizerToWaterMap();
@@ -32,258 +58,332 @@ public class Day05 {
     private static final SourceToDestinationMap lightToTemperatureMap = new LightToTemperatureMap();
     private static final SourceToDestinationMap temperatureToHumidityMap = new TemperatureToHumidityMap();
     private static final SourceToDestinationMap humidityToLocationMap = new HumidityToLocationMap();
-    private static final List<Long> seeds = new ArrayList<>();
-    private String seedsLine = null;
-    private static final int BATCH_SIZE = 1000;
 
+    // State variables
+    private static final List<Long> seedsForPart1 = new ArrayList<>();
+    private String seedsLineForPart2 = null;
+
+    @SuppressWarnings("unused")
     public void main(String[] args) throws FileNotFoundException {
-        Day05Run();
+        runDay05();
     }
 
-    public void Day05Run() throws FileNotFoundException {
+    /**
+     * Entry point for Day 5 solution.
+     */
+    public void runDay05() throws FileNotFoundException {
         System.out.println("\n--- Day 5: If You Give A Seed A Fertilizer ---\n");
 
-        String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input.txt";
-        String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input_test.txt";
+        String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input.txt";
 
-        long partOneAnswer = part1(input);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        long partOneAnswer = solvePart1(actualInputFilePath);
+        log(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
-        long partTwoAnswer = part2(input);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        long partTwoAnswer = solvePart2(actualInputFilePath);
+        log(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
-    public long part1(String inputString) throws FileNotFoundException {
-        return processFile(inputString, 1);
+    /**
+     * Solves Part 1 by processing individual seeds through transformation maps.
+     */
+    public long solvePart1(String inputFilePath) throws FileNotFoundException {
+        return processInputFile(inputFilePath, 1);
     }
 
-    public long part2(String inputString) throws FileNotFoundException {
-        return processFile(inputString, 2);
+    /**
+     * Solves Part 2 by processing seed ranges in batches through transformation maps.
+     */
+    public long solvePart2(String inputFilePath) throws FileNotFoundException {
+        return processInputFile(inputFilePath, 2);
     }
 
-    public long processFile(String filePath, int part) throws FileNotFoundException {
-        String currentHeader = null;
-        seedsLine = null;
+    /**
+     * Processes the input file and builds transformation maps based on the specified part.
+     */
+    public long processInputFile(String inputFilePath, int problemPart) throws FileNotFoundException {
+        String currentSectionHeader = null;
+        seedsLineForPart2 = null;
 
-        Scanner scanner = new Scanner(new File(filePath));
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine().trim();
+        try (Scanner inputFileScanner = new Scanner(new File(inputFilePath))) {
+            while (inputFileScanner.hasNextLine()) {
+                String currentLine = inputFileScanner.nextLine().trim();
 
-            if (line.startsWith("seeds:")) {
-                currentHeader = "seeds";
-            } else if (line.isBlank()) {
-                currentHeader = null;
-                continue;
-            } else if (line.startsWith(seedToSoilString)) {
-                currentHeader = seedToSoilString;
-                continue;
-            } else if (line.startsWith(soilToFertilizerString)) {
-                currentHeader = soilToFertilizerString;
-                continue;
-            } else if (line.startsWith(fertilizerToWaterString)) {
-                currentHeader = fertilizerToWaterString;
-                continue;
-            } else if (line.startsWith(waterToLightString)) {
-                currentHeader = waterToLightString;
-                continue;
-            } else if (line.startsWith(lightToTemperatureString)) {
-                currentHeader = lightToTemperatureString;
-                continue;
-            } else if (line.startsWith(temperatureToHumidityString)) {
-                currentHeader = temperatureToHumidityString;
-                continue;
-            } else if (line.startsWith(humidityToLocationString)) {
-                currentHeader = humidityToLocationString;
-                continue;
-            }
+                currentSectionHeader = determineCurrentSectionHeader(currentLine, currentSectionHeader);
 
-            if (currentHeader.equals("seeds")) {
-                if (part == 1) {
-                    processSeedsLine(line);
-                } else {
-                    this.seedsLine = line;
+                if (currentSectionHeader == null) {
+                    continue;
                 }
-            } else {
-                processLineBasedOnCurrentHeader(currentHeader, line);
+
+                processLineBasedOnSection(currentSectionHeader, currentLine, problemPart);
             }
+        } catch (FileNotFoundException fileNotFoundException) {
+            String errorMessage = "Input file not found: " + inputFilePath;
+            System.err.println(errorMessage);
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFoundException.getMessage());
+            throw fileNotFoundException;
         }
 
-        scanner.close();
+        long lowestLocationNumber = calculateLowestLocationForPart(problemPart);
 
-        long answer;
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Lowest Location number for provided seeds: " + lowestLocationNumber);
 
-        if (part == 1) {
-            answer = processSeedsForPart1();
+        return lowestLocationNumber;
+    }
+
+    /**
+     * Determines the current section header based on the input line.
+     */
+    private String determineCurrentSectionHeader(String currentLine, String previousSectionHeader) {
+        if (currentLine.startsWith(SEEDS_PREFIX)) {
+            return SEEDS_HEADER;
+        } else if (currentLine.isBlank()) {
+            return null;
+        } else if (currentLine.startsWith(SEED_TO_SOIL_MAP_HEADER)) {
+            return SEED_TO_SOIL_MAP_HEADER;
+        } else if (currentLine.startsWith(SOIL_TO_FERTILIZER_MAP_HEADER)) {
+            return SOIL_TO_FERTILIZER_MAP_HEADER;
+        } else if (currentLine.startsWith(FERTILIZER_TO_WATER_MAP_HEADER)) {
+            return FERTILIZER_TO_WATER_MAP_HEADER;
+        } else if (currentLine.startsWith(WATER_TO_LIGHT_MAP_HEADER)) {
+            return WATER_TO_LIGHT_MAP_HEADER;
+        } else if (currentLine.startsWith(LIGHT_TO_TEMPERATURE_MAP_HEADER)) {
+            return LIGHT_TO_TEMPERATURE_MAP_HEADER;
+        } else if (currentLine.startsWith(TEMPERATURE_TO_HUMIDITY_MAP_HEADER)) {
+            return TEMPERATURE_TO_HUMIDITY_MAP_HEADER;
+        } else if (currentLine.startsWith(HUMIDITY_TO_LOCATION_MAP_HEADER)) {
+            return HUMIDITY_TO_LOCATION_MAP_HEADER;
         } else {
-            answer = processSeedsLinePart2();
-        }
-
-        System.out.println("Lowest Location number for provided seeds: " + answer);
-
-        return answer;
-    }
-
-    private Long processSeedsForPart1() {
-        long answer = Long.MAX_VALUE;
-
-        for (Long seed : seeds) {
-            long location = calculateLocation(seed);
-            if (location < answer) {
-                answer = location;
-            }
-        }
-
-        return answer;
-    }
-
-    private static void processLineBasedOnCurrentHeader(String currentHeader, String line) {
-        // Process lines based on the current header
-        if (currentHeader != null) {
-            switch (currentHeader) {
-                case seedToSoilString:
-                    getMapDataStrings(line, seedToSoilMap);
-                    break;
-                case soilToFertilizerString:
-                    getMapDataStrings(line, soilToFertilizerMap);
-                    break;
-                case fertilizerToWaterString:
-                    getMapDataStrings(line, fertilizerToWaterMap);
-                    break;
-                case waterToLightString:
-                    getMapDataStrings(line, waterToLightMap);
-                    break;
-                case lightToTemperatureString:
-                    getMapDataStrings(line, lightToTemperatureMap);
-                    break;
-                case temperatureToHumidityString:
-                    getMapDataStrings(line, temperatureToHumidityMap);
-                    break;
-                case humidityToLocationString:
-                    getMapDataStrings(line, humidityToLocationMap);
-                    break;
-            }
+            return previousSectionHeader; // Keep the current header for data lines
         }
     }
 
-    private static void processSeedsLine(String line) {
-        Arrays.stream(line.split(" "))
-                .skip(1) // Skip "seeds:"
+    /**
+     * Processes a line based on the current section header and problem part.
+     */
+    private void processLineBasedOnSection(String currentSectionHeader, String currentLine, int problemPart) {
+        if (SEEDS_HEADER.equals(currentSectionHeader)) {
+            processSeedsLine(currentLine, problemPart);
+        } else {
+            processTransformationMapLine(currentSectionHeader, currentLine);
+        }
+    }
+
+    /**
+     * Processes the seeds line differently based on the problem part.
+     */
+    private void processSeedsLine(String currentLine, int problemPart) {
+        if (problemPart == 1) {
+            parseIndividualSeeds(currentLine);
+        } else {
+            this.seedsLineForPart2 = currentLine;
+        }
+    }
+
+    /**
+     * Parses individual seeds for Part 1.
+     */
+    private void parseIndividualSeeds(String seedsLine) {
+        Arrays.stream(seedsLine.split(" "))
+                .skip(1) // Skip "seeds:" prefix
                 .map(Long::parseLong)
-                .forEach(seeds::add);
-        if (DEBUGGING) System.out.println("seeds: " + seeds);
+                .forEach(seedsForPart1::add);
+
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Parsed individual seeds: " + seedsForPart1);
     }
 
-    private long processSeedsLinePart2() {
-        String seedsLine = this.seedsLine
-                .substring(this.seedsLine.indexOf("seeds:") + "seeds:".length())
+    /**
+     * Processes transformation map lines and adds them to the appropriate map.
+     */
+    private void processTransformationMapLine(String currentSectionHeader, String currentLine) {
+        if (currentSectionHeader != null && !currentLine.contains("map:")) {
+            switch (currentSectionHeader) {
+                case SEED_TO_SOIL_MAP_HEADER:
+                    addMappingDataToMap(currentLine, seedToSoilMap);
+                    break;
+                case SOIL_TO_FERTILIZER_MAP_HEADER:
+                    addMappingDataToMap(currentLine, soilToFertilizerMap);
+                    break;
+                case FERTILIZER_TO_WATER_MAP_HEADER:
+                    addMappingDataToMap(currentLine, fertilizerToWaterMap);
+                    break;
+                case WATER_TO_LIGHT_MAP_HEADER:
+                    addMappingDataToMap(currentLine, waterToLightMap);
+                    break;
+                case LIGHT_TO_TEMPERATURE_MAP_HEADER:
+                    addMappingDataToMap(currentLine, lightToTemperatureMap);
+                    break;
+                case TEMPERATURE_TO_HUMIDITY_MAP_HEADER:
+                    addMappingDataToMap(currentLine, temperatureToHumidityMap);
+                    break;
+                case HUMIDITY_TO_LOCATION_MAP_HEADER:
+                    addMappingDataToMap(currentLine, humidityToLocationMap);
+                    break;
+                default:
+                    log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Unknown section header: " + currentSectionHeader);
+            }
+        }
+    }
+
+    /**
+     * Calculates the lowest location number based on the problem part.
+     */
+    private long calculateLowestLocationForPart(int problemPart) {
+        if (problemPart == 1) {
+            return calculateLowestLocationForIndividualSeeds();
+        } else {
+            return calculateLowestLocationForSeedRanges();
+        }
+    }
+
+    /**
+     * Calculates the lowest location for individual seeds in Part 1.
+     */
+    private long calculateLowestLocationForIndividualSeeds() {
+        long lowestLocationNumber = Long.MAX_VALUE;
+
+        for (Long seedNumber : seedsForPart1) {
+            long seedLocationNumber = calculateLocationForSeed(seedNumber);
+            if (seedLocationNumber < lowestLocationNumber) {
+                lowestLocationNumber = seedLocationNumber;
+            }
+
+            log(
+                    LogLevel.VERBOSE,
+                    ENABLE_VERBOSE_LOGGING,
+                    "Seed " + seedNumber + " maps to location " + seedLocationNumber);
+        }
+
+        return lowestLocationNumber;
+    }
+
+    /**
+     * Calculates the lowest location for seed ranges in Part 2.
+     */
+    private long calculateLowestLocationForSeedRanges() {
+        String seedRangeData = extractSeedRangeData();
+        String[] rangeComponents = seedRangeData.split("\\s+");
+        long overallLowestLocationNumber = Long.MAX_VALUE;
+
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Processing seed ranges for Part 2");
+
+        for (int rangeIndex = 0; rangeIndex < rangeComponents.length; rangeIndex += 2) {
+            long rangeStartSeed = Long.parseLong(rangeComponents[rangeIndex]);
+            long rangeLength = Long.parseLong(rangeComponents[rangeIndex + 1]);
+
+            log(
+                    LogLevel.DEBUG,
+                    ENABLE_DEBUG_LOGGING,
+                    "Processing seed range: start=" + rangeStartSeed + ", length=" + rangeLength);
+
+            long rangeLowestLocation = processEntireSeedRange(rangeStartSeed, rangeLength);
+            overallLowestLocationNumber = Math.min(overallLowestLocationNumber, rangeLowestLocation);
+        }
+
+        return overallLowestLocationNumber;
+    }
+
+    /**
+     * Extracts seed range data from the seeds line for Part 2.
+     */
+    private String extractSeedRangeData() {
+        return this.seedsLineForPart2
+                .substring(this.seedsLineForPart2.indexOf(SEEDS_PREFIX) + SEEDS_PREFIX.length())
                 .trim();
-
-        String[] parts = seedsLine.split("\\s+");
-        long overallLowestLocation = Long.MAX_VALUE;
-
-        for (int i = 0; i < parts.length; i += 2) {
-            long seedNumber = Long.parseLong(parts[i]);
-            long range = Long.parseLong(parts[i + 1]);
-
-            overallLowestLocation = Math.min(overallLowestLocation, processSeedRange(seedNumber, range));
-        }
-
-        // Process any remaining seeds
-        overallLowestLocation = processRemainingSeeds(overallLowestLocation);
-
-        return overallLowestLocation;
     }
 
-    private static long processSeedRange(long seedNumber, long range) {
-        long overallLowestLocation = Long.MAX_VALUE;
+    /**
+     * Processes an entire seed range and returns the lowest location found.
+     */
+    private long processEntireSeedRange(long rangeStartSeed, long rangeLength) {
+        long rangeLowestLocation = Long.MAX_VALUE;
+        List<Long> currentBatchSeeds = new ArrayList<>();
 
-        for (long i = seedNumber; i < seedNumber + range; i++) {
-            seeds.add(i);
+        for (long currentSeedOffset = 0; currentSeedOffset < rangeLength; currentSeedOffset++) {
+            long currentSeedNumber = rangeStartSeed + currentSeedOffset;
+            currentBatchSeeds.add(currentSeedNumber);
 
-            if (seeds.size() % BATCH_SIZE == 0) {
-                List<Long> seedBatch = new ArrayList<>(seeds.subList(0, BATCH_SIZE));
-                long lowestLocation = processBatch(seedBatch);
-                overallLowestLocation = Math.min(overallLowestLocation, lowestLocation);
+            if (currentBatchSeeds.size() % SEED_PROCESSING_BATCH_SIZE == 0) {
+                long batchLowestLocation = processSeedBatch(new ArrayList<>(currentBatchSeeds));
+                rangeLowestLocation = Math.min(rangeLowestLocation, batchLowestLocation);
+                currentBatchSeeds.clear();
             }
         }
 
-        // Process any remaining seeds
-        if (!seeds.isEmpty()) {
-            long lowestLocation = processBatches();
-            overallLowestLocation = Math.min(overallLowestLocation, lowestLocation);
+        // Process any remaining seeds in the final batch
+        if (!currentBatchSeeds.isEmpty()) {
+            long finalBatchLowestLocation = processSeedBatch(currentBatchSeeds);
+            rangeLowestLocation = Math.min(rangeLowestLocation, finalBatchLowestLocation);
         }
 
-        return overallLowestLocation;
+        return rangeLowestLocation;
     }
 
-    private static long processBatch(List<Long> seedBatch) {
-        long lowestLocation = getLowestLocationForSeeds(seedBatch);
-        seeds.clear();
-        return lowestLocation;
-    }
+    /**
+     * Processes a batch of seeds and returns the lowest location found.
+     */
+    private long processSeedBatch(List<Long> seedBatch) {
+        long batchLowestLocation = Long.MAX_VALUE;
 
-    private static long processBatches() {
-        long overallLowestLocation = Long.MAX_VALUE;
+        for (Long seedNumber : seedBatch) {
+            long seedLocationNumber = calculateLocationForSeed(seedNumber);
 
-        for (int i = 0; i < seeds.size(); i += BATCH_SIZE) {
-            List<Long> batch = seeds.subList(i, Math.min(i + BATCH_SIZE, seeds.size()));
-
-            for (Long seed : batch) {
-                long location = calculateLocation(seed);
-
-                if (location < overallLowestLocation) {
-                    overallLowestLocation = location;
-                }
+            if (seedLocationNumber < batchLowestLocation) {
+                batchLowestLocation = seedLocationNumber;
             }
         }
 
-        seeds.clear();
-        return overallLowestLocation;
+        log(
+                LogLevel.VERBOSE,
+                ENABLE_VERBOSE_LOGGING,
+                "Processed batch of " + seedBatch.size() + " seeds, lowest location: " + batchLowestLocation);
+
+        return batchLowestLocation;
     }
 
-    private static long calculateLocation(long seed) {
-        long soil = seedToSoilMap.getDestinationForSource(seed);
-        long fertilizer = soilToFertilizerMap.getDestinationForSource(soil);
-        long water = fertilizerToWaterMap.getDestinationForSource(fertilizer);
-        long light = waterToLightMap.getDestinationForSource(water);
-        long temperature = lightToTemperatureMap.getDestinationForSource(light);
-        long humidity = temperatureToHumidityMap.getDestinationForSource(temperature);
-        return humidityToLocationMap.getDestinationForSource(humidity);
+    /**
+     * Calculates the final location for a given seed through all transformation maps.
+     */
+    private long calculateLocationForSeed(long seedNumber) {
+        long soilNumber = seedToSoilMap.getDestinationForSource(seedNumber);
+        long fertilizerNumber = soilToFertilizerMap.getDestinationForSource(soilNumber);
+        long waterNumber = fertilizerToWaterMap.getDestinationForSource(fertilizerNumber);
+        long lightNumber = waterToLightMap.getDestinationForSource(waterNumber);
+        long temperatureNumber = lightToTemperatureMap.getDestinationForSource(lightNumber);
+        long humidityNumber = temperatureToHumidityMap.getDestinationForSource(temperatureNumber);
+        long locationNumber = humidityToLocationMap.getDestinationForSource(humidityNumber);
+
+        log(
+                LogLevel.VERBOSE,
+                ENABLE_VERBOSE_LOGGING,
+                "Seed " + seedNumber + " → " + soilNumber + " → " + fertilizerNumber + " → " + waterNumber
+                        + " → " + lightNumber + " → " + temperatureNumber + " → " + humidityNumber
+                        + " → " + locationNumber);
+
+        return locationNumber;
     }
 
-    private long processRemainingSeeds(long overallLowestLocation) {
-        if (!seeds.isEmpty()) {
-            List<Long> seedBatch = new ArrayList<>(seeds);
-            return Math.min(overallLowestLocation, processBatch(seedBatch));
-        }
-        return overallLowestLocation;
+    /**
+     * Adds mapping data to the specified transformation map.
+     */
+    private void addMappingDataToMap(String mappingDataLine, SourceToDestinationMap transformationMap) {
+        List<String> mappingComponents = Arrays.asList(mappingDataLine.split(" "));
+        long destinationRangeStart = Long.parseLong(mappingComponents.get(0));
+        long sourceRangeStart = Long.parseLong(mappingComponents.get(1));
+        long rangeLength = Long.parseLong(mappingComponents.get(2));
+
+        transformationMap.addMapping(destinationRangeStart, sourceRangeStart, rangeLength);
+
+        log(
+                LogLevel.VERBOSE,
+                ENABLE_VERBOSE_LOGGING,
+                "Added mapping: dest=" + destinationRangeStart + ", src=" + sourceRangeStart + ", len=" + rangeLength);
     }
 
-    private static void getMapDataStrings(String line, SourceToDestinationMap sourceToDestinationMap) {
-        List<String> sourceToDestinationMapDataStrings = Arrays.asList(line.split(" "));
-        Long destination = Long.parseLong(sourceToDestinationMapDataStrings.get(0));
-        Long source = Long.parseLong(sourceToDestinationMapDataStrings.get(1));
-        Long range = Long.parseLong(sourceToDestinationMapDataStrings.get(2));
-
-        sourceToDestinationMap.addMapping(destination, source, range);
-    }
-
-    private static long getLowestLocationForSeeds(List<Long> seedBatch) {
-        long lowestLocation = Long.MAX_VALUE;
-
-        for (Long seed : seedBatch) {
-            long location = calculateLocation(seed);
-
-            if (location < lowestLocation) {
-                lowestLocation = location;
-            }
-        }
-
-        return lowestLocation;
-    }
-
-    public static void reset() {
-        seeds.clear();
+    /**
+     * Resets all state for fresh execution (used in testing).
+     */
+    public static void resetAllMapsAndSeeds() {
+        seedsForPart1.clear();
         seedToSoilMap.getRangeMappings().clear();
         soilToFertilizerMap.getRangeMappings().clear();
         fertilizerToWaterMap.getRangeMappings().clear();
@@ -291,5 +391,7 @@ public class Day05 {
         lightToTemperatureMap.getRangeMappings().clear();
         temperatureToHumidityMap.getRangeMappings().clear();
         humidityToLocationMap.getRangeMappings().clear();
+
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All maps and seeds have been reset");
     }
 }

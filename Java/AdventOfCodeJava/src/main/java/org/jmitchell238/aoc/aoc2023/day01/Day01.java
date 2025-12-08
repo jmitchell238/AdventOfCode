@@ -1,120 +1,184 @@
 package org.jmitchell238.aoc.aoc2023.day01;
 
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
+/**
+ * Advent of Code 2023 - Day 1: Trebuchet?!
+ * <p>
+ * This class contains the solution logic for Day 1 of Advent of Code 2023.
+ * Part 1 extracts digits from calibration values, while Part 2 also handles
+ * spelled-out numbers like "one", "two", etc.
+ * </p>
+ */
+@SuppressWarnings({"java:S106", "java:S1118", "java:S1940", "java:S2589", "java:S100"})
 public class Day01 {
 
-    public static void Day01() throws FileNotFoundException {
-        String dayOneInput = "src/main/java/org/jmitchell238/aoc/aoc2023/day01/day1.txt";
+    // Configuration flags
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
+
+    public static void runDay01() throws FileNotFoundException {
+        String dayOneInputPath = "src/main/java/org/jmitchell238/aoc/aoc2023/day01/day1.txt";
 
         System.out.println("\n--- Day 1: Trebuchet?! ---\n");
 
-        File day1Part1Input = new File(dayOneInput);
-        int partOneTotal = Part1(day1Part1Input);
+        File dayOneInputFile = new File(dayOneInputPath);
+        int partOneTotal = solvePart1(dayOneInputFile);
 
-        System.out.println("Part 1: Answer: " + partOneTotal);
+        log(LogLevel.INFO, true, "Part 1: Answer: " + partOneTotal);
 
-        File day1Part2Input = new File(dayOneInput);
-
-        int partTwoTotal = Part2(day1Part2Input);
-        System.out.println("Part 2: Answer: " + partTwoTotal);
+        int partTwoTotal = solvePart2(dayOneInputFile);
+        log(LogLevel.INFO, true, "Part 2: Answer: " + partTwoTotal);
     }
 
-    public static int Part1(File day1Part1Input) throws FileNotFoundException {
-        int total = 0;
+    /**
+     * Solves Part 1 by extracting only numeric digits from each line.
+     */
+    public static int solvePart1(File inputFile) throws FileNotFoundException {
+        int totalSum = 0;
 
-        try (Scanner scanner = new Scanner(day1Part1Input); ) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                StringBuilder numberString =
-                        new StringBuilder(line.replaceAll("\\D", "")); // "\\D" is a regex for non-digits same as [^0-9]
+        try (Scanner fileScanner = new Scanner(inputFile)) {
+            while (fileScanner.hasNextLine()) {
+                String currentLine = fileScanner.nextLine();
+                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
-                total = getTotal(numberString, total);
+                StringBuilder digitsOnly = new StringBuilder(currentLine.replaceAll("\\D", ""));
+                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Extracted digits: " + digitsOnly);
+
+                totalSum = calculateLineTotal(digitsOnly, totalSum);
             }
-        } catch (FileNotFoundException ignored) {
-            // ignored
+        } catch (FileNotFoundException fileNotFound) {
+            System.err.println("Input file not found: " + inputFile.getPath());
+            throw fileNotFound;
         }
 
-        return total;
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 1 total sum: " + totalSum);
+        return totalSum;
     }
 
-    public static int Part2(File day1Part2Input) throws FileNotFoundException {
-        int total = 0;
+    /**
+     * Solves Part 2 by extracting both numeric digits and spelled-out numbers.
+     */
+    public static int solvePart2(File inputFile) throws FileNotFoundException {
+        int totalSum = 0;
 
-        try (Scanner scanner = new Scanner(day1Part2Input); ) {
-            while (scanner.hasNextLine()) {
-                Map<String, Integer> wordToNumber = getWordToNumber();
-                String line = scanner.nextLine();
-                StringBuilder newString = new StringBuilder();
-                int index = 0;
+        try (Scanner fileScanner = new Scanner(inputFile)) {
+            while (fileScanner.hasNextLine()) {
+                String currentLine = fileScanner.nextLine();
+                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
-                for (char c : line.toCharArray()) {
-                    if (Character.isDigit(c)) {
-                        newString.append(c);
-                        index++;
-                        continue;
-                    }
+                StringBuilder extractedNumbers = extractAllNumbers(currentLine);
+                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Extracted numbers: " + extractedNumbers);
 
-                    if (!Character.isDigit(c)) {
-                        for (String key : wordToNumber.keySet()) {
-                            try {
-                                int keyLength = key.length();
-                                String lineSubstring = line.substring(index, index + keyLength);
-                                if (Objects.equals(key, lineSubstring)) {
-                                    newString.append(wordToNumber.get(key));
-                                    break;
-                                }
-                            } catch (StringIndexOutOfBoundsException ignored) {
-                                // ignored
-                            }
-                        }
-                    }
+                totalSum = calculateLineTotal(extractedNumbers, totalSum);
+            }
+        } catch (FileNotFoundException fileNotFound) {
+            System.err.println("Input file not found: " + inputFile.getPath());
+            throw fileNotFound;
+        }
 
-                    index++;
+        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 2 total sum: " + totalSum);
+        return totalSum;
+    }
+
+    /**
+     * Extracts all numbers (digits and spelled-out) from a line of text.
+     */
+    private static StringBuilder extractAllNumbers(String inputLine) {
+        Map<String, Integer> wordToNumberMap = createWordToNumberMapping();
+        StringBuilder extractedNumbers = new StringBuilder();
+        int currentIndex = 0;
+
+        for (char currentChar : inputLine.toCharArray()) {
+            if (Character.isDigit(currentChar)) {
+                extractedNumbers.append(currentChar);
+                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Found digit: " + currentChar);
+                currentIndex++;
+                continue;
+            }
+
+            boolean foundWordNumber = checkForWordNumber(inputLine, currentIndex, wordToNumberMap, extractedNumbers);
+            if (foundWordNumber) {
+                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Found word number at index: " + currentIndex);
+            }
+
+            currentIndex++;
+        }
+
+        return extractedNumbers;
+    }
+
+    /**
+     * Checks if a word number starts at the current index and appends it if found.
+     */
+    private static boolean checkForWordNumber(
+            String inputLine, int currentIndex, Map<String, Integer> wordToNumberMap, StringBuilder extractedNumbers) {
+        for (Map.Entry<String, Integer> wordEntry : wordToNumberMap.entrySet()) {
+            String numberWord = wordEntry.getKey();
+            Integer numberValue = wordEntry.getValue();
+            try {
+                int wordLength = numberWord.length();
+                String lineSubstring = inputLine.substring(currentIndex, currentIndex + wordLength);
+                if (Objects.equals(numberWord, lineSubstring)) {
+                    extractedNumbers.append(numberValue);
+                    return true;
                 }
-
-                total = getTotal(newString, total);
+            } catch (StringIndexOutOfBoundsException _) {
+                log(
+                        LogLevel.VERBOSE,
+                        ENABLE_VERBOSE_LOGGING,
+                        "Index out of bounds checking word: " + numberWord + " at index: " + currentIndex);
             }
-        } catch (FileNotFoundException ignored) {
-            // ignored
+        }
+        return false;
+    }
+
+    /**
+     * Calculates the calibration value for a line by taking first and last digits.
+     */
+    private static int calculateLineTotal(StringBuilder numbersFromLine, int runningTotal) {
+        if (numbersFromLine.isEmpty()) {
+            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "No numbers found in line, skipping");
+            return runningTotal;
         }
 
-        return total;
+        int firstDigit = Integer.parseInt(numbersFromLine.substring(0, 1));
+        int lastDigit = Integer.parseInt(numbersFromLine.substring(numbersFromLine.length() - 1));
+
+        int calibrationValue = Integer.parseInt(String.valueOf(firstDigit) + lastDigit);
+        log(
+                LogLevel.DEBUG,
+                ENABLE_DEBUG_LOGGING,
+                "First: " + firstDigit + ", Last: " + lastDigit + ", Calibration: " + calibrationValue);
+
+        return runningTotal + calibrationValue;
     }
 
-    private static int getTotal(StringBuilder newString, int total) {
-        int firstNumber = Integer.parseInt(newString.substring(0, 1));
-        int lastNumber = Integer.parseInt(newString.substring(newString.length() - 1));
-        String number = String.valueOf(firstNumber + "" + lastNumber);
-        total += Integer.parseInt(number);
-        return total;
-    }
-
-    private static Map<String, Integer> getWordToNumber() {
-        Map<String, Integer> wordToNumber = new HashMap<>();
-        wordToNumber.put("one", 1);
-        wordToNumber.put("1", 1);
-        wordToNumber.put("two", 2);
-        wordToNumber.put("2", 2);
-        wordToNumber.put("three", 3);
-        wordToNumber.put("3", 3);
-        wordToNumber.put("four", 4);
-        wordToNumber.put("4", 4);
-        wordToNumber.put("five", 5);
-        wordToNumber.put("5", 5);
-        wordToNumber.put("six", 6);
-        wordToNumber.put("6", 6);
-        wordToNumber.put("seven", 7);
-        wordToNumber.put("7", 7);
-        wordToNumber.put("eight", 8);
-        wordToNumber.put("8", 8);
-        wordToNumber.put("nine", 9);
-        wordToNumber.put("9", 9);
-        return wordToNumber;
+    /**
+     * Creates a mapping from word representations of numbers to their integer values.
+     */
+    private static Map<String, Integer> createWordToNumberMapping() {
+        Map<String, Integer> wordToNumberMap = new HashMap<>();
+        wordToNumberMap.put("one", 1);
+        wordToNumberMap.put("two", 2);
+        wordToNumberMap.put("three", 3);
+        wordToNumberMap.put("four", 4);
+        wordToNumberMap.put("five", 5);
+        wordToNumberMap.put("six", 6);
+        wordToNumberMap.put("seven", 7);
+        wordToNumberMap.put("eight", 8);
+        wordToNumberMap.put("nine", 9);
+        return wordToNumberMap;
     }
 }

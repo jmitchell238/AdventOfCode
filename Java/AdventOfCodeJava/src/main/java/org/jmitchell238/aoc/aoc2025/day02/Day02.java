@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jmitchell238.aoc.aoc2025.utilities.LogLevel;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
 /**
  * Advent of Code 2025 - Day 2: Gift Shop
