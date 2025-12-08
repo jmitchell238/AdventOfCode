@@ -1,12 +1,19 @@
-package org.jmitchell238.aoc.aoc2025.day00;
+package org.jmitchell238.aoc.aoc2025.day02;
 
 import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
 import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.readFileAndProcessEachLine;
 
 import org.jmitchell238.aoc.aoc2025.utilities.LogLevel;
 
+/**
+ * Advent of Code 2025 - Day 1: Secret Entrance
+ * <p>
+ * Solution for tracking how many times the dial points to zero after rotations,
+ * and how many times it crosses zero during a rotation in Part 2.
+ * </p>
+ */
 @SuppressWarnings({"java:S106"})
-public class Day00 {
+public class Day02 {
 
     // Configuration flags
     private static final Boolean DEBUGGING = false;
@@ -21,10 +28,10 @@ public class Day00 {
     }
 
     public static void run() {
-        System.out.println("\n--- Day 00: Title ---\n");
+        System.out.println("\n--- Day 02: Gift Shop ---\n");
 
-        String input = "src/main/java/org/jmitchell238/aoc/aoc2025/day00/input.txt";
-        String inputTest = "src/test/java/org/jmitchell238/aoc/aoc2025/day00/input_test_part1.txt";
+        String input = "src/main/java/org/jmitchell238/aoc/aoc2025/day02/input.txt";
+        String inputTest = "src/test/java/org/jmitchell238/aoc/aoc2025/day02/input_test_part1.txt";
 
         int partOneAnswer = part1(inputTest);
         System.out.println("Part 1: Answer: " + partOneAnswer);

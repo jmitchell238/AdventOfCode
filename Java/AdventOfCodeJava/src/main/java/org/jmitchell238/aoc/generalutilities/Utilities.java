@@ -1,4 +1,4 @@
-package org.jmitchell238.aoc.aoc2023.utilities;
+package org.jmitchell238.aoc.generalutilities;
 
 import java.awt.Point;
 import java.util.AbstractMap;

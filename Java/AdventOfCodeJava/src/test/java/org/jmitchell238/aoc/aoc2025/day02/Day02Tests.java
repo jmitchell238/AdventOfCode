@@ -1,6 +1,7 @@
 package org.jmitchell238.aoc.aoc2025.day02;
 
-import org.assertj.core.api.AssertionsForClassTypes;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 
 class Day02Tests {
@@ -11,10 +12,10 @@ class Day02Tests {
         String day02Part1Input = "src/test/java/org/jmitchell238/aoc/aoc2025/day02/input_test_part1.txt";
 
         // Assert
-        int expected = 3;
+        int expected = 1227775554;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day02.part1(day02Part1Input)).isEqualTo(expected);
+        assertThat(Day02.part1(day02Part1Input)).isEqualTo(expected);
     }
 
     @Test
@@ -23,10 +24,10 @@ class Day02Tests {
         String day02Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2025/day02/input.txt";
 
         // Assert
-        int expected = 1118;
+        int expected = -1;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day02.part1(day02Part1Input)).isEqualTo(expected);
+        assertThat(Day02.part1(day02Part1Input)).isEqualTo(expected);
     }
 
     @Test
@@ -35,10 +36,10 @@ class Day02Tests {
         String day02Part2Input = "src/test/java/org/jmitchell238/aoc/aoc2025/day02/input_test_part2.txt";
 
         // Assert
-        int expected = 6;
+        int expected = -1;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day02.part2(day02Part2Input)).isEqualTo(expected);
+        assertThat(Day02.part2(day02Part2Input)).isEqualTo(expected);
     }
 
     @Test
@@ -47,9 +48,9 @@ class Day02Tests {
         String day02Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2025/day02/input.txt";
 
         // Assert
-        int expected = 6289;
+        int expected = -1;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day02.part2(day02Part2Input)).isEqualTo(expected);
+        assertThat(Day02.part2(day02Part2Input)).isEqualTo(expected);
     }
 }

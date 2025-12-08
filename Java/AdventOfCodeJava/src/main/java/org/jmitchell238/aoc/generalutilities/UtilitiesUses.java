@@ -1,4 +1,4 @@
-package org.jmitchell238.aoc.aoc2023;
+package org.jmitchell238.aoc.generalutilities;
 
 import java.util.AbstractMap;
 import java.util.Arrays;
@@ -6,7 +6,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BinaryOperator;
-import org.jmitchell238.aoc.aoc2023.utilities.Utilities;
 
 public class UtilitiesUses {
 

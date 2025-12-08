@@ -10,13 +10,6 @@
   <name>AdventOfCodeJava</name>
   <description>Project for Advent Of Code solutions</description>
 
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.0</version>
-    <relativePath/>
-  </parent>
-
   <properties>
     <maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.target>25</maven.compiler.target>
@@ -44,24 +37,28 @@
     <com.palantir.javaformat.version>2.83.0</com.palantir.javaformat.version>
     <fastutil.version>8.5.6</fastutil.version>
     <mug.version>7.0</mug.version>
-    <htmlcleaner.version>2.26</htmlcleaner.version>
+    <htmlcleaner.version>2.29</htmlcleaner.version>
     <versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
-    <spring-boot.version>4.0.0</spring-boot.version>
   </properties>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>4.0.0</version>
+    <relativePath/>
+  </parent>
 
   <dependencies>
     <!-- Spring Boot Dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-      <version>${spring-boot.version}</version>
     </dependency>
 
     <!-- Spring Boot Test -->
     <dependency>
       <artifactId>spring-boot-starter-test</artifactId>
       <groupId>org.springframework.boot</groupId>
-      <version>${spring-boot.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

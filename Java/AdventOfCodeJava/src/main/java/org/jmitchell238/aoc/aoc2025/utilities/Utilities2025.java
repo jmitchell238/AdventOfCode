@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-public class Utilities {
+public class Utilities2025 {
+
+    private Utilities2025() {}
 
     /**
      * Open a file and call the provided action for each line.

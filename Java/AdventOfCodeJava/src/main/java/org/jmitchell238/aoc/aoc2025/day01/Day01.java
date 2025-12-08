@@ -1,7 +1,7 @@
 package org.jmitchell238.aoc.aoc2025.day01;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities.log;
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities.readFileAndProcessEachLine;
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.readFileAndProcessEachLine;
 
 import org.jmitchell238.aoc.aoc2025.utilities.LogLevel;
 

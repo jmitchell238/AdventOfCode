@@ -9,7 +9,6 @@ public class SpringConditionRecord {
     private String numberedSection;
 
     private ArrayList<SpringAndStatus> springsAndStatuses = new ArrayList<>();
-    private ArrayList<Integer> brokenSpringRecords = new ArrayList<>();
 
     public SpringConditionRecord(String line) {
         String[] lineParts = line.split(" ");
@@ -21,11 +20,6 @@ public class SpringConditionRecord {
             SpringAndStatus springAndStatus = new SpringAndStatus(c, springStatus);
             springsAndStatuses.add(springAndStatus);
         }
-
-        for (char c : numberedSection.toCharArray()) {
-            Integer brokenSpringAmount = Character.getNumericValue(c);
-            brokenSpringRecords.add(brokenSpringAmount);
-        }
     }
 
     public void printRecordConditions() {
@@ -35,17 +29,5 @@ public class SpringConditionRecord {
             System.out.println(
                     "Spring: " + springAndStatus.getSpring() + "  -  Status: " + springAndStatus.getSpringStatus());
         }
-    }
-
-    public int getNumberOfPossibleArrangements() {
-        int numberOfPossibleArrangements = 0;
-
-        for (Integer brokenSpringInARowAmount : brokenSpringRecords) {
-            if (brokenSpringInARowAmount == 0) {
-                numberOfPossibleArrangements++;
-            }
-        }
-
-        return numberOfPossibleArrangements;
     }
 }
