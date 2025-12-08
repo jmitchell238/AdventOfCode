@@ -1,9 +1,9 @@
 package org.jmitchell238.aoc.aoc2025.day01;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-import java.util.function.Consumer;
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities.log;
+import static org.jmitchell238.aoc.aoc2025.utilities.Utilities.readFileAndProcessEachLine;
+
+import org.jmitchell238.aoc.aoc2025.utilities.LogLevel;
 
 /**
  * Advent of Code 2025 - Day 1: Secret Entrance
@@ -14,11 +14,6 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings({"java:S106"})
 public class Day01 {
-
-    private enum LogLevel {
-        VERBOSE,
-        DEBUG
-    }
 
     // Configuration flags
     private static final boolean DEBUGGING = false;
@@ -74,44 +69,29 @@ public class Day01 {
      */
     private static void calculateAnswer(String inputFile) {
         readFileAndProcessEachLine(inputFile, line -> {
-            log(LogLevel.VERBOSE, "Read line: " + line);
+            log(LogLevel.VERBOSE, VERBOSE, "Read line: " + line);
 
             // Parse a command like "L68" or "R42": first char is direction, rest is distance.
             char direction = line.charAt(0);
             int number = Integer.parseInt(line.substring(1));
 
-            log(LogLevel.DEBUG, "Parsed direction: " + direction + ", number: " + number);
+            log(LogLevel.DEBUG, DEBUGGING, "Parsed direction: " + direction + ", number: " + number);
 
             processMove(direction, number);
         });
     }
 
     /**
-     * Open a file and call the provided action for each line.
-     */
-    private static void readFileAndProcessEachLine(String filePath, Consumer<String> whatToDoWithEachLine) {
-        File file = new File(filePath);
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                String currentLine = scanner.nextLine();
-                whatToDoWithEachLine.accept(currentLine);
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("Input file not found: " + filePath);
-        }
-    }
-
-    /**
      * Apply a single movement (e.g., "L68" or "R42") to the dial.
      */
     private static void processMove(char direction, int number) {
-        log(LogLevel.VERBOSE, "Processing move: " + direction + number);
-        log(LogLevel.VERBOSE, "Dial before move: " + dialValue);
+        log(LogLevel.VERBOSE, VERBOSE, "Processing move: " + direction + number);
+        log(LogLevel.VERBOSE, VERBOSE, "Dial before move: " + dialValue);
 
         int startValue = dialValue;
         // Subtract for left (L), add for right (R).
         dialValue += (direction == 'L') ? -number : number;
-        log(LogLevel.VERBOSE, "Dial after move: " + dialValue);
+        log(LogLevel.VERBOSE, VERBOSE, "Dial after move: " + dialValue);
 
         // Part 2: count zero crossings during the raw movement.
         int boundariesCrossed = partTwo ? calculateZeroCrossings(startValue, dialValue) : 0;
@@ -127,7 +107,7 @@ public class Day01 {
      * Count how many times the dial passes through zero during a raw move.
      */
     private static int calculateZeroCrossings(int startValue, int endValue) {
-        log(LogLevel.VERBOSE, "Calculating boundary crossings for Part 2");
+        log(LogLevel.VERBOSE, VERBOSE, "Calculating boundary crossings for Part 2");
 
         int crossings = 0;
 
@@ -145,7 +125,7 @@ public class Day01 {
             crossings = countHowManyNegativeHundredsCrossed(endValue);
         }
 
-        log(LogLevel.VERBOSE, "Boundary crossings from " + startValue + " to " + endValue + ": " + crossings);
+        log(LogLevel.VERBOSE, VERBOSE, "Boundary crossings from " + startValue + " to " + endValue + ": " + crossings);
         return crossings;
     }
 
@@ -161,11 +141,11 @@ public class Day01 {
 
         if (dialValue != originalValue) {
             if (originalValue < 0) {
-                log(LogLevel.VERBOSE, "Dial wrapped around from below 0");
+                log(LogLevel.VERBOSE, VERBOSE, "Dial wrapped around from below 0");
             } else {
-                log(LogLevel.VERBOSE, "Dial wrapped around from above 100");
+                log(LogLevel.VERBOSE, VERBOSE, "Dial wrapped around from above 100");
             }
-            log(LogLevel.VERBOSE, "Dial before normalization: " + originalValue);
+            log(LogLevel.VERBOSE, VERBOSE, "Dial before normalization: " + originalValue);
         }
     }
 
@@ -173,21 +153,21 @@ public class Day01 {
      * Update counters for landing on zero and, in Part 2, for crossings.
      */
     private static void checkIfDialIsAtZero(int boundariesCrossed) {
-        log(LogLevel.DEBUG, "Checking if dial is at zero: " + dialValue);
+        log(LogLevel.DEBUG, DEBUGGING, "Checking if dial is at zero: " + dialValue);
 
         // Landing on zero after normalization.
         if (dialValue == 0) {
-            log(LogLevel.VERBOSE, "Dial is at zero! Incrementing counter.");
-            log(LogLevel.DEBUG, "Times hitting zero before increment: " + timesHittingZero);
+            log(LogLevel.VERBOSE, VERBOSE, "Dial is at zero! Incrementing counter.");
+            log(LogLevel.DEBUG, DEBUGGING, "Times hitting zero before increment: " + timesHittingZero);
             timesHittingZero++;
-            log(LogLevel.DEBUG, "Times hitting zero after increment: " + timesHittingZero);
+            log(LogLevel.DEBUG, DEBUGGING, "Times hitting zero after increment: " + timesHittingZero);
         }
 
         // Part 2: count crossings that occurred during movement.
         if (partTwo && boundariesCrossed > 0) {
-            log(LogLevel.VERBOSE, "Part 2: Adding " + boundariesCrossed + " boundary crossings");
+            log(LogLevel.VERBOSE, VERBOSE, "Part 2: Adding " + boundariesCrossed + " boundary crossings");
             timesHittingZero += boundariesCrossed;
-            log(LogLevel.DEBUG, "Total after adding boundary crossings: " + timesHittingZero);
+            log(LogLevel.DEBUG, DEBUGGING, "Total after adding boundary crossings: " + timesHittingZero);
         }
     }
 
@@ -198,23 +178,6 @@ public class Day01 {
         dialValue = 50;
         timesHittingZero = 0;
         partTwo = false;
-    }
-
-    /**
-     * Print a message if the corresponding log level is enabled.
-     */
-    private static void log(LogLevel level, String message) {
-        switch (level) {
-            case VERBOSE:
-                if (VERBOSE) System.out.println(message);
-                break;
-            case DEBUG:
-                if (DEBUGGING) System.out.println(message);
-                break;
-            default:
-                // no-op
-                break;
-        }
     }
 
     // region Helper Methods
