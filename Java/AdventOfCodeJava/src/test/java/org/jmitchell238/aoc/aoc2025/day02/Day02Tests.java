@@ -12,7 +12,7 @@ class Day02Tests {
         String day02Part1Input = "src/test/java/org/jmitchell238/aoc/aoc2025/day02/input_test_part1.txt";
 
         // Assert
-        int expected = 1227775554;
+        long expected = 1227775554L;
 
         // Act
         assertThat(Day02.part1(day02Part1Input)).isEqualTo(expected);
@@ -24,7 +24,7 @@ class Day02Tests {
         String day02Part1Input = "src/main/java/org/jmitchell238/aoc/aoc2025/day02/input.txt";
 
         // Assert
-        int expected = -1;
+        long expected = 28846518423L;
 
         // Act
         assertThat(Day02.part1(day02Part1Input)).isEqualTo(expected);
@@ -33,10 +33,10 @@ class Day02Tests {
     @Test
     void Day02Part2_CalledWithTestInput_ExpectCorrectAnswer() {
         // Arrange
-        String day02Part2Input = "src/test/java/org/jmitchell238/aoc/aoc2025/day02/input_test_part2.txt";
+        String day02Part2Input = "src/test/java/org/jmitchell238/aoc/aoc2025/day02/input_test_part1.txt";
 
         // Assert
-        int expected = -1;
+        long expected = 4174379265L;
 
         // Act
         assertThat(Day02.part2(day02Part2Input)).isEqualTo(expected);
@@ -48,7 +48,7 @@ class Day02Tests {
         String day02Part2Input = "src/main/java/org/jmitchell238/aoc/aoc2025/day02/input.txt";
 
         // Assert
-        int expected = -1;
+        long expected = 31578210022L;
 
         // Act
         assertThat(Day02.part2(day02Part2Input)).isEqualTo(expected);
