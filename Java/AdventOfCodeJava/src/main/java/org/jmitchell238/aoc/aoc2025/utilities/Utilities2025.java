@@ -28,7 +28,7 @@ public class Utilities2025 {
     /**
      * Print a message if the corresponding log level is enabled.
      */
-    public static void log(LogLevel level, Boolean shouldOutput, String message) {
+    public static void log(LogLevel level, boolean shouldOutput, String message) {
         if (shouldOutput) {
             System.out.println(level.toString() + " " + message);
         }
