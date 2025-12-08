@@ -1,6 +1,7 @@
 package org.jmitchell238.aoc.aoc2023.day05;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logException;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,15 +73,16 @@ public class Day05 {
      * Entry point for Day 5 solution.
      */
     public void runDay05() throws FileNotFoundException {
-        System.out.println("\n--- Day 5: If You Give A Seed A Fertilizer ---\n");
+        String day5title = "\n--- Day 5: If You Give A Seed A Fertilizer ---\n";
+        logOutput(LogLevel.INFO, true, day5title);
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day05/input.txt";
 
         long partOneAnswer = solvePart1(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         long partTwoAnswer = solvePart2(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
     /**
@@ -118,14 +120,18 @@ public class Day05 {
             }
         } catch (FileNotFoundException fileNotFoundException) {
             String errorMessage = "Input file not found: " + inputFilePath;
-            System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFoundException.getMessage());
+            logOutput(LogLevel.ERROR, true, errorMessage);
+            logException(fileNotFoundException);
+
             throw fileNotFoundException;
         }
 
         long lowestLocationNumber = calculateLowestLocationForPart(problemPart);
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Lowest Location number for provided seeds: " + lowestLocationNumber);
+        logOutput(
+                LogLevel.DEBUG,
+                ENABLE_DEBUG_LOGGING,
+                "Lowest Location number for provided seeds: " + lowestLocationNumber);
 
         return lowestLocationNumber;
     }
@@ -188,7 +194,7 @@ public class Day05 {
                 .map(Long::parseLong)
                 .forEach(seedsForPart1::add);
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Parsed individual seeds: " + seedsForPart1);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Parsed individual seeds: " + seedsForPart1);
     }
 
     /**
@@ -219,7 +225,10 @@ public class Day05 {
                     addMappingDataToMap(currentLine, humidityToLocationMap);
                     break;
                 default:
-                    log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Unknown section header: " + currentSectionHeader);
+                    logOutput(
+                            LogLevel.VERBOSE,
+                            ENABLE_VERBOSE_LOGGING,
+                            "Unknown section header: " + currentSectionHeader);
             }
         }
     }
@@ -247,7 +256,7 @@ public class Day05 {
                 lowestLocationNumber = seedLocationNumber;
             }
 
-            log(
+            logOutput(
                     LogLevel.VERBOSE,
                     ENABLE_VERBOSE_LOGGING,
                     "Seed " + seedNumber + " maps to location " + seedLocationNumber);
@@ -264,13 +273,13 @@ public class Day05 {
         String[] rangeComponents = seedRangeData.split("\\s+");
         long overallLowestLocationNumber = Long.MAX_VALUE;
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Processing seed ranges for Part 2");
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Processing seed ranges for Part 2");
 
         for (int rangeIndex = 0; rangeIndex < rangeComponents.length; rangeIndex += 2) {
             long rangeStartSeed = Long.parseLong(rangeComponents[rangeIndex]);
             long rangeLength = Long.parseLong(rangeComponents[rangeIndex + 1]);
 
-            log(
+            logOutput(
                     LogLevel.DEBUG,
                     ENABLE_DEBUG_LOGGING,
                     "Processing seed range: start=" + rangeStartSeed + ", length=" + rangeLength);
@@ -332,7 +341,7 @@ public class Day05 {
             }
         }
 
-        log(
+        logOutput(
                 LogLevel.VERBOSE,
                 ENABLE_VERBOSE_LOGGING,
                 "Processed batch of " + seedBatch.size() + " seeds, lowest location: " + batchLowestLocation);
@@ -352,7 +361,7 @@ public class Day05 {
         long humidityNumber = temperatureToHumidityMap.getDestinationForSource(temperatureNumber);
         long locationNumber = humidityToLocationMap.getDestinationForSource(humidityNumber);
 
-        log(
+        logOutput(
                 LogLevel.VERBOSE,
                 ENABLE_VERBOSE_LOGGING,
                 "Seed " + seedNumber + " → " + soilNumber + " → " + fertilizerNumber + " → " + waterNumber
@@ -373,7 +382,7 @@ public class Day05 {
 
         transformationMap.addMapping(destinationRangeStart, sourceRangeStart, rangeLength);
 
-        log(
+        logOutput(
                 LogLevel.VERBOSE,
                 ENABLE_VERBOSE_LOGGING,
                 "Added mapping: dest=" + destinationRangeStart + ", src=" + sourceRangeStart + ", len=" + rangeLength);
@@ -392,6 +401,6 @@ public class Day05 {
         temperatureToHumidityMap.getRangeMappings().clear();
         humidityToLocationMap.getRangeMappings().clear();
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All maps and seeds have been reset");
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All maps and seeds have been reset");
     }
 }

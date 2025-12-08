@@ -1,10 +1,13 @@
 package org.jmitchell238.aoc.aoc2023.day12;
 
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import lombok.Getter;
 import lombok.Setter;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
 public class Day12 {
     private static final Boolean DEBUGGING = false;
@@ -20,13 +23,13 @@ public class Day12 {
     }
 
     public void Day12Run() throws FileNotFoundException {
-        System.out.println("\n--- Day 9: Mirage Maintenance ---\n");
+        logOutput(LogLevel.INFO, true, "\n--- Day 9: Mirage Maintenance ---\n");
 
         String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day12/input.txt";
         String input_test = "src/main/java/org/jmitchell238/aoc/aoc2023/day12/input_test.txt";
 
         long partOneAnswer = part1(input_test);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         //    long partTwoAnswer = part2(input_test);
         //    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");

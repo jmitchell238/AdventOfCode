@@ -1,6 +1,6 @@
 package org.jmitchell238.aoc.aoc2023.day09;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,15 +41,15 @@ public class Day09 {
      * Entry point for Day 9 solution.
      */
     public void runDay09() throws FileNotFoundException {
-        System.out.println("\n--- Day 9: Mirage Maintenance ---\n");
+        logOutput(LogLevel.INFO, true, "\n--- Day 9: Mirage Maintenance ---\n");
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day09/input.txt";
 
         long partOneAnswer = solvePart1(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         long partTwoAnswer = solvePart2(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
     /**
@@ -70,10 +70,10 @@ public class Day09 {
             int nextValue = sequenceWithNextValue.getLast();
             totalSumOfNextValues += nextValue;
 
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Sequence next value: " + nextValue);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Sequence next value: " + nextValue);
         }
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total sum of next values: " + totalSumOfNextValues);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total sum of next values: " + totalSumOfNextValues);
         return totalSumOfNextValues;
     }
 
@@ -95,10 +95,10 @@ public class Day09 {
             int previousValue = sequenceWithPreviousValue.getFirst();
             totalSumOfPreviousValues += previousValue;
 
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Sequence previous value: " + previousValue);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Sequence previous value: " + previousValue);
         }
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total sum of previous values: " + totalSumOfPreviousValues);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total sum of previous values: " + totalSumOfPreviousValues);
         return totalSumOfPreviousValues;
     }
 
@@ -111,19 +111,17 @@ public class Day09 {
         try (Scanner fileScanner = new Scanner(new File(inputFilePath))) {
             while (fileScanner.hasNextLine()) {
                 String currentLine = fileScanner.nextLine();
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
                 int[] sequenceArray = Utilities.splitToIntArray(currentLine, " ");
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Parsed sequence: " + Arrays.toString(sequenceArray));
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Parsed sequence: " + Arrays.toString(sequenceArray));
 
                 List<Integer> sequenceList =
                         Arrays.stream(sequenceArray).boxed().toList();
                 analysisSequences.add(new ArrayList<>(sequenceList)); // Create mutable copy
             }
         } catch (FileNotFoundException fileNotFoundException) {
-            String errorMessage = "Input file not found: " + inputFilePath;
-            System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFoundException.getMessage());
+            logOutput(LogLevel.ERROR, true, "Input file not found: " + inputFilePath);
             throw fileNotFoundException;
         }
     }
@@ -152,14 +150,14 @@ public class Day09 {
             int nextNumberFromDifferences = calculateNextNumberInSequence(differencesSequence);
             sequence.add(sequence.getLast() + nextNumberFromDifferences);
 
-            log(
+            logOutput(
                     LogLevel.VERBOSE,
                     ENABLE_VERBOSE_LOGGING,
                     "Added next value to sequence: " + (sequence.getLast() + nextNumberFromDifferences));
             return sequence;
         }
 
-        log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "All differences are zero, returning original sequence");
+        logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "All differences are zero, returning original sequence");
         return sequence;
     }
 
@@ -188,11 +186,12 @@ public class Day09 {
             int newPreviousValue = sequence.getFirst() - previousNumberFromDifferences;
             sequence.addFirst(newPreviousValue);
 
-            log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Added previous value to sequence: " + newPreviousValue);
+            logOutput(
+                    LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Added previous value to sequence: " + newPreviousValue);
             return sequence;
         }
 
-        log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "All differences are zero, returning original sequence");
+        logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "All differences are zero, returning original sequence");
         return sequence;
     }
 
@@ -210,7 +209,7 @@ public class Day09 {
             differencesSequence.add(difference);
         }
 
-        log(
+        logOutput(
                 LogLevel.VERBOSE,
                 ENABLE_VERBOSE_LOGGING,
                 "Calculated differences: " + differencesSequence + " from sequence: " + sequence);
@@ -224,7 +223,7 @@ public class Day09 {
     private boolean areAllDifferencesZero(List<Integer> differencesSequence) {
         boolean allZero = differencesSequence.stream().allMatch(difference -> difference == 0);
 
-        log(
+        logOutput(
                 LogLevel.VERBOSE,
                 ENABLE_VERBOSE_LOGGING,
                 "All differences zero? " + allZero + " for sequence: " + differencesSequence);
@@ -237,6 +236,6 @@ public class Day09 {
      */
     public void resetSequenceData() {
         analysisSequences.clear();
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All sequence data has been reset");
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All sequence data has been reset");
     }
 }

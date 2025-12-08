@@ -1,5 +1,7 @@
 package org.jmitchell238.aoc.aoc2025.utilities;
 
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -21,23 +23,7 @@ public class Utilities2025 {
                 whatToDoWithEachLine.accept(currentLine);
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Input file not found: " + filePath);
+            logOutput(LogLevel.ERROR, true, "Input file not found: " + filePath);
         }
-    }
-
-    /**
-     * Print a message if the corresponding log level is enabled.
-     */
-    public static void log(LogLevel level, boolean shouldOutput, String message) {
-        if (shouldOutput) {
-            System.out.println(level.toString() + " " + message);
-        }
-    }
-
-    /**
-     * Print a error message to standard error output.
-     */
-    public static void logError(String message) {
-        System.err.println("ERROR: " + message);
     }
 }

@@ -1,7 +1,7 @@
 package org.jmitchell238.aoc.aoc2025.day00;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
 import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.readFileAndProcessEachLine;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import org.jmitchell238.aoc.generalutilities.LogLevel;
 
@@ -21,16 +21,16 @@ public class Day00 {
     }
 
     public static void run() {
-        System.out.println("\n--- Day 00: Title ---\n");
+        logOutput(LogLevel.INFO, DEBUGGING, "\n--- Day 00: Title ---\n");
 
         String input = "src/main/java/org/jmitchell238/aoc/aoc2025/day00/input.txt";
         String inputTest = "src/test/java/org/jmitchell238/aoc/aoc2025/day00/input_test_part1.txt";
 
         int partOneAnswer = part1(inputTest);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, DEBUGGING, "Part 1: Answer: " + partOneAnswer);
 
         int partTwoAnswer = part2(inputTest);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, DEBUGGING, "Part 2: Answer: " + partTwoAnswer);
     }
 
     public static int part1(String inputFile) {
@@ -59,12 +59,12 @@ public class Day00 {
     private static void calculateAnswer(String inputFile) {
         readFileAndProcessEachLine(inputFile, line -> {
             // Log the raw line if verbose logging is enabled
-            log(LogLevel.VERBOSE, VERBOSE, "Read line: " + line);
+            logOutput(LogLevel.VERBOSE, VERBOSE, "Read line: " + line);
 
             // Parse the line if needed (e.g., "move north 10")
 
             // Log parsed values
-            // log(LogLevel.DEBUG, "Parsed ...");
+            // logOutput(LogLevel.DEBUG, "Parsed ...");
 
             // Call processing method/s
             // e.g., processMove(direction, number);

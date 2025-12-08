@@ -1,5 +1,7 @@
 package org.jmitchell238.aoc.aoc2023.day08;
 
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.Map;
 import java.util.Scanner;
 import lombok.Getter;
 import lombok.Setter;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 import org.jmitchell238.aoc.generalutilities.Utilities;
 
 public class Day08 {
@@ -28,17 +31,17 @@ public class Day08 {
     }
 
     public void Day08Run() throws FileNotFoundException {
-        System.out.println("\n--- Day 8: Camel Cards ---\n");
+        logOutput(LogLevel.INFO, DEBUGGING, "\n--- Day 8: Camel Cards ---\n");
 
         String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day08/input.txt";
         String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day08/input_test.txt";
         String inputTest2 = "src/main/java/org/jmitchell238/aoc/aoc2023/day08/input_test_2.txt";
 
         long partOneAnswer = part1(input);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         long partTwoAnswer = part2(input);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
     public long part1(String filePath) throws FileNotFoundException {
@@ -103,9 +106,7 @@ public class Day08 {
             }
         }
 
-        if (DEBUGGING) {
-            System.out.println("Node Lengths to Z: " + nodeLengthsToZ.toString());
-        }
+        logOutput(LogLevel.DEBUG, DEBUGGING, "Node Lengths to Z: " + nodeLengthsToZ.toString());
 
         long lcm;
         if (nodeLengthsToZ.size() == 2) {
@@ -120,9 +121,7 @@ public class Day08 {
                     nodeLengthsToZ.get(5));
         }
 
-        if (DEBUGGING) {
-            System.out.println("LCM: " + lcm);
-        }
+        logOutput(LogLevel.DEBUG, DEBUGGING, "LCM: " + lcm);
 
         return lcm;
     }
@@ -156,10 +155,8 @@ public class Day08 {
         nodes.add(leftNode);
         nodes.add(rightNode);
 
-        if (getIsPartTwo()) {
-            if (node.toCharArray()[2] == 'A') {
-                startingNodesCurrentNodes.put(node, node);
-            }
+        if (getIsPartTwo() && node.toCharArray()[2] == 'A') {
+            startingNodesCurrentNodes.put(node, node);
         }
 
         nodeMap.put(node, nodes);

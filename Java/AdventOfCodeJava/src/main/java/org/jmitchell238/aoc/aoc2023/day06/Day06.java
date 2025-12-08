@@ -1,6 +1,6 @@
 package org.jmitchell238.aoc.aoc2023.day06;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,15 +50,15 @@ public class Day06 {
      * Entry point for Day 6 solution.
      */
     public void runDay06() throws FileNotFoundException {
-        System.out.println("\n--- Day 6: Wait For It ---\n");
+        logOutput(LogLevel.INFO, true, "\n--- Day 6: Wait For It ---\n");
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day06/input.txt";
 
         long partOneAnswer = solvePart1(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         long partTwoAnswer = solvePart2(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Day06 {
 
         long waysToWinAllRacesMultiplied = calculateWaysToWinAllRacesMultiplied();
 
-        log(
+        logOutput(
                 LogLevel.DEBUG,
                 ENABLE_DEBUG_LOGGING,
                 "Part 1 - Ways to win all races multiplied: " + waysToWinAllRacesMultiplied);
@@ -86,7 +86,7 @@ public class Day06 {
 
         long waysToWinSingleRace = calculateWaysToWinAllRacesMultiplied();
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 2 - Ways to win single race: " + waysToWinSingleRace);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 2 - Ways to win single race: " + waysToWinSingleRace);
         return waysToWinSingleRace;
     }
 
@@ -97,7 +97,7 @@ public class Day06 {
         try (Scanner fileScanner = new Scanner(new File(inputFilePath))) {
             while (fileScanner.hasNextLine()) {
                 String currentLine = fileScanner.nextLine();
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
                 if (currentLine.startsWith(TIME_LINE_PREFIX)) {
                     parseIndividualTimesFromLine(currentLine);
@@ -108,7 +108,10 @@ public class Day06 {
         } catch (FileNotFoundException fileNotFoundException) {
             String errorMessage = "Input file not found: " + inputFilePath;
             System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFoundException.getMessage());
+            logOutput(
+                    LogLevel.DEBUG,
+                    ENABLE_DEBUG_LOGGING,
+                    "FileNotFoundException: " + fileNotFoundException.getMessage());
             throw fileNotFoundException;
         }
     }
@@ -120,7 +123,7 @@ public class Day06 {
         try (Scanner fileScanner = new Scanner(new File(inputFilePath))) {
             while (fileScanner.hasNextLine()) {
                 String currentLine = fileScanner.nextLine();
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
                 if (currentLine.startsWith(TIME_LINE_PREFIX)) {
                     parseConcatenatedTimeFromLine(currentLine);
@@ -131,7 +134,10 @@ public class Day06 {
         } catch (FileNotFoundException fileNotFoundException) {
             String errorMessage = "Input file not found: " + inputFilePath;
             System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFoundException.getMessage());
+            logOutput(
+                    LogLevel.DEBUG,
+                    ENABLE_DEBUG_LOGGING,
+                    "FileNotFoundException: " + fileNotFoundException.getMessage());
             throw fileNotFoundException;
         }
     }
@@ -146,7 +152,7 @@ public class Day06 {
             if (!timeComponents[componentIndex].trim().isEmpty()) {
                 long raceTime = Long.parseLong(timeComponents[componentIndex]);
                 individualRaceTimes.add(raceTime);
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Added race time: " + raceTime);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Added race time: " + raceTime);
             }
         }
     }
@@ -161,7 +167,7 @@ public class Day06 {
             if (!distanceComponents[componentIndex].trim().isEmpty()) {
                 long raceDistance = Long.parseLong(distanceComponents[componentIndex]);
                 individualRaceDistances.add(raceDistance);
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Added race distance: " + raceDistance);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Added race distance: " + raceDistance);
             }
         }
     }
@@ -172,7 +178,7 @@ public class Day06 {
     private void parseConcatenatedTimeFromLine(String timeLine) {
         String[] timeComponents = timeLine.split(":");
         singleRaceTime = Long.parseLong(timeComponents[1].trim().replaceAll("\\s", ""));
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Concatenated race time: " + singleRaceTime);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Concatenated race time: " + singleRaceTime);
     }
 
     /**
@@ -181,7 +187,7 @@ public class Day06 {
     private void parseConcatenatedDistanceFromLine(String distanceLine) {
         String[] distanceComponents = distanceLine.split(":");
         singleRaceDistance = Long.parseLong(distanceComponents[1].trim().replaceAll("\\s", ""));
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Concatenated race distance: " + singleRaceDistance);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Concatenated race distance: " + singleRaceDistance);
     }
 
     /**
@@ -194,7 +200,7 @@ public class Day06 {
             raceTimeToDistanceRecordMap.put(raceTime, raceDistance);
         }
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Built race map: " + raceTimeToDistanceRecordMap);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Built race map: " + raceTimeToDistanceRecordMap);
     }
 
     /**
@@ -204,7 +210,7 @@ public class Day06 {
         raceTimeToDistanceRecordMap.clear();
         raceTimeToDistanceRecordMap.put(singleRaceTime, singleRaceDistance);
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Single race map: " + raceTimeToDistanceRecordMap);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Single race map: " + raceTimeToDistanceRecordMap);
     }
 
     /**
@@ -220,7 +226,7 @@ public class Day06 {
             long waysToWinCurrentRace = calculateWaysToWinSingleRace(raceTime, recordDistance);
             totalWaysToWinMultiplied *= waysToWinCurrentRace;
 
-            log(
+            logOutput(
                     LogLevel.DEBUG,
                     ENABLE_DEBUG_LOGGING,
                     "Race (time=" + raceTime + ", record=" + recordDistance + ") has " + waysToWinCurrentRace
@@ -243,13 +249,13 @@ public class Day06 {
             if (totalDistanceTraveled > recordDistance) {
                 waysToWinThisRace++;
 
-                log(
+                logOutput(
                         LogLevel.VERBOSE,
                         ENABLE_VERBOSE_LOGGING,
                         "Hold=" + buttonHoldTime + "ms, Speed=" + buttonHoldTime + "mm/ms, " + "Travel="
                                 + remainingTravelTime + "ms, Distance=" + totalDistanceTraveled + "mm (WINS!)");
             } else {
-                log(
+                logOutput(
                         LogLevel.VERBOSE,
                         ENABLE_VERBOSE_LOGGING,
                         "Hold=" + buttonHoldTime + "ms, Speed=" + buttonHoldTime + "mm/ms, " + "Travel="
@@ -270,6 +276,6 @@ public class Day06 {
         singleRaceTime = 0L;
         singleRaceDistance = 0L;
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All race data has been reset");
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All race data has been reset");
     }
 }

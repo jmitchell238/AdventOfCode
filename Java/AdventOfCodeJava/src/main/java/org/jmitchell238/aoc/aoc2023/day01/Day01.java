@@ -1,6 +1,6 @@
 package org.jmitchell238.aoc.aoc2023.day01;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,15 +31,15 @@ public class Day01 {
     public static void runDay01() throws FileNotFoundException {
         String dayOneInputPath = "src/main/java/org/jmitchell238/aoc/aoc2023/day01/day1.txt";
 
-        System.out.println("\n--- Day 1: Trebuchet?! ---\n");
+        logOutput(LogLevel.INFO, true, "\n --- Day 1: Trebuchet?! ---\n");
 
         File dayOneInputFile = new File(dayOneInputPath);
         int partOneTotal = solvePart1(dayOneInputFile);
 
-        log(LogLevel.INFO, true, "Part 1: Answer: " + partOneTotal);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneTotal);
 
         int partTwoTotal = solvePart2(dayOneInputFile);
-        log(LogLevel.INFO, true, "Part 2: Answer: " + partTwoTotal);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoTotal);
     }
 
     /**
@@ -51,10 +51,10 @@ public class Day01 {
         try (Scanner fileScanner = new Scanner(inputFile)) {
             while (fileScanner.hasNextLine()) {
                 String currentLine = fileScanner.nextLine();
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
                 StringBuilder digitsOnly = new StringBuilder(currentLine.replaceAll("\\D", ""));
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Extracted digits: " + digitsOnly);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Extracted digits: " + digitsOnly);
 
                 totalSum = calculateLineTotal(digitsOnly, totalSum);
             }
@@ -63,7 +63,7 @@ public class Day01 {
             throw fileNotFound;
         }
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 1 total sum: " + totalSum);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 1 total sum: " + totalSum);
         return totalSum;
     }
 
@@ -76,10 +76,10 @@ public class Day01 {
         try (Scanner fileScanner = new Scanner(inputFile)) {
             while (fileScanner.hasNextLine()) {
                 String currentLine = fileScanner.nextLine();
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
                 StringBuilder extractedNumbers = extractAllNumbers(currentLine);
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Extracted numbers: " + extractedNumbers);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Extracted numbers: " + extractedNumbers);
 
                 totalSum = calculateLineTotal(extractedNumbers, totalSum);
             }
@@ -88,7 +88,7 @@ public class Day01 {
             throw fileNotFound;
         }
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 2 total sum: " + totalSum);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part 2 total sum: " + totalSum);
         return totalSum;
     }
 
@@ -103,14 +103,14 @@ public class Day01 {
         for (char currentChar : inputLine.toCharArray()) {
             if (Character.isDigit(currentChar)) {
                 extractedNumbers.append(currentChar);
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Found digit: " + currentChar);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Found digit: " + currentChar);
                 currentIndex++;
                 continue;
             }
 
             boolean foundWordNumber = checkForWordNumber(inputLine, currentIndex, wordToNumberMap, extractedNumbers);
             if (foundWordNumber) {
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Found word number at index: " + currentIndex);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Found word number at index: " + currentIndex);
             }
 
             currentIndex++;
@@ -135,7 +135,7 @@ public class Day01 {
                     return true;
                 }
             } catch (StringIndexOutOfBoundsException _) {
-                log(
+                logOutput(
                         LogLevel.VERBOSE,
                         ENABLE_VERBOSE_LOGGING,
                         "Index out of bounds checking word: " + numberWord + " at index: " + currentIndex);
@@ -149,7 +149,7 @@ public class Day01 {
      */
     private static int calculateLineTotal(StringBuilder numbersFromLine, int runningTotal) {
         if (numbersFromLine.isEmpty()) {
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "No numbers found in line, skipping");
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "No numbers found in line, skipping");
             return runningTotal;
         }
 
@@ -157,7 +157,7 @@ public class Day01 {
         int lastDigit = Integer.parseInt(numbersFromLine.substring(numbersFromLine.length() - 1));
 
         int calibrationValue = Integer.parseInt(String.valueOf(firstDigit) + lastDigit);
-        log(
+        logOutput(
                 LogLevel.DEBUG,
                 ENABLE_DEBUG_LOGGING,
                 "First: " + firstDigit + ", Last: " + lastDigit + ", Calibration: " + calibrationValue);
