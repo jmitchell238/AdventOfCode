@@ -1,6 +1,7 @@
 package org.jmitchell238.aoc.aoc2025.day01;
 
-import org.assertj.core.api.AssertionsForClassTypes;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 
 class Day01Tests {
@@ -14,7 +15,7 @@ class Day01Tests {
         int expected = 3;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day01.part1(day01Part1Input)).isEqualTo(expected);
+        assertThat(Day01.part1(day01Part1Input)).isEqualTo(expected);
     }
 
     @Test
@@ -26,7 +27,7 @@ class Day01Tests {
         int expected = 1118;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day01.part1(day01Part1Input)).isEqualTo(expected);
+        assertThat(Day01.part1(day01Part1Input)).isEqualTo(expected);
     }
 
     @Test
@@ -38,7 +39,7 @@ class Day01Tests {
         int expected = 6;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day01.part2(day01Part2Input)).isEqualTo(expected);
+        assertThat(Day01.part2(day01Part2Input)).isEqualTo(expected);
     }
 
     @Test
@@ -50,6 +51,6 @@ class Day01Tests {
         int expected = 6289;
 
         // Act
-        AssertionsForClassTypes.assertThat(Day01.part2(day01Part2Input)).isEqualTo(expected);
+        assertThat(Day01.part2(day01Part2Input)).isEqualTo(expected);
     }
 }

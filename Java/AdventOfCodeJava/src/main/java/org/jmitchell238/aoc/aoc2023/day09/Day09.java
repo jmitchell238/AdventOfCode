@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
-import org.jmitchell238.aoc.aoc2023.utilities.Utilities;
+import org.jmitchell238.aoc.generalutilities.Utilities;
 
 public class Day09 {
     private static final Boolean DEBUGGING = true;

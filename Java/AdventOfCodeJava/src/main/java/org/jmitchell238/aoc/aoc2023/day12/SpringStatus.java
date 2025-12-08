@@ -1,23 +1,33 @@
 package org.jmitchell238.aoc.aoc2023.day12;
 
-public class SpringStatus {
+import lombok.Getter;
 
-    private char spring;
+@Getter
+public enum SpringStatus {
+    DAMAGED_SPRING('#'),
+    OPERATIONAL_SPRING('.'),
+    UNKNOWN('?');
 
-    public SpringStatus(char spring) {
-        this.spring = spring;
+    private final char statusChar;
+
+    SpringStatus(char statusChar) {
+        this.statusChar = statusChar;
     }
 
-    public static SpringStatus fromChar(char c) {
-        return new SpringStatus(c);
+    public static SpringStatus fromChar(char statusChar) {
+        for (SpringStatus status : SpringStatus.values()) {
+            if (status.getStatusChar() == statusChar) {
+                return status;
+            }
+        }
+        // Default to UNKNOWN if no match is found
+        return UNKNOWN;
     }
 
-    public char getSpring() {
-        return spring;
-    }
+    public static void main(String[] args) {
+        char inputChar = '#';
 
-    @Override
-    public String toString() {
-        return String.valueOf(spring);
+        SpringStatus springStatus = SpringStatus.fromChar(inputChar);
+        System.out.println("Char '" + inputChar + "' maps to: " + springStatus);
     }
 }

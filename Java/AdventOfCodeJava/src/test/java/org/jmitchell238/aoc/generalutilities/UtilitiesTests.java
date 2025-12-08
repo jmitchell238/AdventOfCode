@@ -1,4 +1,4 @@
-package org.jmitchell238.aoc.aoc2023.utilities;
+package org.jmitchell238.aoc.generalutilities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
-import org.jmitchell238.aoc.aoc2023.utilities.Utilities.Direction;
-import org.jmitchell238.aoc.aoc2023.utilities.Utilities.Directions;
-import org.jmitchell238.aoc.aoc2023.utilities.Utilities.DistanceUtils;
-import org.jmitchell238.aoc.aoc2023.utilities.Utilities.Tuple;
-import org.jmitchell238.aoc.aoc2023.utilities.Utilities.Tuple3;
-import org.jmitchell238.aoc.aoc2023.utilities.Utilities.Tuple4;
+import org.jmitchell238.aoc.generalutilities.Utilities.Direction;
+import org.jmitchell238.aoc.generalutilities.Utilities.Directions;
+import org.jmitchell238.aoc.generalutilities.Utilities.DistanceUtils;
+import org.jmitchell238.aoc.generalutilities.Utilities.Tuple;
+import org.jmitchell238.aoc.generalutilities.Utilities.Tuple3;
+import org.jmitchell238.aoc.generalutilities.Utilities.Tuple4;
 import org.junit.jupiter.api.Test;
 
 class UtilitiesTests {
