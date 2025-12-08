@@ -349,7 +349,7 @@ public class Utilities {
                 .map(str -> {
                     try {
                         return Integer.parseInt(str);
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException _) {
                         return null;
                     }
                 })
@@ -549,12 +549,6 @@ public class Utilities {
                 .map(row -> row.chars().mapToObj(x -> x == mapAsTrue).toArray(Boolean[]::new))
                 .toArray(Boolean[][]::new);
     }
-
-    //  public static char[][] mapAsChar(String[] lines) {
-    //    return Arrays.stream(lines)
-    //        .map(row -> row.chars().mapToObj(x -> x == mapAsTrue).toArray(Boolean[]::new))
-    //        .toArray(Boolean[][]::new);
-    //  }
 
     /**
      * Finds the indices of true values in a 2D array of booleans.
@@ -869,6 +863,104 @@ public class Utilities {
          */
         public static int manhattanDistance(java.awt.Point sensor, java.awt.Point beacon) {
             return Math.abs(sensor.x - beacon.x) + Math.abs(sensor.y - beacon.y);
+        }
+    }
+
+    /**
+     * Determines if a number consists of exactly two identical halves.
+     * Examples: 11 -> true, 22 -> true, 1010 -> true, 12341234 -> true
+     * Non-examples: 101 -> false, 202 -> false, 101010 -> false, 1233451234 -> false
+     */
+    public static boolean isExactlyTwoRepeats(Long numberToCheck) {
+        if (numberToCheck < 10) return false;
+        String digitString = String.valueOf(numberToCheck);
+        return isExactlyTwoRepeats(digitString);
+    }
+
+    /**
+     * Determines if a string of digits consists of exactly two identical halves.
+     * The string must have even length and no leading zeros.
+     */
+    public static boolean isExactlyTwoRepeats(String digitString) {
+        if (digitString == null || digitString.length() < 2) return false;
+        if (digitString.charAt(0) == '0') return false;
+
+        int totalLength = digitString.length();
+        if (totalLength % 2 != 0) return false;
+
+        int halfwayPoint = totalLength / 2;
+        String firstHalf = digitString.substring(0, halfwayPoint);
+        String secondHalf = digitString.substring(halfwayPoint);
+        return firstHalf.equals(secondHalf);
+    }
+
+    /**
+     * Determines if a number consists of a pattern repeated multiple times.
+     * Examples: 11 -> true, 22 -> true, 1010 -> true, 12341234 -> true, 121212 -> true
+     * Non-examples: 101 -> false, 202 -> false, 1231231234 -> false
+     */
+    public static boolean isRepeatedMultipleTimes(Long numberToCheck) {
+        if (numberToCheck < 10) return false;
+        String digitString = String.valueOf(numberToCheck);
+        if (digitString.charAt(0) == '0') return false;
+        return hasRepeatingPatternInString(digitString);
+    }
+
+    /**
+     * Determines if a string of digits consists of a pattern repeated multiple times.
+     * The string must not have leading zeros and must be at least 2 characters.
+     */
+    public static boolean isRepeatedMultipleTimes(String digitString) {
+        if (digitString == null || digitString.length() < 2) return false;
+        if (digitString.charAt(0) == '0') return false;
+        return hasRepeatingPatternInString(digitString);
+    }
+
+    /**
+     * Checks if the given string consists of a repeating pattern.
+     * Tests all possible pattern sizes that divide evenly into the string length.
+     */
+    private static boolean hasRepeatingPatternInString(String digitString) {
+        int totalLength = digitString.length();
+
+        for (int patternSize = 1; patternSize <= totalLength / 2; patternSize++) {
+            if (totalLength % patternSize != 0) continue;
+
+            if (stringMatchesRepeatedPattern(digitString, patternSize)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determines if the string equals a pattern repeated the required number of times.
+     */
+    private static boolean stringMatchesRepeatedPattern(String digitString, int patternSize) {
+        String candidatePattern = digitString.substring(0, patternSize);
+        String reconstructedString = buildStringFromRepeatedPattern(candidatePattern, digitString.length());
+        return reconstructedString.equals(digitString);
+    }
+
+    /**
+     * Builds a string by repeating the given pattern to reach the target length.
+     */
+    private static String buildStringFromRepeatedPattern(String pattern, int targetLength) {
+        int numberOfRepeats = targetLength / pattern.length();
+        return pattern.repeat(numberOfRepeats);
+    }
+
+    /**
+     * Prints all numbers within a range that consist of exactly two repeated halves.
+     */
+    public static void printExactlyTwoRepeatsInRange(Long rangeStart, Long rangeEnd) {
+        Long lowerBound = Math.min(rangeStart, rangeEnd);
+        Long upperBound = Math.max(rangeStart, rangeEnd);
+
+        for (Long currentNumber = lowerBound; currentNumber <= upperBound; currentNumber++) {
+            if (isExactlyTwoRepeats(currentNumber)) {
+                System.out.println(currentNumber);
+            }
         }
     }
 }
