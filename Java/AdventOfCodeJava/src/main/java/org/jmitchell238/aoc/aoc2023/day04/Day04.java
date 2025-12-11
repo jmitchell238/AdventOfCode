@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import org.jmitchell238.aoc.generalutilities.LogLevel;
@@ -21,7 +22,16 @@ import org.jmitchell238.aoc.generalutilities.LogLevel;
  * Part 2 handles card copying mechanics based on matching numbers.
  * </p>
  */
-@SuppressWarnings({"java:S106", "java:S1118", "java:S1940", "java:S2589", "java:S100", "java:S3776", "java:S127"})
+@SuppressWarnings({
+    "java:S106",
+    "java:S1118",
+    "java:S1940",
+    "java:S2589",
+    "java:S100",
+    "java:S3776",
+    "java:S127",
+    "java:S112"
+})
 public class Day04 {
 
     // Configuration flags
@@ -34,9 +44,9 @@ public class Day04 {
     // Constants
     private static final String CARD_SEPARATOR_REGEX = ": |\\|";
 
-    @SuppressWarnings("unused")
-    public void main(String[] args) {
-        runDay04();
+    @SuppressWarnings({"unused", "java:S1172"})
+    static void main(String[] args) {
+        new Day04().runDay04();
     }
 
     /**
@@ -46,7 +56,6 @@ public class Day04 {
         logOutput(LogLevel.INFO, true, "\n--- Day 4: Scratchcards ---\n");
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input.txt";
-        String testInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input_test.txt";
 
         int partOneAnswer = solvePart1(actualInputFilePath);
         logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
@@ -58,6 +67,7 @@ public class Day04 {
     /**
      * Solves Part 1 by calculating points for matching numbers on scratchcards.
      */
+    @SuppressWarnings("java:S112")
     public int solvePart1(String inputFilePath) {
         int totalScratchcardPoints = 0;
         ArrayList<ArrayList<String>> parsedScratchcards = new ArrayList<>();
@@ -104,6 +114,7 @@ public class Day04 {
     /**
      * Solves Part 2 by handling card copying mechanics based on matching numbers.
      */
+    @SuppressWarnings("java:S112")
     public int solvePart2(String inputFilePath) {
         int totalScratchcardCount = 0;
         ArrayList<ScratchcardWithCount> scratchcardsWithCopies = new ArrayList<>();
@@ -116,7 +127,7 @@ public class Day04 {
                 String currentLine = fileScanner.nextLine();
                 totalScratchcardCount++;
 
-                ArrayList<ArrayList<String>> cardData = new ArrayList<>();
+                List<List<String>> cardData = new ArrayList<>();
                 cardData.add(new ArrayList<>(Arrays.asList(currentLine.split(CARD_SEPARATOR_REGEX))));
                 scratchcardsWithCopies.add(new ScratchcardWithCount(1, cardData));
 
@@ -150,13 +161,13 @@ public class Day04 {
     private void processScratchcardCopying(ArrayList<ScratchcardWithCount> scratchcardsWithCopies) {
         for (int cardIndex = 0; cardIndex < scratchcardsWithCopies.size(); cardIndex++) {
             ArrayList<Integer> winningNumbers = parseWinningNumbers(
-                    scratchcardsWithCopies.get(cardIndex).getScratchcardData().get(0));
+                    scratchcardsWithCopies.get(cardIndex).getScratchcardData().getFirst());
             ArrayList<Integer> playerNumbers = parsePlayerNumbers(
-                    scratchcardsWithCopies.get(cardIndex).getScratchcardData().get(0));
+                    scratchcardsWithCopies.get(cardIndex).getScratchcardData().getFirst());
             ArrayList<Integer> matchingNumbers = findMatchingNumbers(winningNumbers, playerNumbers);
 
             logScratchcardAnalysisIfDebug(
-                    scratchcardsWithCopies.get(cardIndex).getScratchcardData().get(0),
+                    scratchcardsWithCopies.get(cardIndex).getScratchcardData().getFirst(),
                     winningNumbers,
                     playerNumbers,
                     matchingNumbers);
@@ -185,7 +196,7 @@ public class Day04 {
     /**
      * Parses winning numbers from scratchcard data.
      */
-    private static ArrayList<Integer> parseWinningNumbers(ArrayList<String> scratchcardData) {
+    private static ArrayList<Integer> parseWinningNumbers(List<String> scratchcardData) {
         return stream(scratchcardData.get(1).split(" "))
                 .filter(numberString -> !Objects.equals(numberString, ""))
                 .mapToInt(Integer::parseInt)
@@ -196,7 +207,7 @@ public class Day04 {
     /**
      * Parses player numbers from scratchcard data.
      */
-    private static ArrayList<Integer> parsePlayerNumbers(ArrayList<String> scratchcardData) {
+    private static ArrayList<Integer> parsePlayerNumbers(List<String> scratchcardData) {
         return stream(scratchcardData.get(2).split(" "))
                 .filter(numberString -> !Objects.equals(numberString, ""))
                 .mapToInt(Integer::parseInt)
@@ -226,7 +237,7 @@ public class Day04 {
     private static int calculateCardPoints(ArrayList<Integer> matchingNumbers) {
         int cardPoints = 0;
 
-        for (Integer ignoredMatchingNumber : matchingNumbers) {
+        for (int i = 0; i < matchingNumbers.size(); i++) {
             if (cardPoints == 0) {
                 cardPoints = 1;
             } else {
@@ -254,10 +265,8 @@ public class Day04 {
      * Logs parsed scratchcards if verbose logging is enabled.
      */
     private static void logParsedScratchcardsIfVerbose(ArrayList<ArrayList<String>> parsedScratchcards) {
-        if (ENABLE_VERBOSE_LOGGING) {
-            for (ArrayList<String> scratchcardData : parsedScratchcards) {
-                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Parsed scratchcard: " + scratchcardData);
-            }
+        for (ArrayList<String> scratchcardData : parsedScratchcards) {
+            logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Parsed scratchcard: " + scratchcardData);
         }
     }
 
@@ -265,16 +274,14 @@ public class Day04 {
      * Logs scratchcard analysis details if debug logging is enabled.
      */
     private static void logScratchcardAnalysisIfDebug(
-            ArrayList<String> scratchcardData,
+            List<String> scratchcardData,
             ArrayList<Integer> winningNumbers,
             ArrayList<Integer> playerNumbers,
             ArrayList<Integer> matchingNumbers) {
-        if (ENABLE_DEBUG_LOGGING) {
-            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "\n" + scratchcardData.get(0) + ":");
-            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Winning Numbers: " + winningNumbers);
-            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Player Numbers: " + playerNumbers);
-            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Matching Numbers: " + matchingNumbers);
-        }
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "\n" + scratchcardData.getFirst() + ":");
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Winning Numbers: " + winningNumbers);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Player Numbers: " + playerNumbers);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Matching Numbers: " + matchingNumbers);
     }
 
     /**
@@ -282,26 +289,25 @@ public class Day04 {
      */
     private static void logScratchcardCountsIfDebug(
             ArrayList<ScratchcardWithCount> scratchcardsWithCopies, String phase) {
-        if (ENABLE_DEBUG_LOGGING) {
-            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "\n" + phase + " card counts:");
-            for (int i = 0; i < scratchcardsWithCopies.size(); i++) {
-                logOutput(
-                        LogLevel.DEBUG,
-                        ENABLE_DEBUG_LOGGING,
-                        "Card " + (i + 1) + " copies: "
-                                + scratchcardsWithCopies.get(i).getCopyCount());
-            }
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "\n" + phase + " card counts:");
+        for (int i = 0; i < scratchcardsWithCopies.size(); i++) {
+            logOutput(
+                    LogLevel.DEBUG,
+                    ENABLE_DEBUG_LOGGING,
+                    "Card " + (i + 1) + " copies: "
+                            + scratchcardsWithCopies.get(i).getCopyCount());
         }
     }
 
     /**
      * Inner class to represent a scratchcard with its copy count.
      */
-    class ScratchcardWithCount {
+    @SuppressWarnings("all")
+    static class ScratchcardWithCount {
         private int copyCount;
-        private ArrayList<ArrayList<String>> scratchcardData;
+        private final List<List<String>> scratchcardData;
 
-        public ScratchcardWithCount(int copyCount, ArrayList<ArrayList<String>> scratchcardData) {
+        public ScratchcardWithCount(int copyCount, List<List<String>> scratchcardData) {
             this.copyCount = copyCount;
             this.scratchcardData = scratchcardData;
         }
@@ -310,7 +316,7 @@ public class Day04 {
             return copyCount;
         }
 
-        public ArrayList<ArrayList<String>> getScratchcardData() {
+        public List<List<String>> getScratchcardData() {
             return scratchcardData;
         }
 

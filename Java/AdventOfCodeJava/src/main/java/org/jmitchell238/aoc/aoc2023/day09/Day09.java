@@ -32,15 +32,16 @@ public class Day09 {
     // State variables
     private final List<List<Integer>> analysisSequences = new ArrayList<>();
 
-    @SuppressWarnings("unused")
-    public void main(String[] args) throws FileNotFoundException {
-        runDay09();
+    // Java 25-friendly main; suppress unused args
+    @SuppressWarnings({"unused", "java:S1172"})
+    static void main(String[] args) {
+        new Day09().runDay09();
     }
 
     /**
      * Entry point for Day 9 solution.
      */
-    public void runDay09() throws FileNotFoundException {
+    public void runDay09() {
         logOutput(LogLevel.INFO, true, "\n--- Day 9: Mirage Maintenance ---\n");
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day09/input.txt";
@@ -55,7 +56,7 @@ public class Day09 {
     /**
      * Solves Part 1 by extrapolating next values in sequences.
      */
-    public long solvePart1(String inputFilePath) throws FileNotFoundException {
+    public long solvePart1(String inputFilePath) {
         parseInputSequences(inputFilePath);
 
         long totalSumOfNextValues = 0;
@@ -80,7 +81,7 @@ public class Day09 {
     /**
      * Solves Part 2 by extrapolating previous values in sequences.
      */
-    public long solvePart2(String inputFilePath) throws FileNotFoundException {
+    public long solvePart2(String inputFilePath) {
         parseInputSequences(inputFilePath);
 
         long totalSumOfPreviousValues = 0;
@@ -105,7 +106,8 @@ public class Day09 {
     /**
      * Parses input file and extracts sequences for analysis.
      */
-    private void parseInputSequences(String inputFilePath) throws FileNotFoundException {
+    @SuppressWarnings("java:S112")
+    private void parseInputSequences(String inputFilePath) {
         analysisSequences.clear(); // Clear previous data
 
         try (Scanner fileScanner = new Scanner(new File(inputFilePath))) {
@@ -122,7 +124,7 @@ public class Day09 {
             }
         } catch (FileNotFoundException fileNotFoundException) {
             logOutput(LogLevel.ERROR, true, "Input file not found: " + inputFilePath);
-            throw fileNotFoundException;
+            throw new RuntimeException(fileNotFoundException);
         }
     }
 
@@ -132,7 +134,7 @@ public class Day09 {
     private int calculateNextNumberInSequence(List<Integer> sequence) {
         List<Integer> differencesSequence = calculateDifferencesSequence(sequence);
 
-        if (!areAllDifferencesZero(differencesSequence)) {
+        if (hasNonZeroDifferences(differencesSequence)) {
             int nextNumberFromDifferences = calculateNextNumberInSequence(differencesSequence);
             return sequence.getLast() + nextNumberFromDifferences;
         }
@@ -146,7 +148,7 @@ public class Day09 {
     private List<Integer> extrapolateNextValueInSequence(List<Integer> sequence) {
         List<Integer> differencesSequence = calculateDifferencesSequence(sequence);
 
-        if (!areAllDifferencesZero(differencesSequence)) {
+        if (hasNonZeroDifferences(differencesSequence)) {
             int nextNumberFromDifferences = calculateNextNumberInSequence(differencesSequence);
             sequence.add(sequence.getLast() + nextNumberFromDifferences);
 
@@ -167,7 +169,7 @@ public class Day09 {
     private int calculatePreviousNumberInSequence(List<Integer> sequence) {
         List<Integer> differencesSequence = calculateDifferencesSequence(sequence);
 
-        if (!areAllDifferencesZero(differencesSequence)) {
+        if (hasNonZeroDifferences(differencesSequence)) {
             int previousNumberFromDifferences = calculatePreviousNumberInSequence(differencesSequence);
             return sequence.getFirst() - previousNumberFromDifferences;
         }
@@ -181,7 +183,7 @@ public class Day09 {
     private List<Integer> extrapolatePreviousValueInSequence(List<Integer> sequence) {
         List<Integer> differencesSequence = calculateDifferencesSequence(sequence);
 
-        if (!areAllDifferencesZero(differencesSequence)) {
+        if (hasNonZeroDifferences(differencesSequence)) {
             int previousNumberFromDifferences = calculatePreviousNumberInSequence(differencesSequence);
             int newPreviousValue = sequence.getFirst() - previousNumberFromDifferences;
             sequence.addFirst(newPreviousValue);
@@ -218,22 +220,23 @@ public class Day09 {
     }
 
     /**
-     * Checks if all differences in a sequence are zero.
+     * Checks if there are any non-zero differences in a sequence.
      */
-    private boolean areAllDifferencesZero(List<Integer> differencesSequence) {
-        boolean allZero = differencesSequence.stream().allMatch(difference -> difference == 0);
+    private boolean hasNonZeroDifferences(List<Integer> differencesSequence) {
+        boolean anyNonZero = differencesSequence.stream().anyMatch(difference -> difference != 0);
 
         logOutput(
                 LogLevel.VERBOSE,
                 ENABLE_VERBOSE_LOGGING,
-                "All differences zero? " + allZero + " for sequence: " + differencesSequence);
+                "Has non-zero differences? " + anyNonZero + " for sequence: " + differencesSequence);
 
-        return allZero;
+        return anyNonZero;
     }
 
     /**
      * Resets all state for fresh execution (used in testing).
      */
+    @SuppressWarnings("unused")
     public void resetSequenceData() {
         analysisSequences.clear();
         logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "All sequence data has been reset");

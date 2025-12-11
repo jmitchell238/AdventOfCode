@@ -1,30 +1,44 @@
 package org.jmitchell238.aoc.aoc2023.day00;
 
-public class Day00 {
-    private static final Boolean DEBUGGING = false;
-    private static final Boolean VERBOSE = false;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
-    public static void main(String[] args) {
+import org.jmitchell238.aoc.generalutilities.LogLevel;
+
+@SuppressWarnings({"java:S106", "java:S1940", "java:S2589", "java:S1118"})
+public class Day00 {
+    // Configuration flags
+    @SuppressWarnings({"ConstantConditions", "unused"})
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings({"ConstantConditions", "unused"})
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
+
+    // Java 25: 'public' is redundant on main; use package-private
+    @SuppressWarnings("unused")
+    static void main(String[] args) {
         Day00Run();
     }
 
+    @SuppressWarnings({"java:S100", "java:S1481", "java:S1854"})
     public static void Day00Run() {
-        System.out.println("\n--- Day 0: Placeholder ---\n");
+        logOutput(LogLevel.INFO, true, "\n--- Day 0: Placeholder ---\n");
 
         String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day00/input.txt";
         String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day00/input_test_part1.txt";
 
-        int partOneAnswer = part1(inputTest);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        int partOneAnswer = part1(input);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         int partTwoAnswer = part2(inputTest);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
+    @SuppressWarnings("unused")
     public static int part1(String input) {
         return -1;
     }
 
+    @SuppressWarnings("unused")
     public static int part2(String input) {
         return -1;
     }

@@ -9,40 +9,47 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jmitchell238.aoc.generalutilities.LogLevel;
 
+@SuppressWarnings({"java:S106", "java:S1940", "java:S2589", "java:S1118"})
 public class Day12 {
-    private static final Boolean DEBUGGING = false;
+    // Configuration flags
+    @SuppressWarnings({"ConstantConditions", "unused"})
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings({"ConstantConditions", "unused"})
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
 
     @Getter
     @Setter
     private Boolean isPartTwo = false;
 
-    private SpringConditionRecords springConditionRecords = new SpringConditionRecords();
+    private final SpringConditionRecords springConditionRecords = new SpringConditionRecords();
 
-    public void main(String[] args) throws FileNotFoundException {
-        Day12Run();
+    @SuppressWarnings("unused")
+    public static void main(String[] args) throws FileNotFoundException {
+        day12Run();
     }
 
-    public void Day12Run() throws FileNotFoundException {
-        logOutput(LogLevel.INFO, true, "\n--- Day 9: Mirage Maintenance ---\n");
+    @SuppressWarnings("java:S100")
+    public static void day12Run() throws FileNotFoundException {
+        logOutput(LogLevel.INFO, true, "\n--- Day 12: Hot Springs ---\n");
 
-        String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day12/input.txt";
-        String input_test = "src/main/java/org/jmitchell238/aoc/aoc2023/day12/input_test.txt";
+        String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day12/input_test.txt";
 
-        long partOneAnswer = part1(input_test);
+        Day12 day12 = new Day12();
+        long partOneAnswer = day12.part1(inputTest);
         logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
-        //    long partTwoAnswer = part2(input_test);
-        //    System.out.println(STR."Part 2: Answer: \{partTwoAnswer}");
+        long partTwoAnswer = day12.part2(inputTest);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
+    @SuppressWarnings("unused")
     public long part1(String filePath) throws FileNotFoundException {
         processFile(filePath);
-
-        int possibleSpringConditions = findPossibleSpringConditions();
-
-        return possibleSpringConditions;
+        return findPossibleSpringConditions();
     }
 
+    @SuppressWarnings("unused")
     public long part2(String filePath) throws FileNotFoundException {
         processFile(filePath);
 
@@ -50,19 +57,23 @@ public class Day12 {
     }
 
     private void processFile(String filePath) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(filePath));
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Processing file: " + filePath);
 
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            SpringConditionRecord springConditionRecord = new SpringConditionRecord(line);
-            springConditionRecords.getSpringConditionRecordsList().add(springConditionRecord);
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                SpringConditionRecord springConditionRecord = new SpringConditionRecord(line);
+                springConditionRecords.getSpringConditionRecordsList().add(springConditionRecord);
+            }
         }
 
         springConditionRecords.printAllRecordsConditions();
-        scanner.close();
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "File processing completed");
     }
 
     private int findPossibleSpringConditions() {
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Finding possible spring conditions");
+
         int possibleSpringConditions = 0;
         for (SpringConditionRecord springConditionRecord : springConditionRecords.getSpringConditionRecordsList()) {
             for (SpringAndStatus springAndStatus : springConditionRecord.getSpringsAndStatuses()) {
@@ -71,6 +82,11 @@ public class Day12 {
                 }
             }
         }
+
+        logOutput(
+                LogLevel.DEBUG,
+                ENABLE_DEBUG_LOGGING,
+                "Total possible spring conditions found: " + possibleSpringConditions);
         return possibleSpringConditions;
     }
 }

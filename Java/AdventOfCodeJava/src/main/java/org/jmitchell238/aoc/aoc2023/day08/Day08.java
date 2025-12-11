@@ -14,9 +14,14 @@ import lombok.Setter;
 import org.jmitchell238.aoc.generalutilities.LogLevel;
 import org.jmitchell238.aoc.generalutilities.Utilities;
 
+@SuppressWarnings({"java:S106", "java:S1118", "java:S1940", "java:S2589", "java:S100", "java:S3776", "java:S127"})
 public class Day08 {
-    private static final Boolean DEBUGGING = false;
-    private static final Boolean VERBOSE = false;
+    // Configuration flags
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings({"ConstantConditions", "unused"})
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
 
     @Getter
     @Setter
@@ -26,16 +31,16 @@ public class Day08 {
     private final ArrayList<Character> directionsArray = new ArrayList<>();
     private final Map<String, String> startingNodesCurrentNodes = new HashMap<>();
 
-    public void main(String[] args) throws FileNotFoundException {
-        Day08Run();
+    // Java 25-friendly main; suppress unused args
+    @SuppressWarnings({"unused", "java:S1172"})
+    public static void main(String[] args) {
+        new Day08().runDay08();
     }
 
-    public void Day08Run() throws FileNotFoundException {
-        logOutput(LogLevel.INFO, DEBUGGING, "\n--- Day 8: Camel Cards ---\n");
+    public void runDay08() {
+        logOutput(LogLevel.INFO, true, "\n--- Day 8: Haunted Wasteland ---\n");
 
         String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day08/input.txt";
-        String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day08/input_test.txt";
-        String inputTest2 = "src/main/java/org/jmitchell238/aoc/aoc2023/day08/input_test_2.txt";
 
         long partOneAnswer = part1(input);
         logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
@@ -44,12 +49,12 @@ public class Day08 {
         logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
-    public long part1(String filePath) throws FileNotFoundException {
+    public long part1(String filePath) {
         processMaps(filePath);
 
         boolean isTraversingNodes = true;
         String currentNode = "AAA";
-        int steps = 0;
+        long steps = 0;
 
         while (isTraversingNodes) {
             for (char direction : directionsArray) {
@@ -61,8 +66,8 @@ public class Day08 {
 
                 steps++;
 
-                String DESTINATION_NODE = "ZZZ";
-                if (currentNode.equals(DESTINATION_NODE)) {
+                String destinationNode = "ZZZ";
+                if (currentNode.equals(destinationNode)) {
                     isTraversingNodes = false;
                     break;
                 }
@@ -72,13 +77,14 @@ public class Day08 {
         return steps;
     }
 
-    public long part2(String filePath) throws FileNotFoundException {
+    public long part2(String filePath) {
         processMaps(filePath);
 
         long steps = 0;
         List<Long> nodeLengthsToZ = new ArrayList<>();
 
-        for (String node : startingNodesCurrentNodes.keySet()) {
+        for (Map.Entry<String, String> entry : startingNodesCurrentNodes.entrySet()) {
+            String node = entry.getKey();
             boolean isTraversingNodes = true;
 
             while (isTraversingNodes) {
@@ -106,7 +112,7 @@ public class Day08 {
             }
         }
 
-        logOutput(LogLevel.DEBUG, DEBUGGING, "Node Lengths to Z: " + nodeLengthsToZ.toString());
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Node Lengths to Z: " + nodeLengthsToZ);
 
         long lcm;
         if (nodeLengthsToZ.size() == 2) {
@@ -121,27 +127,34 @@ public class Day08 {
                     nodeLengthsToZ.get(5));
         }
 
-        logOutput(LogLevel.DEBUG, DEBUGGING, "LCM: " + lcm);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "LCM: " + lcm);
 
         return lcm;
     }
 
-    private void processMaps(String filePath) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(filePath));
-        boolean directions = true;
+    @SuppressWarnings("java:S112")
+    private void processMaps(String filePath) {
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            boolean readingDirections = true;
 
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
 
-            if (directions) {
-                for (int i = 0; i < line.length(); i++) {
-                    directionsArray.add(line.charAt(i));
+                if (readingDirections) {
+                    for (int i = 0; i < line.length(); i++) {
+                        directionsArray.add(line.charAt(i));
+                    }
+                    readingDirections = false;
+                    continue;
                 }
-                directions = false;
-                continue;
-            }
 
-            addToMap(line);
+                addToMap(line);
+            }
+        } catch (FileNotFoundException fileNotFound) {
+            String errorMessage = "Input file not found: " + filePath;
+            logOutput(LogLevel.ERROR, true, errorMessage);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
+            throw new RuntimeException(fileNotFound);
         }
     }
 
