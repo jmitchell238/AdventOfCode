@@ -41,9 +41,10 @@ public class Day06 {
     private static long singleRaceTime = 0L;
     private static long singleRaceDistance = 0L;
 
-    @SuppressWarnings("unused")
-    public void main(String[] args) throws FileNotFoundException {
-        runDay06();
+    // Java 25: package-private static main; suppress unused args
+    @SuppressWarnings({"unused", "java:S1172"})
+    static void main(String[] args) throws FileNotFoundException {
+        new Day06().runDay06();
     }
 
     /**
@@ -107,7 +108,7 @@ public class Day06 {
             }
         } catch (FileNotFoundException fileNotFoundException) {
             String errorMessage = "Input file not found: " + inputFilePath;
-            System.err.println(errorMessage);
+            logOutput(LogLevel.ERROR, true, errorMessage);
             logOutput(
                     LogLevel.DEBUG,
                     ENABLE_DEBUG_LOGGING,
@@ -133,7 +134,7 @@ public class Day06 {
             }
         } catch (FileNotFoundException fileNotFoundException) {
             String errorMessage = "Input file not found: " + inputFilePath;
-            System.err.println(errorMessage);
+            logOutput(LogLevel.ERROR, true, errorMessage);
             logOutput(
                     LogLevel.DEBUG,
                     ENABLE_DEBUG_LOGGING,
@@ -175,7 +176,7 @@ public class Day06 {
     /**
      * Parses concatenated time from a time line for Part 2.
      */
-    private void parseConcatenatedTimeFromLine(String timeLine) {
+    private static void parseConcatenatedTimeFromLine(String timeLine) {
         String[] timeComponents = timeLine.split(":");
         singleRaceTime = Long.parseLong(timeComponents[1].trim().replaceAll("\\s", ""));
         logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Concatenated race time: " + singleRaceTime);
@@ -184,7 +185,7 @@ public class Day06 {
     /**
      * Parses concatenated distance from a distance line for Part 2.
      */
-    private void parseConcatenatedDistanceFromLine(String distanceLine) {
+    private static void parseConcatenatedDistanceFromLine(String distanceLine) {
         String[] distanceComponents = distanceLine.split(":");
         singleRaceDistance = Long.parseLong(distanceComponents[1].trim().replaceAll("\\s", ""));
         logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Concatenated race distance: " + singleRaceDistance);

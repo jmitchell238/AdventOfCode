@@ -2,31 +2,23 @@ package org.jmitchell238.aoc.aoc2023.utilities.grid;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
+@SuppressWarnings({"java:S106", "java:S1940", "java:S2589", "java:S1118"})
 public class FloodFill {
 
-    private final ArrayList<Character> PIPE_CHARS =
-            new ArrayList<Character>(Arrays.asList('S', 'L', 'J', '7', 'F', '-', '|'));
+    private final Set<Point> visited = new HashSet<>();
+    private final List<Point> pipePoints;
+    private final int gridWidth;
+    private final int gridHeight;
 
-    private final Map<Point, Character> map; // Your Map representing the grid
-    private final Map<Point, Character> originalMap;
-    private Set<Point> visited = new HashSet<>();
-    private ArrayList<Point> pipePoints = new ArrayList<>();
-    private int gridWidth; // Correct grid width
-    private int gridHeight; // Correct grid height
-    int count = 0;
-
-    // Constructor - assuming you provide these values somehow
-    public FloodFill(Map<Point, Character> map, ArrayList<Point> pipePoints, Map<Point, Character> originalMap) {
-        this.map = map;
-        this.originalMap = originalMap;
-        this.gridWidth = map.keySet().stream().mapToInt(p -> p.x).max().orElse(0);
-        this.gridHeight = map.keySet().stream().mapToInt(p -> p.y).max().orElse(0);
+    // Constructor
+    public FloodFill(Map<Point, Character> map, List<Point> pipePoints) {
+        this.gridWidth = map.keySet().stream().mapToInt(p -> p.x).max().orElse(0) + 1;
+        this.gridHeight = map.keySet().stream().mapToInt(p -> p.y).max().orElse(0) + 1;
         this.pipePoints = pipePoints;
     }
 
@@ -44,10 +36,8 @@ public class FloodFill {
     }
 
     public int countPointsInsidePipe(Point startingPoint) {
-        int floodFillCount = floodFill(startingPoint);
-        int pointsInsideOriginalMap = getPointsInsideOriginalMap();
-
-        return pointsInsideOriginalMap;
+        floodFill(startingPoint);
+        return getPointsInsideOriginalMap();
     }
 
     private int getPointsInsideOriginalMap() {
@@ -62,55 +52,43 @@ public class FloodFill {
         return adjustedVisited.size();
     }
 
-    private int floodFill(Point point) {
-        Vector<Point> queue = new Vector<Point>();
+    private void floodFill(Point point) {
+        List<Point> queue = new ArrayList<>();
 
         // Append the position of starting point of the map
         queue.add(point);
-
-        // Add point to count
-        count++;
+        visited.add(point);
 
         // While the queue is not empty i.e. the whole component not counted
-        while (queue.size() > 0) {
-            // Dequeue the front node
-            Point currentPoint = queue.get(queue.size() - 1);
-            queue.remove(queue.size() - 1);
+        while (!queue.isEmpty()) {
+            // Dequeue the last node (using as stack)
+            Point currentPoint = queue.removeLast();
 
             int posX = currentPoint.x;
             int posY = currentPoint.y;
 
-            // Point above
             Point pointAbove = new Point(posX, posY - 1);
-            // Point below
             Point pointBelow = new Point(posX, posY + 1);
-            // Point to the left
             Point pointToLeft = new Point(posX - 1, posY);
-            // Point to the right
             Point pointToRight = new Point(posX + 1, posY);
 
             // Check if adjacent points are valid
             if (isValidPoint(pointAbove)) {
                 visited.add(pointAbove);
-                count++;
                 queue.add(pointAbove);
             }
             if (isValidPoint(pointBelow)) {
                 visited.add(pointBelow);
-                count++;
                 queue.add(pointBelow);
             }
             if (isValidPoint(pointToLeft)) {
                 visited.add(pointToLeft);
-                count++;
                 queue.add(pointToLeft);
             }
             if (isValidPoint(pointToRight)) {
                 visited.add(pointToRight);
-                count++;
                 queue.add(pointToRight);
             }
         }
-        return count;
     }
 }

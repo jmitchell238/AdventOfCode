@@ -1,5 +1,7 @@
 package org.jmitchell238.aoc.aoc2023.day11;
 
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
+
 import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,38 +17,50 @@ import org.jmitchell238.aoc.aoc2023.utilities.galaxies.Galaxies;
 import org.jmitchell238.aoc.aoc2023.utilities.galaxies.Galaxy;
 import org.jmitchell238.aoc.aoc2023.utilities.galaxies.GalaxyPair;
 import org.jmitchell238.aoc.aoc2023.utilities.galaxies.GalaxyPairList;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
+@SuppressWarnings({"java:S106", "java:S1940", "java:S2589", "java:S1118"})
 public class Day11 {
-    private static final Boolean DEBUGGING = false;
+    // Configuration flags
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings({"ConstantConditions", "unused"})
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
 
     @Getter
     @Setter
     private Boolean isPartTwo = false;
 
-    ArrayList<char[]> characterArrayList = new ArrayList<>();
+    // Instance variables
+    private ArrayList<char[]> characterArrayList = new ArrayList<>();
     private Map<Point, Character> map = new HashMap<>();
-    ArrayList<ArrayList<Character>> nextCharacterArrayList = new ArrayList<>();
+    private ArrayList<ArrayList<Character>> nextCharacterArrayList = new ArrayList<>();
     private Galaxies galaxies = new Galaxies();
     private int galaxyId = 1;
     private GalaxyPairList galaxyPairList = new GalaxyPairList();
 
-    public void main(String[] args) throws FileNotFoundException {
-        Day11Run();
+    @SuppressWarnings("unused")
+    public static void main(String[] args) throws FileNotFoundException {
+        day11Run();
     }
 
-    public void Day11Run() throws FileNotFoundException {
-        System.out.println("\n--- Day 9: Mirage Maintenance ---\n");
+    @SuppressWarnings("java:S100")
+    public static void day11Run() throws FileNotFoundException {
+        logOutput(LogLevel.INFO, true, "\n--- Day 11: Cosmic Expansion ---\n");
 
         String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day11/input.txt";
 
-        long partOneAnswer = part1(input);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        Day11 day11 = new Day11();
+        long partOneAnswer = day11.part1(input);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         long expansionFactor = 1000000;
-        long partTwoAnswer = part2(input, expansionFactor);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        long partTwoAnswer = day11.part2(input, expansionFactor);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
+    @SuppressWarnings("unused")
     public long part1(String filePath) throws FileNotFoundException {
         processFile(filePath);
 
@@ -55,7 +69,7 @@ public class Day11 {
         findGalaxies();
         findAllGalaxyPairs();
 
-        if (DEBUGGING) {
+        if (ENABLE_DEBUG_LOGGING) {
             printGrid();
         }
 
@@ -66,6 +80,7 @@ public class Day11 {
         return sumOfShortestDistances;
     }
 
+    @SuppressWarnings("unused")
     public long part2(String filePath, long expansionFactor) throws FileNotFoundException {
         processFile(filePath);
 
@@ -149,17 +164,12 @@ public class Day11 {
     }
 
     private boolean areAllCharactersTheSame(ArrayList<Character> characterList) {
-        boolean allSame = false;
-        for (int i = 0; i < characterList.size(); i++) {
-            if (i == 0) {
-                allSame = true;
-            } else {
-                if (characterList.get(i) != characterList.get(i - 1)) {
-                    allSame = false;
-                }
-            }
+        if (characterList.isEmpty()) {
+            return true;
         }
-        return allSame;
+
+        Character firstChar = characterList.getFirst();
+        return characterList.stream().allMatch(c -> c.equals(firstChar));
     }
 
     private void ifGalaxyAddToGalaxies(long xGridValue, long yGridValue, Character character) {
@@ -176,13 +186,12 @@ public class Day11 {
         for (int y = 0; y < characterArrayList.size(); y++) {
             ArrayList<Character> characterList = new ArrayList<>();
 
-            boolean allSame = false;
             for (char c : characterArrayList.get(y)) {
                 characterList.add(c);
             }
 
             nextCharacterArrayList.add(characterList);
-            allSame = areAllCharactersTheSame(characterList);
+            boolean allSame = areAllCharactersTheSame(characterList);
 
             if (allSame) {
                 rowsToExpand.add(y);
@@ -211,23 +220,23 @@ public class Day11 {
     }
 
     private void findGalaxies() {
-        int galaxyId = 1;
+        int localGalaxyId = 1;
         for (int y = 0; y < nextCharacterArrayList.size(); y++) {
             for (int x = 0; x < nextCharacterArrayList.get(y).size(); x++) {
                 if (map.get(new Point(x, y)) == '#') {
-                    Galaxy galaxy = new Galaxy(galaxyId, new Point(x, y));
+                    Galaxy galaxy = new Galaxy(localGalaxyId, new Point(x, y));
                     galaxies.addGalaxy(galaxy);
-                    galaxyId++;
+                    localGalaxyId++;
                 }
             }
         }
     }
 
     private void findAllGalaxyPairs() {
-        for (int galaxyId = 1; galaxyId <= galaxies.getGalaxyList().size(); galaxyId++) {
-            Galaxy galaxy1 = galaxies.getGalaxyById(galaxyId);
+        for (int localGalaxyId = 1; localGalaxyId <= galaxies.getGalaxyList().size(); localGalaxyId++) {
+            Galaxy galaxy1 = galaxies.getGalaxyById(localGalaxyId);
 
-            for (int galaxyId2 = galaxyId + 1;
+            for (int galaxyId2 = localGalaxyId + 1;
                     galaxyId2 <= galaxies.getGalaxyList().size();
                     galaxyId2++) {
                 Galaxy galaxy2 = galaxies.getGalaxyById(galaxyId2);
@@ -241,7 +250,6 @@ public class Day11 {
     }
 
     private int calculateShortestDistanceBetweenTwoGalaxies(Galaxy galaxy1, Galaxy galaxy2) {
-        //    return calculateShortestDistanceBetweenTwoPoints(galaxy1.getLocation(), galaxy2.getLocation());
         return calculateShortestDistanceBetweenTwoPoints(galaxy1.location(), galaxy2.location());
     }
 
@@ -253,31 +261,34 @@ public class Day11 {
     }
 
     private void printGrid() {
-        System.out.println("Original Universe:\n\n");
+        logOutput(LogLevel.INFO, true, "Original Universe:\n");
 
         for (char[] line : characterArrayList) {
+            StringBuilder lineBuilder = new StringBuilder();
             for (char c : line) {
-                System.out.print(c);
+                lineBuilder.append(c);
             }
-            System.out.println();
+            logOutput(LogLevel.INFO, true, lineBuilder.toString());
         }
 
-        System.out.println("\n\nExpanded Universe:\n\n");
+        logOutput(LogLevel.INFO, true, "\nExpanded Universe:\n");
 
         for (ArrayList<Character> line : nextCharacterArrayList) {
+            StringBuilder lineBuilder = new StringBuilder();
             for (Character character : line) {
-                System.out.print(character);
+                lineBuilder.append(character);
             }
-            System.out.println();
+            logOutput(LogLevel.INFO, true, lineBuilder.toString());
         }
 
-        System.out.println("\n\nGrid:\n\n");
+        logOutput(LogLevel.INFO, true, "\nGrid:\n");
 
         for (int y = 0; y < nextCharacterArrayList.size(); y++) {
+            StringBuilder lineBuilder = new StringBuilder();
             for (int x = 0; x < nextCharacterArrayList.get(y).size(); x++) {
-                System.out.print(map.get(new Point(x, y)));
+                lineBuilder.append(map.get(new Point(x, y)));
             }
-            System.out.println();
+            logOutput(LogLevel.INFO, true, lineBuilder.toString());
         }
     }
 

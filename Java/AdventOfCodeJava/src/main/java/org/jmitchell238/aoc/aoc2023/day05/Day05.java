@@ -65,7 +65,7 @@ public class Day05 {
     private String seedsLineForPart2 = null;
 
     @SuppressWarnings("unused")
-    public void main(String[] args) throws FileNotFoundException {
+    void main(String[] args) throws FileNotFoundException {
         runDay05();
     }
 

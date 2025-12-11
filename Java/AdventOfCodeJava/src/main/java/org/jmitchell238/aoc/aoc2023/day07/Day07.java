@@ -1,16 +1,26 @@
 package org.jmitchell238.aoc.aoc2023.day07;
 
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
+@SuppressWarnings({"java:S106", "java:S1118", "java:S1940", "java:S2589", "java:S100", "java:S3776", "java:S127"})
 public class Day07 {
-    private static final Boolean DEBUGGING = false;
-    private static final Boolean VERBOSE = false;
+    // Configuration flags
+    @SuppressWarnings("ConstantConditions")
+    private static final boolean ENABLE_DEBUG_LOGGING = false;
+
+    @SuppressWarnings({"ConstantConditions", "unused"})
+    private static final boolean ENABLE_VERBOSE_LOGGING = false;
+
     private static final TreeMap<char[], Integer> fiveOfAKind = new TreeMap<>(new ArrayComparator());
     private static final TreeMap<char[], Integer> fourOfAKind = new TreeMap<>(new ArrayComparator());
     private static final TreeMap<char[], Integer> fullHouse = new TreeMap<>(new ArrayComparator());
@@ -19,7 +29,7 @@ public class Day07 {
     private static final TreeMap<char[], Integer> onePair = new TreeMap<>(new ArrayComparator());
     private static final TreeMap<char[], Integer> highCard = new TreeMap<>(new ArrayComparator());
 
-    private Boolean isPart1 = true;
+    private boolean isPart1 = true;
 
     private static final Map<Character, Integer> cardValues = new HashMap<>();
 
@@ -49,8 +59,10 @@ public class Day07 {
         cardValues.remove('J');
     }
 
-    public void main(String[] args) throws FileNotFoundException {
-        Day07Run();
+    // Java 25-friendly main; suppress unused args
+    @SuppressWarnings({"unused", "java:S1172"})
+    public static void main(String[] args) {
+        new Day07().runDay07();
     }
 
     public boolean getIsPart1() {
@@ -61,17 +73,16 @@ public class Day07 {
         this.isPart1 = isPart1;
     }
 
-    public void Day07Run() throws FileNotFoundException {
-        System.out.println("\n--- Day 7: Camel Cards ---\n");
+    public void runDay07() {
+        logOutput(LogLevel.INFO, true, "\n--- Day 7: Camel Cards ---\n");
 
-        String input = "src/main/java/org/jmitchell238/aoc/aoc2023/day07/input.txt";
         String inputTest = "src/main/java/org/jmitchell238/aoc/aoc2023/day07/input_test.txt";
 
         long partOneAnswer = part1(inputTest);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         long partTwoAnswer = part2(inputTest);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
     public long part1(String filePath) {
@@ -93,41 +104,52 @@ public class Day07 {
     }
 
     private void processInput(String filePath) {
-        try {
-            Scanner scanner = new Scanner(new File(filePath));
-
+        try (Scanner scanner = new Scanner(new File(filePath))) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if (DEBUGGING) System.out.println(line);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, line);
 
                 String[] lineSplit = line.split(" ");
-                if (DEBUGGING) System.out.print("Hand: " + lineSplit[0] + " | Bid: " + lineSplit[1] + " | \n");
+                logOutput(
+                        LogLevel.DEBUG,
+                        ENABLE_DEBUG_LOGGING,
+                        "Hand: " + lineSplit[0] + " | Bid: " + lineSplit[1] + " | ");
 
-                char[] hand = new char[5];
-                for (int i = 0; i < 5; i++) {
-                    hand[i] = lineSplit[0].charAt(i);
-                }
+                char[] hand = parseHandFromString(lineSplit[0]);
 
-                if (DEBUGGING) {
-                    for (int i = 0; i < 5; i++) {
-                        System.out.print(hand[i]);
-                        if (i < 4) System.out.print(", ");
-                        if (i == 4) System.out.println();
-                    }
-                }
+                // Directly log; logOutput respects ENABLE_DEBUG_LOGGING
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, formatHandForLog(hand));
 
                 int handValue = Integer.parseInt(lineSplit[1]);
-                if (DEBUGGING) System.out.println(handValue);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, Integer.toString(handValue));
 
                 String type = getHandType(hand);
 
                 addHandToMap(hand, handValue, type);
             }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found, " + filePath);
-            e.printStackTrace();
+        } catch (FileNotFoundException _) {
+            String errorMessage = "File not found, " + filePath;
+            logOutput(LogLevel.ERROR, true, errorMessage);
         }
+    }
+
+    // Helper: parse a 5-card hand from string
+    private static char[] parseHandFromString(String handString) {
+        char[] hand = new char[5];
+        for (int i = 0; i < 5; i++) {
+            hand[i] = handString.charAt(i);
+        }
+        return hand;
+    }
+
+    // Helper: format hand for debug logging
+    private static String formatHandForLog(char[] hand) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < hand.length; i++) {
+            sb.append(hand[i]);
+            if (i < hand.length - 1) sb.append(", ");
+        }
+        return sb.toString();
     }
 
     private Map<Character, Integer> countOccurrences(char[] hand) {
@@ -148,25 +170,28 @@ public class Day07 {
                 cardCountMap.remove('J');
 
                 int highestCardCount =
-                        cardCountMap.values().stream().max(Integer::compare).get();
-                char highestCardCountKey;
-                if (highestCardCount == 1) {
-                    highestCardCountKey = cardCountMap.keySet().stream()
-                            .max(Comparator.comparingInt(cardValues::get))
-                            .get();
-                    cardCountMap.put(highestCardCountKey, cardCountMap.get(highestCardCountKey) + jokerCount);
-                } else {
-                    highestCardCountKey = cardCountMap.entrySet().stream()
-                            .filter(entry -> entry.getValue() == highestCardCount)
-                            .findFirst()
-                            .get()
-                            .getKey();
-                    cardCountMap.put(highestCardCountKey, cardCountMap.get(highestCardCountKey) + jokerCount);
-                }
+                        cardCountMap.values().stream().max(Integer::compare).orElse(0);
+                char highestCardCountKey = resolveHighestCardKey(cardCountMap, highestCardCount);
+                cardCountMap.put(highestCardCountKey, cardCountMap.get(highestCardCountKey) + jokerCount);
             }
         }
 
         return cardCountMap;
+    }
+
+    // Helper: resolve which card to boost by jokerCount
+    private static char resolveHighestCardKey(Map<Character, Integer> cardCountMap, int highestCardCount) {
+        if (highestCardCount == 1) {
+            return cardCountMap.keySet().stream()
+                    .max(java.util.Comparator.comparingInt(cardValues::get))
+                    .orElse('A');
+        } else {
+            return cardCountMap.entrySet().stream()
+                    .filter(entry -> entry.getValue() == highestCardCount)
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElse('A');
+        }
     }
 
     private String getHandType(char[] hand) {
@@ -213,28 +238,26 @@ public class Day07 {
                 highCard.put(hand, handValue);
                 break;
             default:
-                System.out.println("Error: Hand type not found");
+                logOutput(LogLevel.ERROR, true, "Error: Hand type not found");
                 break;
         }
     }
 
     private long getTotalValueFromHands() {
         long totalValue = 0L;
-
         long multiplier = 1L;
-        totalValue += getTotalValueFromHandType(highCard, multiplier);
-        if (!highCard.isEmpty()) multiplier += highCard.size();
-        totalValue += getTotalValueFromHandType(onePair, multiplier);
-        if (!onePair.isEmpty()) multiplier += onePair.size();
-        totalValue += getTotalValueFromHandType(twoPairs, multiplier);
-        if (!twoPairs.isEmpty()) multiplier += twoPairs.size();
-        totalValue += getTotalValueFromHandType(threeOfAKind, multiplier);
-        if (!threeOfAKind.isEmpty()) multiplier += threeOfAKind.size();
-        totalValue += getTotalValueFromHandType(fullHouse, multiplier);
-        if (!fullHouse.isEmpty()) multiplier += fullHouse.size();
-        totalValue += getTotalValueFromHandType(fourOfAKind, multiplier);
-        if (!fourOfAKind.isEmpty()) multiplier += fourOfAKind.size();
-        totalValue += getTotalValueFromHandType(fiveOfAKind, multiplier);
+
+        // Process hand types in ranking order
+        List<TreeMap<char[], Integer>> handTypesInOrder =
+                List.of(highCard, onePair, twoPairs, threeOfAKind, fullHouse, fourOfAKind, fiveOfAKind);
+
+        for (TreeMap<char[], Integer> handType : handTypesInOrder) {
+            totalValue += getTotalValueFromHandType(handType, multiplier);
+            int size = handType.size();
+            if (size > 0) {
+                multiplier += size;
+            }
+        }
 
         return totalValue;
     }
@@ -246,8 +269,8 @@ public class Day07 {
 
         if (handType.isEmpty()) return totalValue;
 
-        for (int i = 0; i < handValues.length; i++) {
-            totalValue += handValues[i] * multiplier;
+        for (long value : handValues) {
+            totalValue += value * multiplier;
             multiplier++;
         }
 
