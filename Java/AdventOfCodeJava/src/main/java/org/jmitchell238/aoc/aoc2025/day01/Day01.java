@@ -1,7 +1,7 @@
 package org.jmitchell238.aoc.aoc2025.day01;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
 import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.readFileAndProcessEachLine;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import org.jmitchell238.aoc.generalutilities.LogLevel;
 
@@ -33,16 +33,16 @@ public class Day01 {
      * Entry point for running both parts against an input file.
      */
     public static void run() {
-        System.out.println("\n--- Day 01: Secret Entrance ---\n");
+        logOutput(LogLevel.INFO, DEBUGGING, "\n--- Day 01: Secret Entrance ---\n");
 
         String input = "src/main/java/org/jmitchell238/aoc/aoc2025/day01/input.txt";
         String inputTest = "src/test/java/org/jmitchell238/aoc/aoc2025/day01/input_test_part1.txt";
 
         int partOneAnswer = part1(input);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         int partTwoAnswer = part2(inputTest);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
     /**
@@ -69,13 +69,13 @@ public class Day01 {
      */
     private static void calculateAnswer(String inputFile) {
         readFileAndProcessEachLine(inputFile, line -> {
-            log(LogLevel.VERBOSE, VERBOSE, "Read line: " + line);
+            logOutput(LogLevel.VERBOSE, VERBOSE, "Read line: " + line);
 
             // Parse a command like "L68" or "R42": first char is direction, rest is distance.
             char direction = line.charAt(0);
             int number = Integer.parseInt(line.substring(1));
 
-            log(LogLevel.DEBUG, DEBUGGING, "Parsed direction: " + direction + ", number: " + number);
+            logOutput(LogLevel.DEBUG, DEBUGGING, "Parsed direction: " + direction + ", number: " + number);
 
             processMove(direction, number);
         });
@@ -85,13 +85,13 @@ public class Day01 {
      * Apply a single movement (e.g., "L68" or "R42") to the dial.
      */
     private static void processMove(char direction, int number) {
-        log(LogLevel.VERBOSE, VERBOSE, "Processing move: " + direction + number);
-        log(LogLevel.VERBOSE, VERBOSE, "Dial before move: " + dialValue);
+        logOutput(LogLevel.VERBOSE, VERBOSE, "Processing move: " + direction + number);
+        logOutput(LogLevel.VERBOSE, VERBOSE, "Dial before move: " + dialValue);
 
         int startValue = dialValue;
         // Subtract for left (L), add for right (R).
         dialValue += (direction == 'L') ? -number : number;
-        log(LogLevel.VERBOSE, VERBOSE, "Dial after move: " + dialValue);
+        logOutput(LogLevel.VERBOSE, VERBOSE, "Dial after move: " + dialValue);
 
         // Part 2: count zero crossings during the raw movement.
         int boundariesCrossed = partTwo ? calculateZeroCrossings(startValue, dialValue) : 0;
@@ -107,7 +107,7 @@ public class Day01 {
      * Count how many times the dial passes through zero during a raw move.
      */
     private static int calculateZeroCrossings(int startValue, int endValue) {
-        log(LogLevel.VERBOSE, VERBOSE, "Calculating boundary crossings for Part 2");
+        logOutput(LogLevel.VERBOSE, VERBOSE, "Calculating boundary crossings for Part 2");
 
         int crossings = 0;
 
@@ -125,7 +125,10 @@ public class Day01 {
             crossings = countHowManyNegativeHundredsCrossed(endValue);
         }
 
-        log(LogLevel.VERBOSE, VERBOSE, "Boundary crossings from " + startValue + " to " + endValue + ": " + crossings);
+        logOutput(
+                LogLevel.VERBOSE,
+                VERBOSE,
+                "Boundary crossings from " + startValue + " to " + endValue + ": " + crossings);
         return crossings;
     }
 
@@ -141,11 +144,11 @@ public class Day01 {
 
         if (dialValue != originalValue) {
             if (originalValue < 0) {
-                log(LogLevel.VERBOSE, VERBOSE, "Dial wrapped around from below 0");
+                logOutput(LogLevel.VERBOSE, VERBOSE, "Dial wrapped around from below 0");
             } else {
-                log(LogLevel.VERBOSE, VERBOSE, "Dial wrapped around from above 100");
+                logOutput(LogLevel.VERBOSE, VERBOSE, "Dial wrapped around from above 100");
             }
-            log(LogLevel.VERBOSE, VERBOSE, "Dial before normalization: " + originalValue);
+            logOutput(LogLevel.VERBOSE, VERBOSE, "Dial before normalization: " + originalValue);
         }
     }
 
@@ -153,21 +156,21 @@ public class Day01 {
      * Update counters for landing on zero and, in Part 2, for crossings.
      */
     private static void checkIfDialIsAtZero(int boundariesCrossed) {
-        log(LogLevel.DEBUG, DEBUGGING, "Checking if dial is at zero: " + dialValue);
+        logOutput(LogLevel.DEBUG, DEBUGGING, "Checking if dial is at zero: " + dialValue);
 
         // Landing on zero after normalization.
         if (dialValue == 0) {
-            log(LogLevel.VERBOSE, VERBOSE, "Dial is at zero! Incrementing counter.");
-            log(LogLevel.DEBUG, DEBUGGING, "Times hitting zero before increment: " + timesHittingZero);
+            logOutput(LogLevel.VERBOSE, VERBOSE, "Dial is at zero! Incrementing counter.");
+            logOutput(LogLevel.DEBUG, DEBUGGING, "Times hitting zero before increment: " + timesHittingZero);
             timesHittingZero++;
-            log(LogLevel.DEBUG, DEBUGGING, "Times hitting zero after increment: " + timesHittingZero);
+            logOutput(LogLevel.DEBUG, DEBUGGING, "Times hitting zero after increment: " + timesHittingZero);
         }
 
         // Part 2: count crossings that occurred during movement.
         if (partTwo && boundariesCrossed > 0) {
-            log(LogLevel.VERBOSE, VERBOSE, "Part 2: Adding " + boundariesCrossed + " boundary crossings");
+            logOutput(LogLevel.VERBOSE, VERBOSE, "Part 2: Adding " + boundariesCrossed + " boundary crossings");
             timesHittingZero += boundariesCrossed;
-            log(LogLevel.DEBUG, DEBUGGING, "Total after adding boundary crossings: " + timesHittingZero);
+            logOutput(LogLevel.DEBUG, DEBUGGING, "Total after adding boundary crossings: " + timesHittingZero);
         }
     }
 

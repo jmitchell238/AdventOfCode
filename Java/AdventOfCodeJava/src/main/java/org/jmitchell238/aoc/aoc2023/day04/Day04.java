@@ -2,7 +2,8 @@ package org.jmitchell238.aoc.aoc2023.day04;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toCollection;
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logException;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,16 +43,16 @@ public class Day04 {
      * Entry point for Day 4 solution.
      */
     public void runDay04() {
-        System.out.println("\n--- Day 4: Scratchcards ---\n");
+        logOutput(LogLevel.INFO, true, "\n--- Day 4: Scratchcards ---\n");
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input.txt";
         String testInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day04/input_test.txt";
 
         int partOneAnswer = solvePart1(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         int partTwoAnswer = solvePart2(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
     /**
@@ -69,7 +70,7 @@ public class Day04 {
                 String currentLine = fileScanner.nextLine();
                 parsedScratchcards.add(new ArrayList<>(Arrays.asList(currentLine.split(CARD_SEPARATOR_REGEX))));
 
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
             }
             fileScanner.close();
 
@@ -83,18 +84,19 @@ public class Day04 {
                 logScratchcardAnalysisIfDebug(scratchcardData, winningNumbers, playerNumbers, matchingNumbers);
 
                 int cardPoints = calculateCardPoints(matchingNumbers);
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Card points: " + cardPoints);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Card points: " + cardPoints);
 
                 totalScratchcardPoints += cardPoints;
             }
 
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total scratchcard points: " + totalScratchcardPoints);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total scratchcard points: " + totalScratchcardPoints);
             return totalScratchcardPoints;
 
         } catch (FileNotFoundException fileNotFound) {
             String errorMessage = "Input file not found: " + inputFilePath;
-            System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
+            logOutput(LogLevel.ERROR, true, errorMessage);
+            logException(fileNotFound);
             throw new RuntimeException(fileNotFound);
         }
     }
@@ -118,7 +120,7 @@ public class Day04 {
                 cardData.add(new ArrayList<>(Arrays.asList(currentLine.split(CARD_SEPARATOR_REGEX))));
                 scratchcardsWithCopies.add(new ScratchcardWithCount(1, cardData));
 
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
             }
             fileScanner.close();
 
@@ -130,13 +132,14 @@ public class Day04 {
 
             totalScratchcardCount = calculateTotalScratchcardCount(scratchcardsWithCopies);
 
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Final total scratchcard count: " + totalScratchcardCount);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Final total scratchcard count: " + totalScratchcardCount);
             return totalScratchcardCount;
 
         } catch (FileNotFoundException fileNotFound) {
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
             String errorMessage = "Input file not found: " + inputFilePath;
-            System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
+            logOutput(LogLevel.ERROR, true, errorMessage);
+            logException(fileNotFound);
             throw new RuntimeException(fileNotFound);
         }
     }
@@ -171,7 +174,7 @@ public class Day04 {
                 }
             }
 
-            log(
+            logOutput(
                     LogLevel.DEBUG,
                     ENABLE_DEBUG_LOGGING,
                     "Card " + (cardIndex + 1) + " had " + matchingNumbers.size() + " matches, " + "current copies: "
@@ -253,7 +256,7 @@ public class Day04 {
     private static void logParsedScratchcardsIfVerbose(ArrayList<ArrayList<String>> parsedScratchcards) {
         if (ENABLE_VERBOSE_LOGGING) {
             for (ArrayList<String> scratchcardData : parsedScratchcards) {
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Parsed scratchcard: " + scratchcardData);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Parsed scratchcard: " + scratchcardData);
             }
         }
     }
@@ -267,10 +270,10 @@ public class Day04 {
             ArrayList<Integer> playerNumbers,
             ArrayList<Integer> matchingNumbers) {
         if (ENABLE_DEBUG_LOGGING) {
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "\n" + scratchcardData.get(0) + ":");
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Winning Numbers: " + winningNumbers);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Player Numbers: " + playerNumbers);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Matching Numbers: " + matchingNumbers);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "\n" + scratchcardData.get(0) + ":");
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Winning Numbers: " + winningNumbers);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Player Numbers: " + playerNumbers);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Matching Numbers: " + matchingNumbers);
         }
     }
 
@@ -280,9 +283,9 @@ public class Day04 {
     private static void logScratchcardCountsIfDebug(
             ArrayList<ScratchcardWithCount> scratchcardsWithCopies, String phase) {
         if (ENABLE_DEBUG_LOGGING) {
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "\n" + phase + " card counts:");
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "\n" + phase + " card counts:");
             for (int i = 0; i < scratchcardsWithCopies.size(); i++) {
-                log(
+                logOutput(
                         LogLevel.DEBUG,
                         ENABLE_DEBUG_LOGGING,
                         "Card " + (i + 1) + " copies: "

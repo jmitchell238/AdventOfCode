@@ -1,7 +1,10 @@
 package org.jmitchell238.aoc.aoc2023.day12;
 
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
+
 import java.util.ArrayList;
 import lombok.Data;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
 @Data
 public class SpringConditionRecord {
@@ -23,10 +26,15 @@ public class SpringConditionRecord {
     }
 
     public void printRecordConditions() {
-        System.out.print("Unknown Section: " + unknownSection + "  -  ");
-        System.out.println("Numbered Section: " + numberedSection);
+        logOutput(
+                LogLevel.INFO,
+                true,
+                "Unknown Section: " + unknownSection + "  -  Numbered Section: " + numberedSection);
+
         for (SpringAndStatus springAndStatus : springsAndStatuses) {
-            System.out.println(
+            logOutput(
+                    LogLevel.INFO,
+                    true,
                     "Spring: " + springAndStatus.getSpring() + "  -  Status: " + springAndStatus.getSpringStatus());
         }
     }

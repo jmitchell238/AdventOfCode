@@ -1,5 +1,7 @@
 package org.jmitchell238.aoc.generalutilities;
 
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
+
 import java.awt.Point;
 import java.util.AbstractMap;
 import java.util.ArrayDeque;
@@ -954,12 +956,12 @@ public class Utilities {
      * Prints all numbers within a range that consist of exactly two repeated halves.
      */
     public static void printExactlyTwoRepeatsInRange(Long rangeStart, Long rangeEnd) {
-        Long lowerBound = Math.min(rangeStart, rangeEnd);
-        Long upperBound = Math.max(rangeStart, rangeEnd);
+        long lowerBound = Math.min(rangeStart, rangeEnd);
+        long upperBound = Math.max(rangeStart, rangeEnd);
 
-        for (Long currentNumber = lowerBound; currentNumber <= upperBound; currentNumber++) {
+        for (long currentNumber = lowerBound; currentNumber <= upperBound; currentNumber++) {
             if (isExactlyTwoRepeats(currentNumber)) {
-                System.out.println(currentNumber);
+                logOutput(LogLevel.INFO, true, Long.toString(currentNumber));
             }
         }
     }

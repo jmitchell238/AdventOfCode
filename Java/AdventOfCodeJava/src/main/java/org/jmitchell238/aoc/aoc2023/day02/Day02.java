@@ -1,6 +1,6 @@
 package org.jmitchell238.aoc.aoc2023.day02;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,16 +36,16 @@ public class Day02 {
     private static final String COLOR_BLUE = "blue";
 
     public static void runDay02() {
-        System.out.println("\n--- Day 2: Cube Conundrum ---\n");
+        logOutput(LogLevel.INFO, true, "\n--- Day 2: Cube Conundrum ---\n");
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day02/input.txt";
         String testInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day02/input_test.txt";
 
         int partOneAnswer = solvePart1(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 1: Answer: Possible set ID's sum = " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: Possible set ID's sum = " + partOneAnswer);
 
         int partTwoAnswer = solvePart2(testInputFilePath);
-        log(LogLevel.INFO, true, "Part 2: Answer: Power of each set minimum cubes sum = " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: Power of each set minimum cubes sum = " + partTwoAnswer);
     }
 
     /**
@@ -61,11 +61,11 @@ public class Day02 {
         try (Scanner fileScanner = new Scanner(inputFile)) {
             while (fileScanner.hasNextLine()) {
                 String currentLine = fileScanner.nextLine();
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
                 String[] lineParts = currentLine.split(":");
                 Integer gameId = Integer.parseInt(lineParts[0].split(" ")[1]);
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Checking game ID: " + gameId);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Checking game ID: " + gameId);
 
                 String[] cubeSets = lineParts[1].split(";");
                 boolean isGamePossible = true;
@@ -73,24 +73,22 @@ public class Day02 {
                 for (String cubeSet : cubeSets) {
                     if (!isCubeSetPossible(cubeSet, maximumCubesByColor)) {
                         isGamePossible = false;
-                        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameId + " is not possible");
+                        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameId + " is not possible");
                         break;
                     }
                 }
 
                 if (isGamePossible) {
                     possibleGameIds.add(gameId);
-                    log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameId + " is possible");
+                    logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameId + " is possible");
                 }
             }
-        } catch (FileNotFoundException fileNotFound) {
-            String errorMessage = "Input file not found: " + inputFile.getPath();
-            System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
+        } catch (FileNotFoundException _) {
+            logOutput(LogLevel.ERROR, true, "Input file not found: " + inputFilePath);
         }
 
         int totalSum = possibleGameIds.stream().mapToInt(Integer::intValue).sum();
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total sum of possible games: " + totalSum);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total sum of possible games: " + totalSum);
         return totalSum;
     }
 
@@ -104,27 +102,25 @@ public class Day02 {
         try (Scanner fileScanner = new Scanner(inputFile)) {
             while (fileScanner.hasNextLine()) {
                 String currentLine = fileScanner.nextLine();
-                log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
+                logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Processing line: " + currentLine);
 
                 String[] cubeSets = currentLine.split(":")[1].split(";");
                 int gameRound = Integer.parseInt(currentLine.split(":")[0].split(" ")[1]);
 
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Processing round: " + gameRound);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Processing round: " + gameRound);
 
                 Map<String, Integer> minimumCubesRequired = calculateMinimumCubesForGame(cubeSets);
                 int gamePower = calculateGamePower(minimumCubesRequired);
 
                 gamePowers.add(gamePower);
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameRound + " power: " + gamePower);
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, GAME_PREFIX + gameRound + " power: " + gamePower);
             }
-        } catch (FileNotFoundException fileNotFound) {
-            String errorMessage = "Input file not found: " + inputFile.getPath();
-            System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
+        } catch (FileNotFoundException _) {
+            logOutput(LogLevel.ERROR, true, "Input file not found: " + inputFilePath);
         }
 
         int totalPowerSum = gamePowers.stream().mapToInt(Integer::intValue).sum();
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total power sum: " + totalPowerSum);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total power sum: " + totalPowerSum);
         return totalPowerSum;
     }
 
@@ -146,7 +142,7 @@ public class Day02 {
             int maximumAllowedForColor = maximumCubesByColor.get(cubeColor);
 
             if (currentColorAmount > maximumAllowedForColor) {
-                log(
+                logOutput(
                         LogLevel.VERBOSE,
                         ENABLE_VERBOSE_LOGGING,
                         "Cube set impossible: " + cubeColor + " has " + currentColorAmount + " but max allowed is "
@@ -184,7 +180,7 @@ public class Day02 {
                     Math.max(currentMinimum, cubesInCurrentSet.getOrDefault(colorKey, currentMinimum)));
         }
 
-        log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Minimum cubes required: " + minimumCubesRequired);
+        logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Minimum cubes required: " + minimumCubesRequired);
         return minimumCubesRequired;
     }
 
@@ -194,7 +190,7 @@ public class Day02 {
     private static int calculateGamePower(Map<String, Integer> minimumCubesRequired) {
         int gamePower =
                 minimumCubesRequired.values().stream().reduce(1, (accumulator, cubeAmount) -> accumulator * cubeAmount);
-        log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Calculated game power: " + gamePower);
+        logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Calculated game power: " + gamePower);
         return gamePower;
     }
 

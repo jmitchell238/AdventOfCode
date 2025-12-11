@@ -1,6 +1,9 @@
 package org.jmitchell238.aoc.aoc2023.day12;
 
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
+
 import lombok.Getter;
+import org.jmitchell238.aoc.generalutilities.LogLevel;
 
 @Getter
 public enum SpringStatus {
@@ -28,6 +31,7 @@ public enum SpringStatus {
         char inputChar = '#';
 
         SpringStatus springStatus = SpringStatus.fromChar(inputChar);
-        System.out.println("Char '" + inputChar + "' maps to: " + springStatus);
+        String whatToOutput = "Char '" + inputChar + "' maps to: " + springStatus;
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + whatToOutput);
     }
 }

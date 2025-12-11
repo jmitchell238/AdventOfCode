@@ -1,7 +1,7 @@
 package org.jmitchell238.aoc.aoc2025.day02;
 
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
 import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.readFileAndProcessEachLine;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 import static org.jmitchell238.aoc.generalutilities.Utilities.isExactlyTwoRepeats;
 import static org.jmitchell238.aoc.generalutilities.Utilities.isRepeatedMultipleTimes;
 
@@ -43,16 +43,16 @@ public class Day02 {
     }
 
     public static void run() {
-        System.out.println("\n--- Day 02: Gift Shop ---\n");
+        logOutput(LogLevel.INFO, true, "\n--- Day 02: Gift Shop ---\n");
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2025/day02/input.txt";
         String testInputFilePath = "src/test/java/org/jmitchell238/aoc/aoc2025/day02/input_test_part1.txt";
 
         Long partOneAnswer = part1(actualInputFilePath);
-        System.out.println("Part 1: Answer: " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: " + partOneAnswer);
 
         Long partTwoAnswer = part2(testInputFilePath);
-        System.out.println("Part 2: Answer: " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: " + partTwoAnswer);
     }
 
     /**
@@ -93,7 +93,7 @@ public class Day02 {
      */
     private static void calculateAnswer(String inputFilePath) {
         readFileAndProcessEachLine(inputFilePath, inputLine -> {
-            log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Read line: " + inputLine);
+            logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Read line: " + inputLine);
 
             if (inputLine == null || inputLine.isBlank()) {
                 return;
@@ -102,10 +102,10 @@ public class Day02 {
             List<Long[]> rangesToProcess = parseInputLineIntoRanges(inputLine);
 
             if (isProcessingPartTwo) {
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "PART 2: Processing ranges for two or more repeats...");
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "PART 2: Processing ranges for two or more repeats...");
                 processRangesForMultipleRepeats(rangesToProcess);
             } else {
-                log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "PART 1: Processing ranges for exactly two repeats...");
+                logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "PART 1: Processing ranges for exactly two repeats...");
                 processRangesForExactlyTwoRepeats(rangesToProcess);
             }
         });
@@ -154,7 +154,7 @@ public class Day02 {
     private static Long[] parseIndividualRangeSegment(String rangeSegment) {
         int dashPosition = rangeSegment.indexOf('-');
         if (dashPosition <= 0 || dashPosition >= rangeSegment.length() - 1) {
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Ignoring malformed range: " + rangeSegment);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Ignoring malformed range: " + rangeSegment);
             return new Long[0];
         }
 
@@ -173,7 +173,7 @@ public class Day02 {
 
             return new Long[] {rangeStart, rangeEnd};
         } catch (NumberFormatException _) {
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Ignoring non-numeric range: " + rangeSegment);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Ignoring non-numeric range: " + rangeSegment);
             return new Long[0];
         }
     }
@@ -198,7 +198,7 @@ public class Day02 {
                     incrementExistingCount(numberToCheck);
                 } else if (isExactlyTwoRepeats(digitString)) {
                     addNewInvalidId(numberToCheck);
-                    System.out.println(numberToCheck);
+                    logOutput(LogLevel.INFO, true, numberToCheck.toString());
                 }
             }
         }
@@ -224,7 +224,7 @@ public class Day02 {
                     incrementExistingCount(numberToCheck);
                 } else if (isRepeatedMultipleTimes(digitString)) {
                     addNewInvalidId(numberToCheck);
-                    System.out.println(numberToCheck);
+                    logOutput(LogLevel.INFO, true, numberToCheck.toString());
                 }
             }
         }
@@ -258,7 +258,7 @@ public class Day02 {
         Long currentCount = invalidIdCounts.get(numberToCheck);
         Long newCount = currentCount + 1;
         invalidIdCounts.put(numberToCheck, newCount);
-        log(
+        logOutput(
                 LogLevel.VERBOSE,
                 ENABLE_VERBOSE_LOGGING,
                 "Seen before (incremented): " + numberToCheck + " -> " + newCount);
@@ -269,23 +269,26 @@ public class Day02 {
      */
     private static void addNewInvalidId(Long numberToCheck) {
         invalidIdCounts.put(numberToCheck, 1L);
-        log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Repeating (added): " + numberToCheck);
+        logOutput(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Repeating (added): " + numberToCheck);
     }
 
     /**
      * Calculates the final total by summing all invalid IDs multiplied by their counts.
      */
     private static void calculateFinalTotal() {
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Calculating total of all invalid IDs from tracking map...");
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Calculating total of all invalid IDs from tracking map...");
 
         for (Map.Entry<Long, Long> idEntry : invalidIdCounts.entrySet()) {
             Long invalidId = idEntry.getKey();
             Long occurrenceCount = idEntry.getValue();
             sumTotalOfAllInvalidIds += invalidId * occurrenceCount;
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Adding " + invalidId + " * " + occurrenceCount + " to total.");
+            logOutput(
+                    LogLevel.DEBUG,
+                    ENABLE_DEBUG_LOGGING,
+                    "Adding " + invalidId + " * " + occurrenceCount + " to total.");
         }
 
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total of all invalid IDs: " + sumTotalOfAllInvalidIds);
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total of all invalid IDs: " + sumTotalOfAllInvalidIds);
     }
 
     /**
@@ -293,9 +296,9 @@ public class Day02 {
      */
     private static void printSummaryIfVerboseEnabled() {
         if (ENABLE_VERBOSE_LOGGING) {
-            log(LogLevel.VERBOSE, true, "Summary of repeating numbers:");
+            logOutput(LogLevel.VERBOSE, true, "Summary of repeating numbers:");
             for (Map.Entry<Long, Long> idEntry : invalidIdCounts.entrySet()) {
-                log(LogLevel.VERBOSE, true, idEntry.getKey() + " -> count " + idEntry.getValue());
+                logOutput(LogLevel.VERBOSE, true, idEntry.getKey() + " -> count " + idEntry.getValue());
             }
         }
     }

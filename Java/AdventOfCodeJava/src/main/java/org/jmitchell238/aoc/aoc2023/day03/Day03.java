@@ -1,8 +1,7 @@
 package org.jmitchell238.aoc.aoc2023.day03;
 
 import static java.lang.Character.isDigit;
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.log;
-import static org.jmitchell238.aoc.aoc2025.utilities.Utilities2025.logError;
+import static org.jmitchell238.aoc.generalutilities.LogHelper.logOutput;
 
 import java.awt.Point;
 import java.io.File;
@@ -59,15 +58,15 @@ public class Day03 {
      * Entry point for Day 3 solution.
      */
     public static void runDay03() throws FileNotFoundException {
-        System.out.println("\n--- Day 03: Gear Ratios ---\n");
+        logOutput(LogLevel.INFO, true, "\n--- Day 03: Gear Ratios ---\n");
 
         String actualInputFilePath = "src/main/java/org/jmitchell238/aoc/aoc2023/day03/input.txt";
 
         Long partOneAnswer = solvePart1(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 1: Answer: Part Number Sum = " + partOneAnswer);
+        logOutput(LogLevel.INFO, true, "Part 1: Answer: Part Number Sum = " + partOneAnswer);
 
         Long partTwoAnswer = solvePart2(actualInputFilePath);
-        log(LogLevel.INFO, true, "Part 2: Answer: Gear Ratio Sum = " + partTwoAnswer);
+        logOutput(LogLevel.INFO, true, "Part 2: Answer: Gear Ratio Sum = " + partTwoAnswer);
     }
 
     /**
@@ -85,13 +84,13 @@ public class Day03 {
 
             partNumberSum = calculatePartNumberSum(engineSchematic, partNumberSum);
 
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part Number Sum: " + partNumberSum);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Part Number Sum: " + partNumberSum);
 
             return partNumberSum;
         } catch (FileNotFoundException fileNotFound) {
             String errorMessage = "Input file not found: " + inputFilePath;
-            logError(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
+            logOutput(LogLevel.ERROR, true, errorMessage);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
             return -1L;
         }
     }
@@ -139,7 +138,7 @@ public class Day03 {
             for (Point gearPosition : gearToPartNumbersMap.keySet()) {
                 ArrayList<Long> adjacentPartNumbers = gearToPartNumbersMap.get(gearPosition);
 
-                log(
+                logOutput(
                         LogLevel.DEBUG,
                         ENABLE_DEBUG_LOGGING,
                         "Gear at " + gearPosition + " has adjacent part numbers: " + adjacentPartNumbers);
@@ -148,17 +147,15 @@ public class Day03 {
                     long gearRatio = adjacentPartNumbers.get(0) * adjacentPartNumbers.get(1);
                     totalGearRatioSum += gearRatio;
 
-                    log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Valid gear found! Ratio: " + gearRatio);
+                    logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Valid gear found! Ratio: " + gearRatio);
                 }
             }
 
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total Gear Ratio Sum: " + totalGearRatioSum);
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Total Gear Ratio Sum: " + totalGearRatioSum);
 
             return totalGearRatioSum;
-        } catch (FileNotFoundException fileNotFound) {
-            String errorMessage = "Input file not found: " + inputFilePath;
-            System.err.println(errorMessage);
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "FileNotFoundException: " + fileNotFound.getMessage());
+        } catch (FileNotFoundException _) {
+            logOutput(LogLevel.ERROR, true, "Input file not found: " + inputFilePath);
             return -1L;
         }
     }
@@ -188,7 +185,10 @@ public class Day03 {
                         }
                     }
 
-                    log(LogLevel.VERBOSE, ENABLE_VERBOSE_LOGGING, "Found potential part number: " + partNumberBuilder);
+                    logOutput(
+                            LogLevel.VERBOSE,
+                            ENABLE_VERBOSE_LOGGING,
+                            "Found potential part number: " + partNumberBuilder);
 
                     String partNumberString = partNumberBuilder.toString();
                     partNumberValue = Long.parseLong(partNumberString);
@@ -196,7 +196,7 @@ public class Day03 {
 
                     if (isPartNumberValid(currentPosition, partNumberLength)) {
                         currentPartNumberSum += partNumberValue;
-                        log(
+                        logOutput(
                                 LogLevel.DEBUG,
                                 ENABLE_DEBUG_LOGGING,
                                 "Valid part number: " + partNumberValue + " (sum now: " + currentPartNumberSum + ")");
@@ -236,7 +236,7 @@ public class Day03 {
             char rightCharacter = gridCoordinateMap.get(rightPosition);
             return rightCharacter != EMPTY_SYMBOL && !isDigit(rightCharacter);
         } catch (Exception _) {
-            log(
+            logOutput(
                     LogLevel.VERBOSE,
                     ENABLE_VERBOSE_LOGGING,
                     "Part number is at the end of the line at position: " + startPosition);
@@ -384,7 +384,7 @@ public class Day03 {
 
                 if (currentCharacter == GEAR_SYMBOL) {
                     gearCandidatePositions.add(currentPosition);
-                    log(
+                    logOutput(
                             LogLevel.DEBUG,
                             ENABLE_DEBUG_LOGGING,
                             "Found gear candidate at: " + columnIndex + ", " + rowIndex);
@@ -447,7 +447,7 @@ public class Day03 {
                         partNumberLocationMap.put(partNumberValue, partNumberCoordinatesList);
                     }
 
-                    log(
+                    logOutput(
                             LogLevel.VERBOSE,
                             ENABLE_VERBOSE_LOGGING,
                             "Mapped part number: " + partNumberBuilder + " at coordinates: " + partNumberCoordinates);
@@ -464,7 +464,7 @@ public class Day03 {
      * Logs the coordinate map to console for debugging.
      */
     private static void logGridToConsole(Map<Point, Character> coordinateMap, int gridHeight, int gridWidth) {
-        log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Grid layout:");
+        logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, "Grid layout:");
 
         for (int rowIndex = -1; rowIndex <= gridHeight; rowIndex++) {
             StringBuilder rowBuilder = new StringBuilder();
@@ -473,7 +473,7 @@ public class Day03 {
                 Character currentCharacter = coordinateMap.get(currentPosition);
                 rowBuilder.append(currentCharacter);
             }
-            log(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, rowBuilder.toString());
+            logOutput(LogLevel.DEBUG, ENABLE_DEBUG_LOGGING, rowBuilder.toString());
         }
     }
 
@@ -485,7 +485,7 @@ public class Day03 {
             for (int columnIndex = -1; columnIndex <= gridWidth; columnIndex++) {
                 Point currentPosition = new Point(columnIndex, rowIndex);
                 Character currentCharacter = coordinateMap.get(currentPosition);
-                log(
+                logOutput(
                         LogLevel.VERBOSE,
                         ENABLE_VERBOSE_LOGGING,
                         String.format("Coordinate (%d,%d) = %c", columnIndex, rowIndex, currentCharacter));

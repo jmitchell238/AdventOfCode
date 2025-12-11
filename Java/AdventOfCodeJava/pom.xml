@@ -40,6 +40,8 @@
     <mug.version>7.0</mug.version>
     <htmlcleaner.version>2.29</htmlcleaner.version>
     <versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
+    <logback-classic.version>1.5.21</logback-classic.version>
+    <slf4j-api.version>2.0.17</slf4j-api.version>
   </properties>
 
   <parent>
@@ -133,6 +135,18 @@
       <groupId>net.sourceforge.htmlcleaner</groupId>
       <artifactId>htmlcleaner</artifactId>
       <version>${htmlcleaner.version}</version>
+    </dependency>
+
+    <!-- Logging Dependencies -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback-classic.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j-api.version}</version>
     </dependency>
 
   </dependencies>
